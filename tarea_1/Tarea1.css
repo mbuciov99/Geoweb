@@ -1,0 +1,452 @@
+body{
+    background-color: bisque;
+    font-family: sans-serif;
+    margin: 0;
+}
+a{
+    text-decoration: none;
+    color: inherit;
+}
+
+ul{
+    background-color: white;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+li{
+    background-color: chocolate;
+    color: white;
+    border: dashed rgb(162, 118, 57);
+    padding: 0.3rem, 0.7rem;
+}
+
+ul{
+    display: flex;
+    flex-direction: column;
+    
+}
+h1{
+    color: inherit;
+    background-color: rgb(162, 118, 57);
+}
+
+p{
+    color: inherit;
+    background-color: rgb(162, 118, 57);
+    padding: 0.1rem;
+}
+
+/*Contenedor principal de la tabla*/
+.tabla-geo{
+    width: 0.5rem;
+    border-collapse: collapse; /*Fusiona los bordes para que se vea como una sola linea limpia*/
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+/*Estilos compartidos para celdas (td) y Encabezados (th)*/
+.tabla-geo th,
+.tabla-geo td {
+    padding: 12px; /*Espacio interno para que el texto no respira*/
+    border-bottom: 1px solid #dddddd; /*Solo una linea divisoria bajo cada fila*/
+}
+
+/*Estilos exclusivos para encabezados*/
+.tabla-geo th {
+    background-color: chocolate; /*Color oscuro para resaltar*/
+    color: white;
+    font-weight: bold;
+}
+
+/*Filas cebra para mejorar la lectura*/
+.tabla-geo tr:nth-child(even){
+    background-color: rgb(191, 178, 159); /*Pinta las filas pares con otro color*/
+}  
+
+/*Estado normal del enlace*/
+.enlace-destacado{
+    color: #0078a8; 
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s; /*Hace que el cambio de color sea suave, no de golpe*/
+}
+
+/*El estado cuando pasas el mouse por encima (Hover)*/
+.enlace-destacado:hover{
+    color: #004466;
+    text-decoration: underline;
+}
+
+/*Nivel 1 de cabecera*/
+.cabecera-1{
+    font-size: 36px;
+    color: #003366;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/*Nivel 2 de cabecera: separación de secciones grandes*/
+.cabecera-2{
+    font-size: 28px;
+    color: #004488;
+    border-bottom: 2px solid #dddddd; /*Linea sutil debajo del texto*/
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+/*Nivel 3: Subtítulos estandar*/
+.cabecera-3{
+    font-size: 24px;
+    color: #333333; 
+    margin-bottom: 10px;
+}
+
+/*Nivel 4: Titulos para bloques de texto pequeños*/
+.cabecera-4{
+    font-size: 20px;
+    color: #555555;
+    margin-bottom: 8px;
+}
+
+/*Nivel 5: Casi del tamaño del texto normal*/
+.cabecera-5{
+    font-size: 16px; /*Tamaño típico de un párrafo normal*/
+    color: #777777;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/*Nivel 6: El más pequeño, etiquetas o metadatos*/
+.cabecera-6{
+    font-size: 14px;
+    color: #999999;
+    text-transform: uppercase; /*Convertir el texto a mayusculas automáticamente*/
+    letter-spacing: 1px; /*Separa un poco las letras para que se vea mejor*/
+}
+
+/*Buscar cualquier etiqueta <a> que tenga el atributo target="_blank"*/
+a[target="_blank"]{
+    color: #e65100;
+    font-weight: bold;
+    border-bottom: 2px dashed #e65100;
+}
+
+/*Truco visual extra: añair una flechita al final del texto automáticamente*/
+a[target="_blank"]::after{
+    content: " ↗";    
+}
+
+/*Buscar solo los inputs que sean cajas de texto, ignorando el boton de enviar*/
+input[type= "text"]{
+    padding: 10px;
+    border: 2px solid #0078A8;
+    border-radius: 4px;
+    width: 250px;
+}
+
+/*Buscar solo el input que funciona como botón*/
+input[type="submit"]{
+    background-color: #0078A8;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/*Clase general: Da la estructura, margenes y forma redondita*/
+.btn-general{
+    padding: 10px 20 px;
+    border: none;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    cursor: pointer; /*Cambia el cursor a la manita al pasar por encima*/
+}
+
+/*Adicional 1: Botón principal de acción*/
+.btn-primario{
+    background-color: #0078A8;
+    color: white;
+}
+
+/*Adicional 2: Botón para acciones destructivas*/
+.btn-peligro{
+    background-color: #0078A8;
+    color: white;
+}
+/*Elemento <div>*/
+/*Clase General: Define el espaciado interno y una sombra suave*/
+.tarjeta-general{
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgb(0,0,0,0.1); /*Efecto de elevación*/
+    margin-bottom: 15px;
+}
+
+/*Adicional 1: Tarjeta para modo día*/
+.tarjeta-clara{
+    background-color: #ffffff;
+    border-left: 5px solid #0078A8; /*Barra decorativa a la izquierda*/
+}
+
+/*Adicional 2: Tarjeta para resaltar advertencias o datos críticos*/
+.tarjeta-oscura{
+    background-color: #333333;
+    color: white;
+    border-left: 5px solid #ff9800; 
+}
+
+/*Elemento <p>*/
+/*Clase General: Asegura que el texto no canse la vista*/
+.texto-general{
+    font-family: Helvetical, sans-serif;
+    line-height: 1.6; /*Espacio entre lineas para que respire el texto*/
+    color: #444444;
+}
+
+/*Adicional 1: Texto más grande para instrucciones o resúmenes*/
+.texto-intro{
+    font-size: 18px;
+    font-weight: bold;
+    color: #222222;
+}
+
+/*Adicional 2: Letra pequeña y gris para detalles técnicos*/
+.texto-metadato{
+    font-size: 12px;
+    color: #888888;
+    font-style: italic;
+}
+
+/*Elemento <span>*/
+/*Clase General: Convierte el texto general en una íldora compacta*/
+.etiqueta-general{
+    padding: 3px 6px;
+    border-radius: 12px; /*Bordes muy redondos*/
+    font-size: 12 px;
+    font-weight: bold;
+    color:  white;
+}
+
+/*Adicional 1: Color rojo para valores altos*/
+.etiqueta-alta{
+    background-color: #e53935;
+}
+
+/*Adicional 2: Color verde para valores bajos*/
+.etiqueta-baja{
+    background-color: #43a047;
+}
+
+/*Valor del sensor*/
+/*La regla se lee así: "Aplica este estilo a la clase .valor-sensor
+ que pertenezca a un span, EXCLUSIVAMENTE cuando esté dentro de un div"*/
+
+div span.valor-sensor{
+    background-color: #e3f2fd;
+    color: #0277bd;
+    font-weight: bold;
+    font-family: monospace; /*Tipo de letra como de código terminal*/
+    padding: 3px 6px;
+    border: 1px solid #81d4fa;
+    border-radius: 4px;
+}
+
+/*Definición de la clase para el logotipo institucional
+En CSS las imagenes son tratadas como elementos "en linea" (inline)  por defecto.
+Para tener control total, el primer truco es convertirlas a "bloque"*/
+.logo-institucional{
+    /*Control de tamaño*/
+    max-width: 250px; /*ancho máximo para que no se vea gigante*/
+    height: auto; /*Mantine la proporción original de la imagen al cambiar el ancho*/
+
+    /*Diseño de border*/
+    background-color: white; /*Si la imagen es transparente, esto le pone un fondo*/
+    padding: 10px; /*Espacio interno entre el logo y su borde*/
+    border: 1px solid #ddd;
+    border-radius: 8px;
+
+    /*Sombras para dar profundidad*/
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+
+    /*Alineación (El truco del bloque y márgenes automáticos)*/
+    display: block; /*Convierte la imagen en un bloque que ocupa todo el ancho*/
+    margin-left: auto; /*Empuja el logo desde la izquierda hacia el centro*/
+    margin-right: auto; /*Empuja el logo desde la derecha hacia el centro*/
+
+    margin-top: 30px; /*Separación con lo que esté arriba*/
+    margin-bottom: 30px; /*Separación con lo que esté abajo*/
+}
+
+/*Contenedor principal (form)*/
+.formulario-geo{
+    max-width: 500px;
+    margin: 20px auto; /*Centra el formulario en la página*/
+    font-family: Aria, sans-serif;
+}
+
+/*Cuadro agrupador (fieldset) y su título (legend)*/
+.formulario fieldset{
+    border: 2px #0078A8;
+    border-radius: 8px;
+    padding: 25px;
+    background-color: #fcfcfc;
+}
+
+.formulario legend{
+    background-color: #0078A8;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+/*Etiquetas de texto label*/
+.formulario-geo label{
+    display: block; /*hace que la etiqueta ocupe su propia linea*/
+    margin-bottom: 5px;
+    margin-top: 15px;
+    color: #333;
+    font-weight: bold;
+    font-size: 14px
+}
+
+/*Los campos de entrada (input texto/email), desplegables (select)
+ y areas de texto (textarea)*/
+ .formulario-geo input[type="text"],
+ .formulario-geo input[type="email"],
+ .formulario-geo select,
+ .formulario-geo textarea{
+    width: 100%; /*Ocupa todo el ancho disponible*/
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /*Evita que el padding rompa el ancho del 100%*/
+    font-family: inherit; /*Heredar la fuente del contenedor padre*/
+ }
+
+ /*Un pequeño efecto cuando el usuario hace clic en un campo (focus)*/
+ .formulario-geo input[type="text"]:focus,
+ .formulario-geo input[type="email"]:focus,
+ .formulario-geo select:focus,
+ .formulario-geo textarea:focus{
+    border-color: #0078A8;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0,120,168,0.3); /*Sombra suave para resaltar el campo activo*/
+ }
+
+ /*Ajustes para los radio buttons y los chackboxes*/
+ .formulario-geo .grupo-radio label,
+ .formulario-geo .grupo-checkbox label{
+    display:inline; /*Estos labels sí deben ir al lado de su bolita/cuadrito*/
+    font-weight: normal;
+    margin-left: 5px;
+ }
+
+ .formulario-geo .grupo-radio,
+ .formulario-geo .grupo-checkbox{
+    margin-bottom: 15px;
+ }
+
+ /*El botón de enviar (submit)*/
+ .formulario-geo .btn-enviar{
+    width: 100%;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px;
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s; /*Hace que el cambio de color sea suave*/
+ }
+
+ /*========================================================================
+            Estilos de base (Móviles - 1 Columna)
+==========================================================================*/
+.grid-visor{
+    display:grid;
+    grid-template-columns: 1fr; /*Una sóla columna que ocupa todo el ancho*/
+    gap: 15px; /*Espacio entre las cajas*/
+    font-family: Arial, sans-serif;
+    text-align: center;
+    font-weight: bold;
+}
+
+/*Colores y estilo para las cajas*/
+.grid-visor > *{
+    background-color: #5b9bd5;
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+/*Hacer que le mapa sea un pocomás alto por defecto*/
+.mapa{
+    min-height: 250px;
+    display: flex; /*Usamos flexbox para centrar el contenido del mapa*/
+    flex-direction: column; /*Organiza el contenido en columna*/
+}
+
+/*=================================================================
+            Diseño para tabletas (2 columnas)
+====================================================================*/
+@media (min-width: 768px){
+    .grid-visor{
+        /*Dividir en 2 columnas, el mapa toma más espacio*/
+        grid-template-columns: 35% 65%;
+
+        /*Dibujar el rompecabezas*/
+        grid-template-areas:
+        "header header"
+        "nav nav"
+        "form mapa"
+        "texto mapa"
+        "imagen mapa"
+        "footer footer";
+    }
+
+    /*Asignación de nombre a cada caja del rompecabezas*/
+    .encabezado{grid-area: header; }
+    .menu{grid-area: nav; }
+    .formulario{grid-area: form; }
+    .mapa{grid-area: mapa; }
+    .textos{grid-area: texto; }
+    .imagen{grid-area: imagen; }
+    .pie-pagina{grid-area: footer; }
+}
+
+/*========================================================
+            Diseño para monitores (3 columnas)
+====================================================================*/
+@media (min-width: 1024px){
+    .grid-visor{
+        /*Exactamente como la imagen: panel izq (25%), mapa (50%), panel der (25%)*/
+        grid-template-columns: 25% 50% 25%; /*Tres columnas de igual ancho*/
+
+        /*Reducir el rompecabezas para pantallas anchas*/
+        grid-template-areas:
+        "header header header"
+        "nav nav nav"
+        "form mapa texto"
+        "form mapa imagen"
+        "footer footer footer";
+    }
+
+    /*El mapa debe ser mucho más alto en escritorio*/
+    .mapa{
+        min-height: 500px;
+    }
+}
+
+/*Esto asegura que cualquier iframe dentro del contenedor mapa ocupe el 100% del espacio*/
+.mapa iframe{
+    width: 100%;
+    flex-grow: 1; /*Llena el espacio disponible*/
+    border: none; /*Quitar los bordes por defecto*/
+    border-radius: 5px; /*Bordes redondeados para que se vea más moderno y combine con las tarjetas*/
+}

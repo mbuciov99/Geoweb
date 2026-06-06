@@ -1,0 +1,16 @@
+_________________________________
+Iniciar Oracle VirtualBox
+Arrancar la máquina virtual->gwCIG2026
+_________________________________
+Ventana de ingreso
+Usuario->Contraseña
+ubuntu->ubuntu
+_________________________________
+Abrir en Visual Studio Code
+Inicio->Programación->Visual Studio Code
+File->Open Folder->/var/www/html/0_Taller_Complementario
+Editar javascript.html
+_________________________________
+Abrir en el navegador de la máquina host
+http://192.168.6.XX/0_Taller_Complementario/javascript/javascript.html
+_________________________________

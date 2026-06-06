@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb EG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+  <form method="post" action="#" id="formulario1">
+    Ingrese clave:
+    <input type="password" id="clave1" name="clave1" size="20" required/>
+    <br/>
+    Repita clave:
+    <input type="password" id="clave2" name="clave2" size="20" required/>
+    <br/>
+    <input type="submit" id="confirmar" name="confirmar" value="Confirmar"/>
+  </form>
+
+<script>
+  window.addEventListener('DOMContentLoaded', inicio, false);
+
+  function inicio() {
+    document.getElementById("formulario1").addEventListener('submit', validar, true);
+  }
+
+  function validar(evento) {
+    var cla1 = document.getElementById("clave1").value;
+    var cla2 = document.getElementById("clave2").value;
+    if (cla1!=cla2) {
+      alert('Las claves ingresadas son distintas');
+      evento.preventDefault();
+    } else {
+	  alert("Datos validados correctamente");
+      return true;
+	}
+  }
+</script>
+La función validar tiene un parámetro evt o evento (le podemos dar cualquier
+nombre) 
+  
+</body>
+</html>

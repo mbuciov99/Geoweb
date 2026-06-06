@@ -1,0 +1,870 @@
+_____________________________________
+GENERALIDADES DEL LENGUAJE JavaScript
+REPASO DE ESTRUCTURAS BÁSICAS DE PROGRAMACIÓN
+_____________________________________
+VARIABLES
+Enteros, reales, caracteres, lógicos
+var dia;
+////////////////////////////////////
+Se pueden declarar varias variables en una misma línea:
+var dia, mes, anio;
+
+Se puede definir e inmediatamente inicializarla con un valor:
+var edad=20;
+
+o en su defecto en dos pasos:
+var edad;
+...
+edad=20;
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoweb_Javascript</title>
+  <meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller complementario, tema javascript" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+  var nombre='Ana';
+  var edad=22;
+  var altura=1.92;
+  var casado=false;
+  document.write("<p>");
+  document.write("Nombre: " + nombre + "<br />");
+  document.write('<br />');
+  document.write("Edad:" + edad); 
+  document.write('<br />');
+  document.write("Estatura: " + altura); 
+  document.write('<br />');
+  document.write(casado);
+  document.write("</p>");
+</script>
+
+</body>
+</html>
+_____________________________________
+ESTRUCTURA DE DATOS SECUENCIAL
+ENTRADA DE DATOS POR TECLADO (PROMPT) :: edad = input(int("Ingresa el valor de edad: "))
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoweb_Javascript</title>
+  <meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller complementario, tema javascript" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+  var nombre;
+  var edad;
+  nombre=prompt('Ingrese su nombre:','');
+  edad=prompt('Ingrese su edad:','');
+  document.write("<span>");
+  document.write('Hola ');
+  document.write(nombre);
+  document.write(' asi que tienes ');
+  document.write(edad);
+  document.write(' años');
+  document.write("</span>");
+</script>
+
+</body>
+</html>
+_____________________________________
+ESTRUCTURAS CONDICIONALES O DE DECISIÓN
+////////////////////////////////////
+1. Condicional simple
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoweb_Javascript</title>
+  <meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller complementario, tema javascript" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+  var nombre;
+  var nota;
+  nombre=prompt('Ingrese nombre:','');
+  nota=parseFloat(prompt('Ingrese su nota:',''));
+  if (nota>=7)
+  {
+    document.write(nombre+' esta aprobado con un '+nota);
+  }
+</script>
+
+</body>
+</html>
+
+////////////////////////////////////
+2. Condicional doble
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoweb_Javascript</title>
+  <meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller complementario, tema javascript" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+  var num1,num2;
+  num1=prompt('Ingrese el primer número:','');
+  num2=prompt('Ingrese el segundo número:','');
+  num1=parseInt(num1);
+  num2=parseInt(num2);
+  if (num1>num2)
+  {
+    document.write('el mayor es '+num1);
+  }
+  else
+  {
+    document.write('el mayor es '+num2);
+  }
+</script>
+
+</body>
+</html>
+////////////////////////////////////
+3. Condicional anidada
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoweb_Javascript</title>
+  <meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller complementario, tema javascript" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+  var nota1,nota2,nota3;
+  nota1=prompt('Ingrese 1ra. nota:','');
+  nota2=prompt('Ingrese 2da. nota:','');
+  nota3=prompt('Ingrese 3ra. nota:','');
+  //Convertimos los 3 string en enteros
+  nota1=parseInt(nota1);
+  nota2=parseInt(nota2);
+  nota3=parseInt(nota3);
+  var pro;
+  pro=(nota1+nota2+nota3)/3;
+  if (pro>=9)
+  {
+    document.write('El resultado de tu evaluación es: MUY BUENO');
+  }
+  else
+  {
+    if (pro>=7)
+    {
+      document.write('El resultado de tu evaluación es:  REGULAR');
+    }
+    else
+    {
+      document.write('El resultado de tu evaluación es: NO SATISFACTORIO');
+    }
+  }
+</script>
+
+</body>
+</html>
+////////////////////////////////////
+4. Operador CASE (Sólo aplica para el operador =, no admite <,>, etc)
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoweb_Javascript</title>
+  <meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller complementario, tema javascript" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+  var valor;
+  valor=prompt('Ingrese un valor comprendido entre 1 y 5:','');
+  //Convertimos a entero
+  valor=parseInt(valor);
+  switch (valor) {
+    case 1: document.write('uno'); //valor==1
+            break;
+    case 2: document.write('dos'); //valor==2
+            break;
+    case 3: document.write('tres'); //valor==3
+            break;
+    case 4: document.write('cuatro');//valor==4
+            break;
+    case 5: document.write('cinco'); //valor ==5
+            break;
+    default:document.write('debe ingresar un valor comprendido entre 1 y 5.');
+  }
+</script>
+
+</body>
+</html>
+////////////////////////////////////
+5. Condicional múltiple
+if (condicion) {
+	CONDICION ES VERDADERO
+} else if (condicion2) {
+	CONDICION2 ES VERDADERO
+} else if (condicion3) {
+	CONDICION3 ES VERDADERO
+} else if (condicion4) {
+	CONDICION4 ES VERDADERO
+} else {
+	NINGUNA CONDICION ES VERDADERA
+}
+
+<script>
+  var nota1,nota2,nota3;
+  nota1=prompt('Ingrese 1ra. nota:','');
+  nota2=prompt('Ingrese 2da. nota:','');
+  nota3=prompt('Ingrese 3ra. nota:','');
+  //Convertimos los 3 string en enteros
+  nota1=parseInt(nota1);
+  nota2=parseInt(nota2);
+  nota3=parseInt(nota3);
+  var pro;
+  pro=(nota1+nota2+nota3)/3;
+  if (pro>=9)
+  {
+    document.write('Tu desempeño es: Muy bueno');
+  } else if (pro>=7) {
+      document.write('Tu desempeño es: regular');
+  } else {
+      document.write('Tu desempeño es: reprobado');
+  }
+</script>
+___________________________________
+OPERADORES LÓGICOS
+////////////////////////////////////
+1. AND
+////////////////////////////////////
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoweb_Javascript</title>
+  <meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller complementario, tema javascript" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+  var num1,num2,num3;
+  num1=prompt('Ingrese primer número:','');
+  num2=prompt('Ingrese segundo número:','');
+  num3=prompt('Ingrese tercer número:','');
+  num1=parseInt(num1);
+  num2=parseInt(num2);
+  num3=parseInt(num3);
+  if (num1>num2 && num1>num3)
+  {
+    document.write('el mayor es el '+num1);
+  }
+  else
+  {
+    if (num2>num3)
+    {
+      document.write('el mayor es el '+num2); 
+    }
+    else
+    {
+      document.write('el mayor es el '+num3);
+    }
+  }
+</script>
+
+</body>
+</html>
+
+////////////////////////////////////
+2. OR
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoweb_Javascript</title>
+  <meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller complementario, tema javascript" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+  var dia,mes,año;
+  dia=prompt('Ingrese día(dd):','');
+  mes=prompt('Ingrese mes(mm):','');
+  año=prompt('Ingrese año(aaaa):','');
+  dia=parseInt(dia);
+  mes=parseInt(mes);
+  año=parseInt(año);
+  if (mes==1 || mes==2 || mes==3)
+  {
+    document.write('la fecha corresponde al primer trimestre del año.');
+  } else if(mes ==4 || mes == 5 || mes == 6) {
+    document.write('la fecha corresponde al segundo trimestre del año.');
+  } else {
+    document.write('La fecha corresponde al segundo semestre del año');
+  }
+</script>
+
+</body>
+</html>
+_____________________________________
+ESTRUCTURAS ITERATIVAS
+////////////////////////////////////
+1. Mientras - Hacer
+////////////////////////////////////
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoweb_Javascript</title>
+  <meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller complementario, tema javascript" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+  var x;
+  x=1;
+  while (x<=100)
+  {
+    document.write(x);
+    document.write('<br>');
+    x=x+1;
+  }
+</script>
+
+</body>
+</html>
+
+////////////////////////////////////
+2. DO - WHILE
+////////////////////////////////////
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoweb_Javascript</title>
+  <meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller complementario, tema javascript" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+  var valor;
+  do {
+    valor=prompt('Ingrese un valor entre 1 y 999; el valor de 0 detiene el ingreso de datos:','');
+    valor=parseInt(valor);
+    document.write('El valor '+valor+' tiene ');
+    if (valor<10)
+    {
+      document.write('Tiene 1 digitos');
+    }
+    else
+    {
+      if (valor<100)
+      {
+        document.write('Tiene 2 digitos');
+      }
+      else
+      {
+        document.write('Tiene 3 digitos');
+      }
+    }
+   document.write('<br>');
+  } while(valor!=0);
+</script>
+
+</body>
+</html>
+////////////////////////////////////
+3. FOR
+////////////////////////////////////
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoweb_Javascript</title>
+  <meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller complementario, tema javascript" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+  var f;
+  for(f=1;f<=10;f++)
+  {
+    document.write(f+" ");
+  }
+</script>
+
+</body>
+</html>
+////////////////////////////////////
+STEP f+=2  
+////////////////////////////////////
+Mismo tratamiento que en Python
+para break, continue
+////////////////////////////////////
+3.1 FOREACH
+<script>
+////////////////////////////////////
+var frutas = ["Manzana", "Pera", "Mango","Cereza"];
+//Antiguamente se utilizaba for
+//-----------------------------------
+for (i = 0; i < frutas.length; i++) {
+    document.write(frutas[i] + " ");
+}
+document.write("<br/>");
+//-----------------------------------
+for (var x in frutas) {
+    document.write(x + ",");
+}
+document.write("<br/>");
+//-----------------------------------
+//A partir de ES6
+frutas.forEach(function (valor, indice) {
+  document.write(valor + "->" + indice + " ");
+});
+</script>
+_____________________________________
+FUNCIONES
+////////////////////////////////////
+1. FUNCIONES SIMPLES
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoweb_Javascript</title>
+  <meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller complementario, tema javascript" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+  function mostrarMensaje()
+  {
+    document.write("Cuidado<br/>");
+    document.write("Ingrese su documento correctamente<br/>");
+  }
+
+  mostrarMensaje();
+</script>
+  <p>Cuidado2</p><br/>
+</body>
+</html>
+////////////////////////////////////
+2. FUNCIONES CON ARGUMENTOS
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoweb_Javascript</title>
+  <meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller complementario, tema javascript" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+  function mostrarNumeros(x1,x2)
+  {
+    var valor;
+    for(valor=x1;valor<=x2;valor++)
+    {
+      document.write(valor + ' ');
+    }
+  }
+
+  var valor1,valor2;
+  valor1=prompt('Ingresa el valor inferior:','');
+  valor1=parseInt(valor1);
+  valor2=prompt('Ingresa el valor superior:','');
+  valor2=parseInt(valor2);
+  mostrarNumeros(valor1,valor2);
+</script>
+
+</body>
+</html>
+////////////////////////////////////
+3. FUNCIONES QUE RETORNAN UN VALOR
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoweb_Javascript</title>
+  <meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller complementario, tema javascript" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+  function convertirCastellano(x)
+  {
+    if (x==1)
+      return "uno";
+    else
+      if (x==2)
+        return "dos";
+      else
+        if (x==3)
+          return "tres";
+        else
+          if (x==4)
+            return "cuatro";
+          else
+            if (x==5)
+              return "cinco";
+            else
+              return "valor incorrecto";
+  }
+
+  var valor;
+  valor=prompt("Ingrese un valor entre 1 y 5","");
+  valor=parseInt(valor);
+  var resultado;
+  resultado=convertirCastellano(valor);
+  document.write(resultado);
+
+</script>
+
+</body>
+</html>
+/////////////////////////////////////
+4. FUNCIONES CON ARGUMENTOS VARIABLES
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoweb_Javascript</title>
+  <meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller complementario, tema javascript" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+  function sumar()
+  {
+    var s=0;
+    var f;
+    for(f=0; f<arguments.length; f++)
+    {
+      s=s+arguments[f];
+    }
+    return s;
+  }
+
+  document.write("sumar(2,4) = " + sumar(2,4));
+  document.write('<br />');
+  document.write("sumar(1,2,3,4,5) = " + sumar(1,2,3,4,5));
+  document.write('<br />');
+  document.write("sumar(100,200,300) = " + sumar(100,200,300));
+</script>
+  
+</body>
+</html>
+///////////////////////////////////////
+5. FUNCIONES DE FLECHA. A partir de ES6
+https://ed.team/blog/arrow-functions-en-javascript
+_____________________________________
+6. FUNCIONES CALLBACK
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoweb_Javascript</title>
+  <meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller complementario, tema javascript" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+<script>
+  document.write('<br/>//**Ejemplo1**//<br/>');
+  function myCallback(message) {
+  document.write(message);
+}
+
+  function welcome(name, myCallback) {
+    const message = `Welcome ${name}`;
+    myCallback(message);
+  }
+
+  welcome('Antonio', myCallback);
+  document.write('<br/>//**Ejemplo2**//<br/>');
+  //*************************************//
+  function myDisplayer(some) {
+    document.write(some);
+  }
+
+  function myCalculator(num1, num2, myCallback) {
+    let sum = num1 + num2;
+    document.write('Antes del callback...Dentro de la fn  ');
+    myCallback(sum);
+    document.write('  Después del callback...Dentro de la fn');
+  }
+
+  myCalculator(5, 5, myDisplayer); 
+  //*************************************//
+  document.write('<br/>//**Ejemplo3**//<br/>');
+  // funcion
+  function saludos(name, callback) {
+      document.write('Hola' + ' ' + name + ' ');
+      callback();
+  }
+
+  // función callback
+  function callMe() {
+      document.write('Soy una funcion callback');
+  }
+
+  // Pasando una función como argumento
+  saludos('Pedro', callMe);
+</script>
+</body>
+</html>
+_____________________________________
+CLASE DATE
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoweb_Javascript</title>
+  <meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller complementario, tema javascript" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+  <script>
+    function mostrarFechaHora()
+    {
+      var fecha;
+      fecha=new Date();
+      document.write('Hoy es: ');
+      document.write(fecha.getDate()+'/');
+      document.write((fecha.getMonth()+1)+'/');
+      document.write(fecha.getFullYear());
+      document.write('<br>');
+      document.write('La hora actual es: ');
+      document.write(fecha.getHours()+':');
+      document.write(fecha.getMinutes()+':');
+      document.write(fecha.getSeconds()); 
+    }
+  
+  //Llamada a la función
+    mostrarFechaHora();
+  </script>
+</body>
+</html>
+_____________________________________
+CLASE ARRAY
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoweb_Javascript</title>
+  <meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller complementario, tema javascript" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+<script>
+  function cargar(sueldos)
+  {
+    var f;
+    for(f=0;f<sueldos.length;f++)
+    {
+      var v;
+      v=prompt('Ingrese el sueldo mensual de cinco personas:','');
+      sueldos[f]=parseFloat(v); 
+    }
+  }
+
+  function calcularGastos(sueldos)
+  {
+    var total=0;
+    var f;
+    for(f=0;f<sueldos.length;f++)
+    {
+      total=total+sueldos[f];
+    }
+    document.write('Listado de sueldos<br />');
+    for(f=0;f<sueldos.length;f++)
+    {
+      document.write(sueldos[f]+'<br />');
+    } 
+    document.write('Total de gastos en sueldos:'+total); 
+  }
+
+  var sueldos;
+  sueldos=new Array(5);
+  cargar(sueldos);
+  calcularGastos(sueldos);
+</script>
+
+</body>
+</html>
+_____________________________________
+CLASE STRING
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoweb_Javascript</title>
+  <meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller complementario, tema javascript" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+ var cadena=prompt('Ingrese una cadena:','');
+  document.write('La cadena ingresada es:'+cadena);
+  document.write('<br />');
+  document.write('La cantidad de caracteres son:'+cadena.length);
+  document.write('<br />');
+  document.write('El primer carácter es:'+cadena.charAt(0));
+  document.write('<br />'); 
+  document.write('Los primeros 3 caracteres son:'+cadena.substring(0,3));
+  document.write('<br />'); 
+  if (cadena.indexOf('hola')!=-1)
+    document.write('Se ingresó la subcadena hola');
+  else 
+    document.write('No se ingresó la subcadena hola');
+  document.write('<br>'); 
+  document.write('La cadena convertida a mayúsculas es:'+cadena.toUpperCase());
+  document.write('<br>');
+  document.write('La cadena convertida a minúsculas es:'+cadena.toLowerCase());
+  document.write('<br>'); 
+</script>
+
+</body>
+</html>
+_____________________________________
+

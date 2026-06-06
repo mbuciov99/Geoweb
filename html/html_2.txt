@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Texto visible en la pestaña del navegador</title>
+ <meta charset="utf-8" />
+ <link rel="icon" href="data:," />
+ <meta name="description" content="Taller de html de la materia de Geoweb." />
+ <meta name="keywords" content="html, geoweb, desarrollo web"/>
+ <meta name="author" content="Materia Geoweb de CIG Generación 2025" />
+ <meta name="copyright" content="CentroGeo 2026" />
+ <meta name="robots" content="index,follow" />
+ <meta http-equiv="cache-control" content="no-cache"/>
+</head>
+<body>
+ Bienvenidos
+ <p>Hola a tod@s</p>
+</body>
+</html>
+ FORMULARIOS
+Recabar información para analizar o enviar
+-------------------------------------------
+ACTION
+-------------------------------------------
+action="php/consulta.php"
+action="http://www.misitio.com/servicios.html"
+action="#"
+-------------------------------------------
+METHOD
+-------------------------------------------
+Forma en que se envían los datos:
+GET
+POST
+-------------------------------------------
+<p>Formularios básicos</p>
+<h3>Método POST</h3>
+<form action="php/consulta.php" method="post" >
+   <p>Escribe aquí tu petición (con método post) <input type="text" id="peticion" name="mensaje" /></p>
+   <p><input type="submit" value="Enviar"/></p>
+</form> 
+<br/>
+<h3>Método GET</h3>
+<form action="#" method="get" >
+   <p>Escribe aquí tu petición (con método get) <input type="text" id ="solicitud" name="mensaje"/></p>
+   <p><input type="submit" value="Enviar"/></p>
+</form>
+<hr/>
+-------------------------------------------
+
+<h1>ETIQUETAS INPUT DENTRO DE FORMULARIOS</h1>
+<h2>TIPO TEXTO</h2>
+        <form action="#" method="get">
+            <p>Nombre: <input type="text" id="fname" name="nombre" placeholder="Escribe tu nombre" /></p>
+            <p>Apellidos: <input type="text" id="lname" name="ape" size="15" maxlength="=15" /></p>
+            <p>Localidad: <input type="text" id="lugar" name="lugar" size="18" minlength="2" /></p>
+            <input type="submit" value="Enviar" />
+        </form>
+<hr/>
+_________________________________
+<h2>TIPO CHECKBOX</h2>
+        <form action="#" method="get">
+            <input type="checkbox" id="vehiculo1" value="Bicicleta" />
+            <label for="vehiculo1">Bicicleta</label>
+            <input type="checkbox" id="vehiculo2" value="Carro" />
+            <label for="vehiculo2">Automóvil</label>
+            <input type="checkbox" id="vehiculo3" value="Bote" />
+            <label for="vehiculo3">Barco</label>
+            <input type="submit" value="Enviar" />
+        </form> 
+<hr/>
+_________________________________ 
+<h2>TIPO RADIO</h2>
+        <form action="#" method="get">
+            <p>Programa de posgrado en el que está inscrito <br/>
+                Especialidad: <input type="radio" name="nestudios" value="e" />
+                Maestría: <input type="radio" name="nestudios" value="m" />
+                Doctorado: <input type="radio" name="nestudios" value="d" />
+            </p>
+            <input type="submit" value="Enviar" />
+        </form>
+<hr/>
+_________________________________
+<h2>TIPO NUMBER</h2>
+        <form action="#" method="get">
+            <p>Cantidad: <input type="number" name="numero" step="0.1" /></p>
+            <p>Edad: <input type="number" name="edad" min="18" max="65" placeholder="Entre 18 y 65 años" /></p>
+            <input type="submit" value="Enviar" />
+        </form>
+<hr/>
+_________________________________
+<h2>TIPO RANGE</h2>
+        <form action="#" method="get">
+            <label for="vol">Volumen entre 0 y 50:</label>
+            <input type="range" id="vol" name="vol" min="0" max="50" oninput="valvolumen.value=vol.value" />
+            <output id="valvolumen"></output>
+            <input type="submit" value="Enviar" />
+        </form>
+<hr/>
+_________________________________
+<h2>TIPO PASSWORD</h2>
+        <form action="#" method="get">
+            <p>Contraseña: <input type="password" name="clave" maxlength=200 minlength=5 placeholder="Escribe una conraseña de mas de cinco caracteres" required /></p>
+            <input type="submit" value="Enviar" />
+        </form>  
+<hr/> 
+_________________________________   
+
+<h2>TIPO EMAIL</h2>
+        <form action="#" method="get">
+            <p>Correo electrónico: <input type="email" multiple name="correo múltiple" placeholder="Escribe correo(s) electr&oacute;nico(s)" /></p>
+            <input type="submit" value="Enviar" />
+            <p>Si se desean agregar varias cuentas de correo, se escriben separadas por comas.</p>
+        </form>
+<hr/>
+_________________________________
+<h2>TIPO SUBMIT</h2>
+<form action="#">
+  <p>Programa de posgrado en el que está inscrito: <br/>
+	Especialidad<input type="radio" name="nestudios" value="e"> 
+	Maestría<input type="radio" name="nestudios" value="m">
+	Doctorado<input type="radio" name="nestudios" value="d"></p>
+  <input type="submit" value="Enviar"/>
+</form>
+<hr/>
+_________________________________
+<h2>TIPO RESET</h2>
+        <p>Botón de envío de formulario input type="submit" value="Enviar" </p>
+<p>        Tipo Reset </p>
+        <form action="#" method="get">
+            <p>Nombre: <input type="text" id="fname" name="nombre" placeholder="Escribe tu nombre" /></p>
+            <p>Apellidos: <input type="text" id="lname" name="ape" size="15" maxlength="=15" /></p>
+            <p>Localidad: <input type="text" id="lugar" name="lugar" size="18" minlength="2" /></p>
+            <input type="reset" value="Borrar" /><br/>
+            <input type="submit" value="Enviar" />
+        </form>
+<hr/>
+_________________________________
+<h2>TIPO HIDDEN</h2>
+        <form action="#" method="get">
+            <p>Oculto: <input type="hidden" value="no se puede ver" /></p>
+            <p>Contraseña: <input type="password" name="clave" /></p>
+            <input type="submit" value="Enviar" />
+        </form> 
+<hr/>
+_________________________________
+<h2>TIPO DATE</h2>
+        <form action="#" method="get">
+            <input type="date" name="fecha" value="2026-01-16" />
+            <p>Contraseña: <input type="password" name="clave" /></p>
+            <input type="submit" value="Enviar" />
+        </form>
+<hr/>
+_________________________________
+<h2>TIPO TIME</h2>
+        <form action="#" method="get">
+            <input type="date" name="fecha" value="2026-01-16" />
+            <input type="time" name="hora" value="12:42" />
+            <p>Contraseña: <input type="password" name="clave" /></p>
+            <input type="submit" value="Enviar" />
+        </form> 
+<hr/>
+_________________________________
+<h2>TIPO COLOR</h2>
+        <form action="#" method="get">
+            <input type="color" name="color" value="#00ff00" />
+            <input type="submit" value="Enviar" />
+        </form>
+<hr/>
+_________________________________
+<h2>TIPO FILE</h2>
+        <form action="#" method="post">
+            <input type="file" name="archivo" accept=".jpg, .jpeg, .docx, .pdf" />
+            <input type="submit" value="Enviar" />
+        </form> 
+<hr/>
+_________________________________
+<h2>TIPO IMAGE</h2>
+        <form action="#" method="get">
+            <input type="image" src="img/logo.jpg" width="50px" /><br/>
+            <input type="submit" value="Enviar" />
+        </form>
+<hr/>
+_________________________________
+<h2>TIPO URL</h2>
+        <form action="#" method="get">
+            <input type="url" id="sitioweb" name="url" placeholder="http://www.misitio.com" pattern="http.*" size="30" required /><br/>
+            <input type="submit" value="Enviar" />
+        </form>
+<hr/>
+_________________________________
+____________________________________________
+_____________________________________________
+<h1>OTRAS ETIQUETAS HTML</h1> 
+<h2>TIPO TEXTAREA</h2>
+        <form action="#" method="get">
+            <p>Área de texto: <textarea name="area" cols="40" rows="5" minlength="5" maxlength="200">Escribe tu opinión</textarea></p>
+            <input type="submit" value="Enviar" />
+        </form>
+<hr/>
+_________________________________
+<h2>ETIQUETA DATALIST</h2>
+<form action="#" method="post" >
+  <p>Nombre: <input type="text" name="nombre" placeholder="Escribe tu nombre" ></p>
+  <p>Apellidos: <input type="text" name="ape" size="15" maxlength="15"></p>
+  <p>Localidad: <input type="text" name="localidad" size="18" minlength="2"></p>
+  <p>Elegir memoria USB:<input  list="listaUsb"></p>
+	<datalist id="listaUsb" >
+	  <option value="8" >
+	  <option value="16" >
+	  <option value="32" >
+	  <option value="64" >
+	</datalist>
+  <p><input type="submit" value="Enviar"/></p>
+</form>
+<hr/>
+_________________________________
+
+<h2>TIPO SELECT</h2>
+        <form action="#" method="get">
+            <select name="pais">
+                <option value="es">España</option>
+                <option value="mx" selected="selected">México</option>
+                <option value="co">Colombia</option>
+            </select>
+            <input type="submit" value="Enviar" />
+        </form>
+<hr/>
+_________________________________
+<h2>TIPO SELECT SIN FORMULARIO</h2>
+  <select name="pais" onchange="enviardatos()">
+  <option value"es" > España</option>
+  <option value"mx" selected="selected"> México</option>
+  <option value"co"> Colombia</option>
+  </select>
+  <hr/>
+_________________________________
+<h2>TIPO OPTGROUP</h2>
+        <form action="#" method="get">
+            <select name="pais" size="10">
+                <option value="xx">Elija un país ...</option>
+                <optgroup label="América">
+                    <option value="ar">Argentina</option>
+                    <option value="mx">México</option>
+                    <option value="co">Colombia</option>
+                </optgroup>
+                <optgroup label="Europa" disabled>
+                    <option value="es">España</option>
+                    <option value="fr">Francia</option>
+                    <option value="it">Italia</option>
+                </optgroup>
+            </select>
+            <input type="submit" value="Enviar" />
+        </form>
+<hr/>
+_________________________________
+
+<h2>TIPO LABEL</h2>
+<p>Para escribir mensajes visibles al usuario sobre elementos de formulario</p>
+<form action="#" method="post" >
+  <label>Nombre: <input type="text" name="nombre" placeholder="Escribe tu nombre" ></label>
+  <label>Apellidos: <input type="text" name="ape" size="15" maxlength="15"></label>
+  <p>Localidad: <input type="text" name="localidad" size="18" minlength="2"></p>
+  <p><input type="submit" value="Enviar"/></p>
+</form>
+NOTA: En todos los casos anteriores donde hemos utilizado " p " se pueden sustituir por " label "
+<hr/>
+_________________________________
+<h2>TIPO FIELDSET Y LEGEND</h2>
+<form action="#" method="post" >
+	<fieldset>
+	  <legend>Datos personales</legend>
+	  <label>Nombre: <input type="text" name="nom" /><label><br>
+	  <label>Apellidos: <input type="text" name="ape" /><label><br>
+	</fieldset>
+	<br />
+	<fieldset>
+	  <legend>Datos del domicilio</legend>
+	  <label>Calle: <input type="text" name="calle" /><label><br />
+	  <label>Población: <input type="text" name="pobla" /><label><br />
+	  <label>Provincia: <input type="text" name="prov" /><label><br />
+	</fieldset><br />
+  <p><input type="submit" value="Enviar"/></p>
+</form>
+<p>br: Break Return</p>
+<hr/>
+_________________________________
+<h2>TIPO BUTTON</h2>
+Se pueden utilizar en lugar de submit
+        <form action="#" method="get">
+            <p>Término a buscar: <input type="text" name="nom" /></p>
+            <p><button type="button">Buscar></button></p>
+            <p><button><img src="img/logo.jpg" width="50px" />Buscar</button></p>
+            <p><button><img src="img/logo.jpg" width="50px" /></button></p>
+        </form> 
+<hr/>
+_________________________________
+<h2>Button CON FORMACTION Y FORMMETHOD</h2>
+<form id="formu1" >
+  <p>T&eacute;rmino a buscar:<input type="text" name="nom3" /></p>
+</form>
+<p>
+<button form="formu1" formaction="#" formmethod="post"><img src="img/logo.jpg" width="50px" /> Buscar</button>
+</p>
+</form>
+<hr/>
+_________________________________
+
+<!--
+Mapa de carateres en Ubuntu
+sudo apt install gucharmap
+LXTerminal->gucharmap
+PEstaña -> común
+-->
+</body>
+</html>

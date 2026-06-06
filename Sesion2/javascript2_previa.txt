@@ -1,0 +1,628 @@
+EVENTOS LOAD Y DOMContentLoaded
+/////////////////////////////////////
+Javascript implementa algoritmos que reaccionan a eventos que se producen
+en una página web. Cuando se presiona un botón de tipo submit se dispara el
+evento onsubmit. Cuando se termina de cargar completamente una página web se dispara
+el evento onload.
+/////////////////////////////////////
+1. Eventos definidos en el HTML
+Ha caído en desuso, digamos que era la forma antigua de hacer manejar este evento
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb CIG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body onload="fnInicial();">
+<img src="img/logo.jpg" onload="loadImagen()" />
+<p id="parrafo1"></p>
+<script>
+function fnInicial() {
+    document.getElementById("parrafo1").innerText += "Contenido del párrafo desde la fn de inicio ";
+    document.getElementById("parrafo1").innerHTML += "<br/>Contenido HTML <hr/>";
+    alert('navigator.appCodeName' + window.navigator.appCodeName);
+    alert('navigator.appName' + window.navigator.appName);
+    alert('navigator.appVersion' + window.navigator.appVersion);
+    alert('navigator.cookieEnabled' + window.navigator.cookieEnabled);
+    alert('navigator.language' + window.navigator.language);
+    alert('navigator.platform' + window.navigator.platform);
+    alert('navigator.product' + window.navigator.product);
+    alert('navigator.userAgent' + window.navigator.userAgent);
+    alert('screen.height' + window.screen.height);
+    alert('screen.width' + window.screen.width);
+    alert('screen.pixelDepth' + window.screen.pixelDepth);
+    alert('location.origin = ' + window.location.origin);
+    alert('location.host = ' + window.location.host);
+    alert('location.hostname = ' + window.location.hostname);
+    alert('location.href = ' + window.location.href);
+    alert('location.origin = ' + window.location.origin);
+    alert('location.pathname = ' + window.location.pathname);
+    alert('location.protocol = ' + window.location.protocol);  
+    window.setTimeout(retardo, 10000);
+    
+}
+function retardo() {
+    alert('Después de diez segundos');
+    window.location.assign("https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference");
+}
+function loadImagen() {
+    alert("Se ha cargado la imagen");
+}
+</script>
+  
+</body>
+</html>
+/////////////////////////////////////
+
+2.0 EVENTOS DEFINIDOS ACCEDIENDO A PROPIEDADES DEL OBJETO
+Es la más utilizada actualmente
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb EG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<form method="post" action="#" id="formulario1">
+  Ingrese nombre:
+  <input type="text" id="usuario" name="usuario" size="20"/>
+  <br/>
+  Ingrese clave:
+  <input type="password" id="clave" name="clave" size="20"/>
+  <br/>
+  <input type="submit" id="confirmar" name="confirmar" value="Confirmar"/>
+</form>  
+
+<script>
+  window.onload=inicio;
+
+  function inicio()
+  {
+    document.getElementById("formulario1").onsubmit=validar;
+  }
+
+  function validar()
+  {
+    var usu=document.getElementById("usuario").value;
+    var cla=document.getElementById("clave").value;
+    if (usu.length==0 || cla.length==0)
+    {
+      alert('El nombre de usuario o clave está vacío');
+      return false;
+    }
+    else
+      alert("Datos del formulario validados");
+      return true;
+  }
+</script>
+  
+</body>
+</html>
+
+/////////////////////////////////////
+2.1 EVENTOS DEFINIDOS ACCEDIENDO A PROPIEDADES DEL OBJETO CON FN ANÓNIMA
+La misma metodología pero utilizando funciones anónimas para el evento
+el código javascript ahora queda condensado:
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb EG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<form method="post" action="#" id="formulario1">
+  Ingrese nombre:
+  <input type="text" id="usuario" name="usuario" size="20"/>
+  <br/>
+  Ingrese clave:
+  <input type="password" id="clave" name="clave" size="20"/>
+  <br/>
+  <input type="submit" id="confirmar" name="confirmar" value="Confirmar"/>
+</form>  
+
+<script>
+  window.onload=function() {
+    document.getElementById("formulario1").onsubmit=function () {
+      var usu=document.getElementById("usuario").value;
+      var cla=document.getElementById("clave").value;
+      if (usu.length==0 || cla.length==0)
+      {
+        alert('El nombre de usuario o clave está vacío');
+        return false;
+      }
+      else
+        alert("Datos validados correctamente");
+        return true;
+    }
+  }
+</script>
+  
+</body>
+</html>
+/////////////////////////////////////
+Modelo de eventos definidos por W3C (World Wide Web Consortium)
+Estos eventos están siendo ampliamente implementados por los navegadores modernos
+pero navegadores IE8 o inferiores y versiones antiguas de otros navegadores no lo
+soportan.
+3. addEventListener -> load
+
+Este modelo de eventos se basa en la implementación del método addEventListener 
+para todos los objetos, lo que nos permite registrar eventos.
+addEventListener(evento, método a ejecutar, useCapture);
+useCapture se establece en el valor de falso por default.
+useCapture en addEventListener() determina en qué fase de la propagación del evento 
+se ejecutará el listener. 
+•	Fase de Captura (useCapture = true): 
+  En esta fase, los eventos se propagan desde el documento hacia el elemento específico 
+  que genera el evento. Desde el elemento <html> hacia el elemento <form>
+
+•	Fase de Propagación/Burbujeo (useCapture = false): 
+  En esta fase, los eventos se propagan desde el elemento que los genera hacia el 
+  documento. Desde el elemento <form>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb EG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<form method="post" action="#" id="formulario1">
+  Ingrese nombre:
+  <input type="text" id="usuario" name="usuario" size="20"/>
+  <br/>
+  Ingrese clave:
+  <input type="password" id="clave" name="clave" size="20"/>
+  <br/>
+  <input type="submit" id="confirmar" name="confirmar" value="Confirmar"/>
+</form>  
+
+<script>
+ window.addEventListener('load',inicio,false);
+
+function inicio()
+{
+  document.getElementById("formulario1").addEventListener('submit',validar,false);
+}
+
+function validar(evt)
+{
+   var usu=document.getElementById("usuario").value;
+   var cla=document.getElementById("clave").value;
+   if (usu.length==0 || cla.length==0)
+   {
+     alert('El nombre de usuario o clave está vacío');
+     evt.preventDefault();
+   } else {
+     alert("Datos validados del formulario");
+   }
+}
+</script>
+  
+</body>
+</html>
+/////////////////////////////////////
+4. addEventListener -> DOMContentLoaded
+
+a. load se dispara cuando el contenido HTML, imágenes y css se han cargado en 
+memoria del navegador
+b. DOMContentLoaded sólo requiere la carga del contenido HTML
+Por lo anterior se recomienda utilizar DOMContentLoaded.Está implementado en todos
+los navegadores modernos
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb EG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<form method="post" action="#" id="formulario1">
+  Ingrese nombre:
+  <input type="text" id="usuario" name="usuario" size="20"/>
+  <br/>
+  Ingrese clave:
+  <input type="password" id="clave" name="clave" size="20"/>
+  <br/>
+  <input type="submit" id="confirmar" name="confirmar" value="Confirmar"/>
+</form>  
+
+<script>
+ window.addEventListener('DOMContentLoaded',inicio,false);
+
+function inicio()
+{
+  document.getElementById("formulario1").addEventListener('submit',validar,false);
+}
+
+function validar(evt)
+{
+   var usu=document.getElementById("usuario").value;
+   var cla=document.getElementById("clave").value;
+   if (usu.length==0 || cla.length==0)
+   {
+     alert('El nombre de usuario o clave está vacío');
+     evt.preventDefault();
+   } else {
+     alert("Datos validados del formulario");
+   }
+}
+</script>
+  
+</body>
+</html>
+____________________________________
+EVENTOS CLICK Y DOUBLECLICK
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb EG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+      div.evt_click {
+        width:200px;height:200px;background:#ffff00;
+      }
+      div.evt_dbl_click {
+        width:200px;height:200px;background:#ff5500
+      }
+    </style>
+</head>
+<body>
+
+  <div class="evt_click" id="recuadro1">
+    Prueba del evento click
+  </div>
+  <div class="evt_dbl_click" id="recuadro2">
+    Prueba del evento dblclick
+  </div>  
+
+<script>
+  addEventListener('DOMContentLoaded',inicio,false);
+
+  function inicio()
+  {
+    document.getElementById('recuadro1').addEventListener('click',presion1,false);
+    document.getElementById('recuadro2').addEventListener('dblclick',presion2,false);
+  }
+
+  function presion1()
+  {
+    alert('se hizo click');
+  }
+
+  function presion2()
+  {
+    alert('se hizo doble click');
+  }
+</script>
+  
+</body>
+</html>
+_____________________________________
+EVENTOS MOUSEDOWN Y MOUSEUP
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb EG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+  <p>Presione el recuadro amarillo sin soltar el botón del mouse.</p>
+  <div style="width:200px;height:200px;background:#ffff00" id="recuadro1">
+  </div>
+  <p>Presione el recuadro naranja y suelte el botón del mouse.</p>
+  <div style="width:200px;height:200px;background:#ff5500" id="recuadro2">
+  </div>
+
+<script>
+  addEventListener('DOMContentLoaded',inicio,false);
+
+  function inicio()
+  {
+    document.getElementById('recuadro1').addEventListener('mousedown',presion1,false);
+    document.getElementById('recuadro2').addEventListener('mouseup',presion2,false);
+  }
+
+  function presion1()
+  {
+    document.getElementById('recuadro1').innerHTML='Se presionó el mouse y todavía no se soltó';
+  }
+
+  function presion2()
+  {
+    document.getElementById('recuadro2').innerHTML='Se presion&oacute; el mouse y se soltó';
+  }
+</script>
+  
+</body>
+</html>
+
+/////////////////////////////////////
+/////////////////////////////////////
+_____________________________________
+EVENTOS MOUSEOVER Y MOUSEOUT
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb EG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+  <div style="width:200px;height:200px;background:#0000ff;" id="recuadro1">    
+  </div>
+
+<script>
+  addEventListener('DOMContentLoaded',inicio,false);
+
+  function inicio()
+  {
+    document.getElementById('recuadro1').addEventListener('mouseover',entrada,false);
+    document.getElementById('recuadro1').addEventListener('mouseout',salida,false);
+  }
+
+  function entrada()
+  {
+    document.getElementById('recuadro1').style.borderRadius='30px';
+  }
+
+  function salida()
+  {
+    document.getElementById('recuadro1').style.borderRadius='0px';
+  }
+</script>
+  
+</body>
+</html>
+_____________________________________
+EVENTO MOUSEMOVE
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb EG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+  <div style="width:200px;height:200px;background:#0000ff" id="recuadro1">
+  </div>
+  <p id="cantidad">0</p>
+
+<script>
+  addEventListener('DOMContentLoaded',inicio,false);
+
+  function inicio()
+  {
+    document.getElementById('recuadro1').addEventListener('mousemove',mover,false);
+  }
+
+  function mover()
+  {
+    var x=parseInt(document.getElementById('cantidad').innerHTML);
+    x++;
+    document.getElementById('cantidad').innerHTML=x;
+  }
+</script>
+  
+</body>
+</html>
+_____________________________________
+EVENTOS CHANGE
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb EG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+  Evento change del checkbox:
+  <input type="checkbox" id="checkbox1" name="checkbox1" checked>
+  <br/>
+  Evento change del radio:<br/>
+  <input type="radio" name="radio1" id="radioa"/><br/>
+  <input type="radio" name="radio1" id="radiob"/><br/>
+  <input type="radio" name="radio1" id="radioc"/><br/>
+  Evento change del select:
+  <select name="select1" id="select1">
+    <option value="argentina">Argentina</option>
+    <option value="chile">Chile</option>
+    <option value="uruguay">Uruguay</option>
+    <option value="paraguay">Paraguay</option>
+    <option value="bolivia">Bolivia</option>
+  </select>
+  <br/>
+  <input type="text" name="text1" id="text1"/>
+  <br/>
+  <textarea name="text1" id="textarea1" rows="6" cols="80"></textarea>
+  <br/>
+
+<script>
+  addEventListener('DOMContentLoaded',inicio,false);
+
+  function inicio()
+  {
+    document.getElementById('checkbox1').addEventListener('change',cambiocheckbox,false);
+    document.getElementById('radioa').addEventListener('change',cambioradio,false);
+    document.getElementById('radiob').addEventListener('change',cambioradio,false);
+    document.getElementById('radioc').addEventListener('change',cambioradio,false);
+    document.getElementById('select1').addEventListener('change',cambioselect,false);
+    document.getElementById('text1').addEventListener('change',cambiotext,false);
+    document.getElementById('textarea1').addEventListener('change',cambiotextarea,false);
+  }
+
+  function cambiocheckbox()
+  {
+  alert(document.getElementById('checkbox1').checked);
+  }
+
+  function cambioradio()
+  {
+    alert(document.getElementById('radioa').checked+' '+
+          document.getElementById('radiob').checked+' '+
+          document.getElementById('radioc').checked);
+  }
+
+  function cambioselect()
+  {
+    alert(document.getElementById('select1').value);
+  }
+
+  function cambiotext()
+  {
+    alert(document.getElementById('text1').value);
+  }
+
+  function cambiotextarea()
+  {
+    alert(document.getElementById('textarea1').value);
+  }
+</script>
+
+</body>
+</html>
+_____________________________________
+EVENTO SUBMIT
+En este caso, 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb EG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+  <form method="post" action="#" id="formulario1">
+    Ingrese clave:
+    <input type="password" id="clave1" name="clave1" size="20" required/>
+    <br/>
+    Repita clave:
+    <input type="password" id="clave2" name="clave2" size="20" required/>
+    <br/>
+    <input type="submit" id="confirmar" name="confirmar" value="Confirmar"/>
+  </form>
+
+<script>
+  window.addEventListener('DOMContentLoaded', inicio, false);
+
+  function inicio() {
+    document.getElementById("formulario1").addEventListener('submit', validar, false);
+  }
+
+  function validar(evento) {
+    var cla1 = document.getElementById("clave1").value;
+    var cla2 = document.getElementById("clave2").value;
+    if (cla1!=cla2) {
+      alert('Las claves ingresadas son distintas');
+      evento.preventDefault();
+    } else {
+	  alert("Datos validados correctamente");
+	}
+  }
+</script>
+La función validar tiene un parámetro evt o evento (le podemos dar cualquier
+nombre) 
+  
+</body>
+</html>
+_____________________________________

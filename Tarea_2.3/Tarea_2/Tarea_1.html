@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarea 1</title>
+
+    <link rel="stylesheet" href="Tarea1.css">
+</head>
+<body> 
+     <div class="grid-visor">
+        <header class="encabezado">
+            <h1 class="cabecera-1">
+                Proyecto TEMPO: Visor de NO2
+            </h1>
+        </header>
+        
+        <nav class="menu">
+    		<ul>
+        		<li><a href="#mapa">Mapa</a></li>
+        		<li><a href="#formulario">Formularios</a></li>
+        		<li><a href="#tabla">Tabla</a></li>
+			<li><a href="#listas">Listas</a></li>
+        		<li><a href="#enlaces">Enlaces</a></li>
+    		</ul>
+	    </nav>
+
+        <aside class="formulario" id="formulario">
+            <!--I. Agregar un formulario con todas las etiquetas html de formulario y crear estilos para cada elemento.-->
+            <form class="formulario-geo" action="#" method="post">
+                <fieldset>
+                    <legend>Solicitud de Datos TEMPO</legend>
+
+                    <label for="nombre">Nombre de la estación o investigador</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Ej. Estación Merced">
+
+                    <label for="ubicacion">Ubicación geográfica (latitud y longitud)</label>
+                    <input type="text" id="lat" name="lat" placeholder="Ingresa la latitud"> <br>
+                    <input type="text" id="lon" name="lon" placeholder="Ingresa la longitud"> <br>
+
+                    <label for="correo">Correo electrónico</label>
+                    <input type="email" id="correo" name="correo" placeholder="usuario@institucion.edu">
+
+                    <label for="clave-api">Contraseña de Acceso / Clave API:</label>
+                    <input type="password" id="clave-api" name="clave-api" placeholder="Ingresa tu contraseña de seguridad">
+
+                    <label for="contaminante">Gas traza de interés</label>
+                    <select id="contaminante" name="contaminante">
+                        <option value="NO2">Dióxido de Nitrógeno (NO2)</option>
+                        <option value="O3">Ozono (O3)</option>
+                        <option value="SO2">Dióxido de Azufre (SO2)</option>
+                        <option value="hcho">Formaldehído (HCHO)</option>
+                    </select>
+
+                    <label>Formato de Descarga</label>
+                    <div class="grupo-radio">
+                        <input type="radio" id="formato-csv" name="formato" value="csv" chacked>
+                        <label for="formato-csv">Tabla(.csv)</label>
+
+                        <input type="radio" id="formato-tiff" name="formato" value="tiff">
+                        <label for="formato-tiff">Imagen Raster (.tiff)</label>
+                    </div>
+
+                    <label for="justificacion">Justificación del uso de datos:</label>
+                    <textarea id="justificacion" name="justificacion" rows="4" placeholder="Describe brevemente tu investigación..."></textarea>
+
+                    <div class="grupo-chackbox">
+                        <input type="checkbox" id="terminos" name="terminos">
+                        <label for="terminos">Acepto los términos y condiciones de uso de datos</label>
+                    </div>
+
+                    <button type="submit" class="btn-enviar">Enviar solicitud</button>
+                </fieldset>
+            </form>
+        </aside>
+
+        <main class="mapa" id="mapa">
+            <h2 class="cabecera-2">
+                Mapa y Contenido (Visor NO2)
+            </h2>
+            <!-- Agregando un mapa interactivo-->
+             <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=-99.25%2C19.30%2C-99.05%2C19.50&amp;layer=mapnik" style="border: 1px solid black">
+                title="Mapa Base de la zona de estudio" allowfullscreen>
+             </iframe>
+        </main> <section class="seccion-resultados-js" id="resultados">
+            <!--Resultados T2 A, B, C -->
+            <div class="caja-resultados-js">
+                <h3 class="cabecera-2 titulo-resultados">Resultados JavaScript</h3>
+                <p id="pantalla-resultados">Cargando resultados...</p>
+            </div>
+
+            <hr class="divisor-resultados">
+            <h2 class="cabecera-4">Panel de control de Eventos (Mouse & UI)</h2>
+            <p class="texto-general texto-metadato">Interactua con los elementos
+                de abajo.
+            </p>
+
+            <div class="texto-general tarjeta-clara">
+                <label for="selector-capas" style="color: #D9C5A7; font-weight: bold; display: block; margin-bottom: 5px;">
+                    Cambiar Capa satelital (Evento Change):
+                </label>
+                <select id="selector-capas" style="width: 100%;padding: 8px; border-radius: 4px; background: #1B2632; color: #F0F3F5; border: 1px solid #3A4A5E">
+                    <option value="predeterminado">Selecciona una capa...</option>
+                    <option value="no2-dat">Capa de NO2 Absoluto (TEMPO)</option>
+                    <option value="o3-sat">Capa de Ozono Troposférico</option>
+                    <option value="rgb-true">Imagen Color Verdadero (RGB)</option>
+                </select>
+                <br><br>
+
+                <div style="display: flex; gap: 10px; margin-bottom: 15px";>
+                    <botton id="btn-click" class="btn-general btn-primario" style="flex:1;">
+                        Centrar Mapa (Click)
+                    </botton>
+                    <button id="btn-doubleclick" class="btn-general btn-peligro" style="flex:1; background-color: #8B3C2A;">
+                        Reiniciar Visor (Double Click)
+                    </button>
+                </div>
+                <button id="btn-presion" class="btn-general" style="width: 100%;background-color: #2c3b4d; color: #D9C5A7; border:1px dashed #D9C5A7; margin-bottom: 15px; padding: 12px;">
+                    Mantén presionado para calibrar sensor (mousedown / mouseup)
+                </button>
+                <div id="zona-radar" style="background-color: #1B2632; border: 2px solid #3A4A5E; border-radius: 8px; height: 120 px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor:crosshair; position: relative;">
+                    <span id="texto-radar" style="font-weight:bold; color: #7A8B9F;">Radar Apagado (mouseover)</span>
+                    <span id="coordenadas-radar" style="font-size: 0.8rem; color:#A35139; font-family: monospace; margin-top: 5px;"></span>
+                </div>
+            </div>
+
+        </section>
+
+        <aside class="textos">
+            <header class="encabezado">
+            <h1>Definición de HTML</h1>
+            </header>
+            <p>HTML es un lenguaje de marcado utilizado para crear páginas web. Significa HyperText Markup Language (Lenguaje de Marcado de Hipertexto). HTML se utiliza para estructurar el contenido de una página web, como texto, imágenes, enlaces y otros elementos multimedia. Es la base de la mayoría de los sitios web y se combina con CSS y JavaScript para crear experiencias web interactivas y atractivas.</p>
+            <p>CSS es un lenguaje de estilo utilizado para describir la presentación de un documento HTML. Permite controlar el diseño, la tipografía, los colores y el diseño general de una página web.</p>
+            <p>JavaScript es un lenguaje de programación utilizado para crear experiencias web interactivas. Se utiliza para agregar funcionalidad dinámica a las páginas web, como formularios, animaciones y manipulación del DOM.</p>
+
+            
+            <h3 class="cabecera-3" id="listas"> Seguimiento de monitoreo de gases 
+                (Lista ordenada)
+            </h3>
+            <ol>
+                <li>Calentamiento de equipo de medición</li>
+                <li>Medición apriori</li>
+                <li>Medición in situ</li>
+                <li>Medición aposteriori</li>
+                <li>Medición de calidad del aire</li>
+                <li>Procesamiento de datos</li>
+                <li>Interpretación de datos</li>
+                <li>Elaboración de informes</li>
+                <li>Publicación de resultados</li>
+            </ol>
+
+            <h3 class="cabecera-3" id="conceptos"> Conceptos que te podrian interesar 
+                (Lista desordenada)</h3>
+            <ul>
+                <li>Mediciones in situ</li>
+                <li>Mediciones remotas</li>
+                <li>Percepción Remota</li>
+                <li>Calidad del Aire en México</li>
+                <li>Contaminantes atmosféricos</li>
+                <li>Instrumentos de medición de gases contaminantes in situ y remotos</li>
+                <li>Contaminación atmosférica en México y el mundo</li>
+                <li>Uso de tecnologías de monitoreo ambiental</li>
+            </ul>
+
+            <!-- B. Insertar una clase para <table> considerando sus componentes: <td><th><tr></tr>*/--->
+            <h2 class="cabecera-2">Estaciones de Monitoreo</h2>
+                <table class="tabla-geo" id="tabla">
+                    <thead>
+                        <tr>
+                            <th>Estación de Monitoreo</th>
+                            <th>Coordenadas</th>
+                            <th>NO2 (ppb)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Merced</td>
+                            <td> 19.42, -99.11</td>
+                            <td>35.2</td>
+                        </tr>
+                        <tr>
+                            <td>Pedregal</td>
+                            <td>19.32, -99.19</td>
+                            <td>28.4</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2 class="cabecera-2">Clasificaciones de Cabeceras</h2>
+            <!-- D. Crear una clase para cada uno de los tipos de cabeceras <h1...h6-->
+            <h1 class="cabecera-1">Título principal del proyecto</h1>
+            <h2 class="cabecera-2">Sección Principal</h2>
+            <h3 class="cabecera-3">Subsección</h3>
+            <h4 class="cabecera-4">Tema específico</h4>
+            <h5 class="cabecera-5">Nota o detalle menor</h5>
+            <h6 class="cabecera-6">Pie de página o texto muy pequeño</h6>
+    
+            <h2 class="cabecera-2" id="enlaces">
+                Referencias dentro del documento y a otros documentos
+            </h2>
+
+            <!--E. Establecer al menos una regla general con el selector de atributos-->
+            <a href="Tarea_1.html">Leer metodología local</a>
+            <a href="https://browser.dataspace.copernicus.eu/?zoom=5&lat=50.16282&lng=20.78613&demSource3D=%22MAPZEN%22&cloudCoverage=30&dateMode=SINGLE" target="_blank">Descarga datos satelitales</a>
+
+            <div class="textos">
+                <h1 class="cabecera-4">Enlaces destacados</h1>
+            </div>
+
+            <a class="enlace-destacado" href="https://www.aire.cdmx.gob.mx/default.php?opc=%27ZaBhnmI=&dc=%27ZA==">Consulta la pagina de la Red Automática de Monitoreo Atmosférico (RAMA)</a><br>
+            <a href="https://www.aire.cdmx.gob.mx/default.php?opc=%27ZaBhnmI=&dc=%27ZA==" class="enlace-destacado">Consulta las estaciones de monitoreo de contaminantes de la RAMA</a>
+
+            <h2 class="cabecera-2">
+                Elementos de texto destacados
+            </h2>
+            <!-- F. Hacer una clase general y al menos dos clases adicionales para los elementos: <p>, <div>, <span>, <button>-->
+            <button class="btn-general btn-primario">Descargar TIFF</button>
+            <button class="btn-general btn-peligro">Eliminar Capa</button>
+
+            <!-- Contenedor <div>: Contenedores o tarjetas-->
+                <div class="tarjeta-general tarjeta-clara"></div>
+                <div class="tarjeta-general tarjeta-oscura"></div>
+
+            <!-- Elemento <p>: parrafos de texto-->
+                <p class="texto-general texto-intro">Este mapa muestra las mediciones satelitales.</p>
+                <p class="texto-general">Las concentraciones varía según la hora del día.</p>
+                <p class="texto-general texto-metadato">Sensor: TEMPO | Resolución 2x2 km.</p>
+
+            <!-- Elemento <span>: Etiquetas en líneas. sirven para modificar
+                pedacitos de texto sin romper la línea. Perfectas para crear
+                pequeñas "pastillas" o "pildoras de estado"-->
+                <p>Nivel de NO2 en la zona metropolitana: <br>
+                    <span class="etiqueta-general etiqueta-alta">Crítico</span></p>
+                <p>Nivel de NO2 en el sur: <br>
+                    <span class="etiqueta-general etiqueta-baja">Óptimo</span></p>
+
+            <br>
+
+            <!-- G. Realizar una clase que aplique sólo cuando un elemento <span> está anidado dentro de una etiqueta <div>-->
+                <div>
+                    Lectura del instrumento TEMPO: <br>
+                    <span class="valor-sensor">15.4 µg/m³ de NO2</span>
+                </div>
+
+                <br>
+                
+                <p>
+                    Durante la tarde, se registró un pico de <span class="valor-sensor">15.4 µg/m³ de NO2</span> en el sur de la ciudad.
+                </p>
+
+            
+        </aside>
+
+        <aside class="imagen">
+            <div class="texto-imagen">
+                <p>Figura 1. Logotipo Centro Geo</p>
+            </div>
+            <!-- H. Insertar al menos una imagen y agregarle una clase.-->
+            <img src="https://www.centrogeo.org.mx/templates/ja_resume/images/logo_centrogeo_wide.svg">
+            
+        </aside> <footer class="pie-pagina">
+            <h2 class="cabecera-2">Integrantes del equipo</h2>
+		    Mariajesús Bucio Villaseñor<br>
+		    Brenda Cecilia Ortíz Gómez<br>
+		    Coraima Reyes Urrego
+	    </footer>
+
+    </div> <script src="app.js"></script>
+</body>
+</html>

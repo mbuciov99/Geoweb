@@ -1,0 +1,671 @@
+_____________________________________
+JavaScript es un lenguaje interpretado que se inserta en una página web HTML. 
+Un lenguaje interpretado significa que las instrucciones son analizadas y 
+procesadas por el navegador en el momento que deben ser ejecutadas.
+
+Es un lenguaje script u orientado a documento, 
+como pueden ser los lenguajes de macros que tienen muchos procesadores de texto 
+y planillas de cálculo. 
+Hasta hace poco y durante muchos años no se podían desarrollar programas con 
+JavaScript que se ejecutaran fuera de un Navegador, 
+aunque en este momento comienza a expandirse a otras áreas como la programación 
+en el servidor con Node.js
+_____________________________________
+COMENTARIOS
+// Una línea
+/* Comentarios
+multi
+líneas
+*/
+_____________________________________
+MANIPULANDO OBJETOS DEL DOM
+1. document.getElementById
+2. document.getElementsByName
+3. document.getElementsByClassName
+4. document.createElement
+5. document.remove
+5. document.innerHTML
+6. document.innerText
+_____________________________________
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb CIG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<h1>Modelo de objetos del documento</h1>
+<h2>Método createElement</h2>
+
+<h3>Crear una etiqueta <b>p</b> con algo de texto:</p></h3>
+
+<script>
+// Crear elemento:
+const parrafo = document.createElement("p");
+parrafo.style.color = "#0000ff";
+parrafo.innerText = "Este es el contenido del párrafo creado con javascript.";
+
+// Se agrega a <body>:: Checar jerarquía del DOM
+document.body.appendChild(parrafo);
+
+// Crear elemento:
+const textoHTML = document.createElement("span");
+textoHTML.innerHTML = "Texto de la etiqueta <b> span </b> creado con Javascript.<hr/>";
+
+// Se agrega al body
+document.body.appendChild(textoHTML);
+</script>
+
+</body>
+</html>
+_____________________________________
+FORMULARIOS Y EVENTOS
+1. FORMULARIO SIMPLE Y EVENTO
+////////////////////////////////////
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb CIG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+  var contador=0;
+  function incrementar()
+  {
+    contador++;
+    alert('El contador ahora vale :' + contador);
+  }
+</script>
+
+<form>
+  <input type="button" onClick="incrementar()" value="incrementar"/>
+</form>
+</body>
+</html>
+¿Qué pasa si quitas las etiquetas <form> y </form>?
+////////////////////////////////////
+2. CONTROLES FORM, BUTTON Y TEXT
+////////////////////////////////////
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb CIG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+function mostrar()
+{
+  var nom=document.getElementsByName('minombre')[0].value;
+  var ed=document.getElementById('edad').value;
+  alert('Ingresó el nombre: ' + nom);
+  alert('Y la edad: ' + ed);
+}
+function eliminar_parrafo()
+{
+  const elemento = document.getElementById("demo");
+  elemento.remove();
+}
+</script>
+
+<form>
+  <label for="nombre">Ingrese su nombre:</label>
+  <input type="text" id="nombre" name="minombre"/><br/>
+  Ingrese su edad:
+  <input type="text" id="edad"></input><br/>
+  <input type="button" value="Confirmar" onClick="mostrar()"/>
+</form>
+<p id="demo">Clic "Remover", y este párrafo será removido del DOM.
+<button onclick="eliminar_parrafo()">Remove</button>
+</p>
+
+</body>
+</html>
+¿Qué pasa si quitas las etiquetas <form> y </form>?
+////////////////////////////////////
+Ahora, prueba sustituyendo el bloque del formulario anterior con el siguiente
+////////////////////////////////////
+<form action="#" onsubmit="mostrar()" method="post">
+  Ingrese su nombre:
+  <input type="text" id="nombre" name="minombre"/><br/>
+  Ingrese su edad:
+  <input type="text" id="edad"></input><br/>
+  <input type="submit" value="Confirmar"/>
+</form>
+¿Qué pasa si quitas las etiquetas <form> y </form>?
+////////////////////////////////////
+CONTROL PASSWORD
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb CIG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+  function verificar()
+  {
+    var clave=document.getElementById('clave').value;
+    if (clave.length<5)
+    {
+      alert('La clave no puede tener menos de 5 caracteres!!!');
+    }
+    else
+    {
+      alert('Longitud de clave correcta');
+    }
+  }
+</script>
+
+<form action="#" method="get" onsubmit="verificar()">
+  Ingrese una clave:
+  <input type="password" id="clave"/>
+  <br/>
+  <input type="submit" value="Confirmar">
+</form>
+</body>
+</html>
+////////////////////////////////////
+CONTROL SELECT
+Propiedad innerHTML (p, span, div)
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb CIG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+function cambiarColor()
+{
+  var seleccion=document.getElementById('select1');
+  document.getElementById('text1').value=seleccion.selectedIndex;
+  document.getElementById('text2').value=seleccion.options[seleccion.selectedIndex].text;
+  document.getElementById('text3').value=seleccion.options[seleccion.selectedIndex].value;
+  document.getElementById('contenido').innerHTML = "Párrafo: " + seleccion.options[seleccion.selectedIndex].text + "<br/>";
+  document.getElementById('contenido1').innerHTML = "Span: " + seleccion.options[seleccion.selectedIndex].text + "<br/>";
+  document.getElementById('contenido2').innerHTML = "Div: " + seleccion.options[seleccion.selectedIndex].text + "<br/>";
+}
+</script>
+
+<form action="#" method="post">
+  <select id="select1" onChange="cambiarColor()">
+    <option value="ff0000">Rojo</option>
+    <option value="00ff00">Verde</option>
+    <option value="0000ff">Azul</option>
+  </select>
+  <br/>
+  Número de índice seleccionado del objeto SELECT:<input type="text" id="text1"/><br/>
+  Texto seleccionado:<input type="text" id="text2"/><br/>
+  Valor asociado:<input type="text" id="text3"></input><br/>
+ 
+</form>
+<p id="contenido"> <p/>
+<span id="contenido1"></span>
+<div id="contenido2" />
+</body>
+</html>
+////////////////////////////////////
+CONTROL CHECKBOX
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb CIG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+function contarSeleccionados()
+{
+  var cant=0;
+  var programas = "";
+  if (document.getElementById('checkbox1').checked)
+  {
+    cant = cant + 1;
+    programas += document.getElementById('checkbox1').value + " ";
+  }
+  if (document.getElementById('checkbox2').checked)
+  {
+    cant++;
+    programas += document.getElementById('checkbox2').value + " ";
+  }
+  if (document.getElementById('checkbox3').checked)
+  {
+    cant++;
+    programas += document.getElementById('checkbox3').value + " ";
+  }
+  if (document.getElementById('checkbox4').checked)
+  {
+    cant++;
+    programas += document.getElementById('checkbox4').value + " ";
+  }
+  alert('Puede programar en: ' + cant + ' lenguajes');
+  alert(programas);
+}
+</script>
+
+<form action="#" method="get">
+  <input type="checkbox" id="checkbox1" value="js"/>JavaScript
+  <br/>
+  <input type="checkbox" id="checkbox2" value="php"/>PHP
+  <br/>
+  <input type="checkbox" id="checkbox3" value="jsp" />JSP
+  <br/>
+  <input type="checkbox" id="checkbox4" value="python" />Python
+  <br/>
+  <input type="button" value="Mostrar" onClick="contarSeleccionados()"/>
+</form>
+</body>
+</html>
+////////////////////////////////////
+CONTROL RADIO
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb CIG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+  function mostrarSeleccionado()
+  {
+    if (document.getElementById('radio1').checked)
+    {
+      alert('no tienes estudios');
+    }
+    else if (document.getElementById('radio2').checked)
+    {
+      alert('tienes estudios primarios');
+    }
+    else if (document.getElementById('radio3').checked)
+    {
+      alert('tienes estudios secundarios');
+    }
+    else if (document.getElementById('radio4').checked)
+    {
+      alert('tienes estudios universitarios');
+    }
+  }
+</script>
+
+<form action="#" method="get">
+  <input type="radio" id="radio1" name="estudios"/>Sin estudios
+  <br/>
+  <input type="radio" id="radio2" name="estudios"/>Primarios
+  <br/>
+  <input type="radio" id="radio3" name="estudios"/>Secundarios
+  <br/>
+  <input type="radio" id="radio4" name="estudios"/>Universitarios
+  <br/>
+  <input type="button" value="Mostrar" onClick="mostrarSeleccionado()"/>
+</form>
+</body>
+</html>
+////////////////////////////////////
+CONTROL TEXTAREA
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb CIG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+function controlarCaracteres()
+{
+  if (document.getElementById('curriculum').value.length>2000)
+  {
+    alert('curriculum muy largo');
+  }
+  else
+  {
+    alert('datos correctos');
+  }
+}
+</script>
+
+<form action="#" method="post">
+  <textarea id="curriculum" rows="10" cols="50" ></textarea>
+  <br/>
+  <input type="button" value="Mostrar" onClick="controlarCaracteres()"/>
+</form>
+</body>
+</html>
+_____________________________________
+Utilizando getElementsByName, getElementsByClassName, getElementById
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb CIG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    input[type=text].rojo {
+      border-color: red;
+    }
+    input[type=text].verde {
+      border-color: green;
+    }
+  </style>
+</head>
+<body>
+  <form action="#" onsubmit="enviar_val()" method="post">
+    <label for="nombre">Ingrese su nombre:</label>
+    <input type="text" id="nombre" name="minombre" class="rojo"/><br/>
+    <label for="apaterno">Ingrese su apellido paterno:</label>
+    <input type="text" id="apaterno" name="apellido" class="rojo"/><br/>
+    Ingrese su apellido materno:
+    <input type="text" id="amaterno" name="apellido" class="rojo"/><br/>
+    Ingrese su edad:
+    <input type="text" id="edad" name="miedad" class="verde"></input><br/>
+    <input type="submit" value="Confirmar"/>
+  </form>
+  <script>
+    function enviar_val(){
+      // Obteniendo valores por getElementsByName
+      alert(document.getElementsByName("minombre")[0].value);
+      var num_apellidos = document.getElementsByName("apellido").length;
+      for(elem_apellido=0;elem_apellido<num_apellidos;elem_apellido++) {
+        alert(document.getElementsByName("apellido")[elem_apellido].value);
+      }
+      // Obteniendo valores por getElementsByClassName
+      let num_verdes = document.getElementsByClassName("verde").length;
+      alert("Tenemos " + num_verdes + " elementos con clase 'verde'");
+      alert(document.getElementsByClassName("verde")[0].value);
+      let num_rojos = document.getElementsByClassName("rojo").length;
+      alert("Tenemos " + num_rojos + " elementos con clase 'rojo'");
+      alert(document.getElementsByClassName("rojo")[0].value);
+      alert(document.getElementsByClassName("rojo")[1].value);
+      alert(document.getElementsByClassName("rojo")[2].value);
+      for (elem_rojo=0;elem_rojo<num_rojos;elem_rojo ++){
+        alert(document.getElementsByClassName("rojo")[elem_rojo].value);
+      }  
+      // Obteniendo valores por getElementById
+      alert("nombre id " + document.getElementById("nombre").value);
+      alert("apaterno id " + document.getElementById("apaterno").value);
+      alert("amaterno id " + document.getElementById("amaterno").value);
+      alert("edad id " + document.getElementById("edad").value);
+    }
+  </script>
+</body>
+</html>
+_____________________________________
+Evento onLoad
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb CIG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body onLoad="activarPrimerControl()">
+
+<script>
+  function activarPrimerControl()
+  {
+    document.getElementById('nombre').focus();
+    document.getElementById('edad').value = 19;
+  }
+</script>
+
+<form action="#" method="post">
+  Ingrese su nombre:
+  <input type="text" id="nombre"></input><br/>
+  Ingrese su edad:
+  <input type="number" id="edad"/><br/>
+  <input type="button" value="Confirmar"/>
+</form>
+</body>
+</html>
+¿Cómo activo un evento de formulario producido después de la carga del html?
+_____________________________________
+
+EVENTOS CLICK Y DOBLE CLICK
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geoweb_Javascript</title>
+  <meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller complementario, tema javascript" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    div.estilo1 {
+      width:200px;height:200px;background:#ffff00;
+    }
+    div.estilo2 {
+      width:200px;height:200px;background:#ff5500;
+    }
+  </style>
+</head>
+<body>
+  <div class="estilo1" id="recuadro1">
+    Prueba del evento click
+  </div>
+
+  <div class="estilo2" id="recuadro2">
+    Prueba del evento dblclick
+  </div>  
+<script>
+  addEventListener('DOMContentLoaded', inicio,false);
+  function inicio() {
+    document.getElementById('recuadro1').addEventListener('click',presion1,false);
+    document.getElementById('recuadro2').addEventListener('dblclick',presion2,false);
+  }
+  function presion1(){
+    alert('Evento clic en el div recuadro1');
+  }
+  function presion2() {
+    alert('Evento doble clic en el div recuadro2');
+  }
+</script>
+</body>
+</html>
+_____________________________________
+EVENTOS onMouseOver y onMouseOut
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb CIG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+  function pintar(objeto,col)
+  {
+    objeto.style.backgroundColor=col;
+  }
+</script>
+
+<table border="1">
+  <tr>
+    <td onMouseOver="pintar(this,'#ff0f0f')" 
+        onMouseOut="pintar(this,'#ffffff')">rojo</td>
+    <td onMouseOver="pintar(this,'#0fff0f')" 
+        onMouseOut="pintar(this,'#ffffff')">verde</td>
+    <td onMouseOver="pintar(this,'#0000ff')" 
+        onMouseOut="pintar(this,'#ffffff')">azul</td>
+  </tr>
+</table>
+
+</body>
+</html>
+_____________________________________
+OBJETO WINDOW
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geoweb_Javascript</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller complementario, tema javascript" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb CIG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+
+<script>
+  function abrir()
+  {
+    var ventana=open();
+    ventana.document.write("Estoy escribiendo en la nueva ventana<br/>");
+    ventana.document.write("Segunda linea");
+  }
+
+  function abrirParametros()
+  {
+    //open(url,target,parámetros) url=''->Crea una nueva ventana target=''->_blank (_self, _blank)
+    var ventana=open('','','status=yes,width=400,height=250,menubar=yes');
+    ventana.document.write("Esto es lo primero que aparece<br/>");
+  }
+ 
+  function mostrarAlerta()
+  {
+    alert("Esta ventana de alerta ya la utilizamos en otros problemas.");
+  }
+
+  function confirmar()
+  {
+    var respuesta=confirm("Presione alguno de los dos botones");
+    if (respuesta==true)
+      alert("presionó aceptar");
+    else
+      alert("presionó cancelar");  
+  }
+
+  function cargarCadena()
+  {
+    var cad=prompt("Escriba un texto: ","");
+    alert("Usted ingresó: "+cad);
+    console.log("Usted ingresó: " + cad);
+  }
+</script>
+
+<p>Este programa permite analizar la llamada a
+distintas responsabilidades del objeto window.</p>
+<form>
+  <br/>
+  <input type="button" value="open()" onClick="abrir()"/>
+  <br/>
+  <input type="button" value="open con parámetros" onClick="abrirParametros()" />
+  <br/>
+  <input type="button" value="alert" onClick="mostrarAlerta()"/>
+  <br/>
+  <input type="button" value="confirm" onClick="confirmar()"/>
+  <br/>
+  <input type="button" value="prompt" onClick="cargarCadena()"/>
+</form>
+</body>
+</html>
+_____________________________________
+

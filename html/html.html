@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Mi primer HTML despues de 10 años</title>
+ <meta charset="utf-8" />
+ <link rel="icon" href="data:," />
+ <meta name="description" content="Taller de html de la materia de Geoweb." />
+ <meta name="keywords" content="html, geoweb, desarrollo web"/>
+ <meta name="author" content="Materia Geoweb de CIG Generación 2025" />
+ <meta name="copyright" content="CentroGeo 2026" />
+ <meta name="robots" content="index,follow" />
+ <meta http-equiv="cache-control" content="no-cache"/>
+</head>
+
+<body>
+<h1>Mi primer HTML en 10 años</h1>
+<p>Hola a Tod@s</p>
+
+<br/>
+
+<!--
+<div id="contenido1">Este es el contenido div1</div>
+<span id="contenido2">Este es un contenedor de líneas (span)</span>
+<div>Contenido del bloque, otras etiquetas, etc</div>
+<div>Contenido 
+	<span> del bloque</span>
+	con elementos de línea <br/>
+</div>
+-->
+
+<br/>
+<!-- Este es un comentario de una línea -->
+<!-- 
+	Este es un comentario de
+	múltiples líneas 
+-->
+
+
+<h1>Encabezado 1</h1>
+<h2>Encabezado 2</h2>
+<h3>Encabezado 3</h3>
+<h4>Encabezado 4</h4>
+<h5>Encabezado 5</h5>
+<h6>Encabezado 6</h6>
+
+<hr/>
+
+</br>
+
+<p>Los menores entre <strong>dos meses y un año</strong> deben tomar esta medicina.</p>
+<p><em>Los menores</em> entre <strong>dos meses y un año</strong> deben tomar esta medicina.</p>
+<p><em>Los menores</em> entre <strong>dos meses y un año</strong> <b>deben tomar esta medicina</b>.</p>
+<p>Agua = H<sub>2</sub>O</p>
+<p>Elevar al cuadrado = x<sup>2</sup></p>
+
+<br/>
+
+<p>Este es un código: <br />
+<code>
+from osgeo import osr
+spatialRef = osr.SpatialReference()
+spatialRef.ImportFromEPSG(4487)
+print(spatialRef)
+</code></p>
+
+<br/>
+
+<p>Referencias</p>
+<h5> Referencias absolutas</h5>
+<a href="https://idegeo.centrogeo.org.mx/">Visita este sitio</a>
+<a href='https://educa.centrogeo.edu.mx/cig2025'>CIG 2025</a>
+<a href="https://www.centrogeo.org.mx"><img src="img/logo.jpg"/></a>
+<a href='http://10.1.7.XXX/0_Taller_Complementario/html/html.html'>Visita mi espacio de trabajo</a>
+
+<h3>Referencias relativas</h3>
+<a href="html_previo.txt">Ver datos iniciales</a>
+Directorio inferior
+<a href="img/logo.jpg">Ver imagen</a>
+Directorio superior
+<a href="../html/datos.html">Ver datos</a>
+<hr/>
+
+<a href="https://www.centrogeo.org.mx" target="_self"><img src="img/logo.jpg"/></a>
+<a href="https://www.centrogeo.org.mx" target="_blank"><img src="img/logo.jpg"/></a>
+
+<br/>
+<h5>Lista Desordenada</h5>
+<ul><li>Plátanos</li><li>Naranjas</li><li>Manzanas</li></ul>
+<br/>
+<h5>Lista Ordenada</h5>
+<ol><li>Abrir</li><li>Editar</li><li>Guardar</li><li>Cerrar</li></ol>
+
+<br/>
+<h5>Lista Anidada</h5>
+<ol>
+	<li>Frutas</li>
+	<ol>
+		<li>Manzanas</li>
+		<li>Naranjas</li>
+		<li>Peras</li>
+	</ol>
+	<li>Verduras</li>
+	<ol>
+		<li>Lechugas</li>
+		<li>Zanahorias</li>
+	</ol>
+</ol>
+
+<br/>
+<h5>Lista de Definiciones</h5>
+<dl>
+	<dt>Automóvil</dt>
+	<dd>Vehículo de cuatro ruedas con motor</dd>
+	<dt>Motocicleta</dt>
+	<dd>Vehículo de dos ruedas con motor</dd>
+	<dt>Bicicleta</dt>
+	<dd>Vehículo de dos ruedas sin motor</dd>
+</dl>
+
+<br/>
+<h5>Imágenes<h/5>
+<img src="http://10.1.7.XXX/0_Taller_Complementario/html/img/logo.jpg"></img>
+<img src='img/logo.jpg' />
+<img src='img/logo.jpg' alt="Logo del CentroGeo" />
+<img src='img/logo.jpg' width="100" height="40" alt="Logo del CentroGeo" />
+<img src='img/logo.jpg' title="Logo CGeo" id="LogoCGeo" width="100" height="40" alt="Logo del CentroGeo" />
+
+<br/>
+<h5>Canvas<h/5>
+<p>Es un contenedor para dibujar gráficos princiales desde JavaScript</p>
+<canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000; background:#ff0000;"></canvas>
+<br/>
+<label>Canvas</label>
+
+<br/>
+<h5>SVG<h/5>
+<p>Scalable Vector Graphics: Define gráficos basados en vectores en formato XML</p>
+<svg width="400" height="100">
+  <rect width="400" height="100" style="fill:rgb(0,0,255);stroke-width:10;stroke:rgb(0,0,0)" />
+</svg>
+<br/>
+<label>SVG</label>
+
+<br/>
+<h5>Tablas<h/5>
+<table>
+	<tr>
+		<td>Marcas</td>
+		<td>Seat</td>
+		<td>Ford</td>
+		<td>BMW</td>
+	</tr>
+	<tr>
+		<td>2016</td>
+		<td>23900</td>
+		<td>21500</td>
+		<td>11500</td>
+	</tr>
+	<tr>
+		<td>2017</td>
+		<td>24600</td>
+		<td>23500</td>
+		<td>13400</td>
+	</tr>
+</table>
+
+<br/>
+<label>Tabla</label>
+
+<br/>
+<h3>Etiqueta para cabeceras de tablas<h/3>
+<table>
+	<tr>
+		<th>Marcas</th>
+		<th>Seat</th>
+		<th>Ford</th>
+		<th>BMW</th>
+	</tr>
+	<tr>
+		<th>2016</th>
+		<td>23900</td>
+		<td>21500</td>
+		<td>11500</td>
+	</tr>
+	<tr>
+		<th>2017</th>
+		<td>24600</td>
+		<td>23500</td>
+		<td>13400</td>
+	</tr>
+</table>
+
+<br/>
+<label>Tabla con cabeceras</label>
+
+<br/>
+<h3>Unir celdas de columna<h/3>
+
+<table border="1">
+	<tr>
+		<td>Celda</td>
+		<td>Celda</td>
+		<td>Celda</td>
+		<td>Celda</td>
+	</tr>
+	<tr>
+		<td colspan="2">Celda ColSpan2</td>
+		<td>Celda</td>
+		<td>Celda</td>
+	</tr>
+	<tr>
+		<td colspan="3">Celda Colspan3</td>
+		<td>Celda</td>
+	</tr>
+	<tr>
+		<td colspan="4">Celda</td>
+	</tr>
+</table>
+
+<br/>
+<h3>Unir celdas de columnas <h/3>
+
+<table border="1">
+	<tr>
+		<td>Celda</td>
+		<td rowspan="2">Celda Rowspan2</td>
+		<td rowspan="3">Celda Rowspan3</td>
+		<td rowspan="4">Celda Rowspan4</td>
+	</tr>
+	<tr>
+		<td>Celda</td>
+	</tr>
+	<tr>
+		<td>Celda</td>
+		<td>Celda</td>
+	</tr>
+	<tr>
+		<td>Celda</td>
+		<td>Celda</td>
+		<td>Celda</td>
+	</tr>
+</table>
+
+<br/>
+<h3>Combinación de Colspan y Rowspan <h/3>
+
+<table border="1">
+	<tr>
+		<td colspan="2" rowspan="2">Celda cs2 rs2</td>
+		<td>Celda</td>
+	</tr>
+	<tr>
+		<td>Celda</td>
+	</tr>
+	<tr>
+		<td>Celda</td>
+		<td>Celda</td>
+		<td>Celda</td>
+	</tr>
+</table>
+
+</body>
+</html>

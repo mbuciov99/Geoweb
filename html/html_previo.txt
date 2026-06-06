@@ -1,0 +1,53 @@
+Página HTML básica
+_____________________________________
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Texto visible en la pestaña del navegador</title>
+</head>
+<body>
+ Bienvenidos
+ <p>Hola a tod@s</p>
+</body>
+</html>
+_____________________________________
+Caracteres especiales
+Insertar dentro del <head>
+<meta charset="utf-8" />
+Para asegurar que los caracteres especiales se visualizan correctamente:
+< &lt;
+> &gt;
+á &aacute;
+Á &Aacute;
+é &eacute;
+É &Eacute;
+í &iacute;
+Í &Iacute;
+ó &oacute;
+Ó &Oacute;
+ú &uacute;
+Ú &Uacute;
+ñ &ntilde;
+Ñ &Ntilde;
+™ &#153;
+€ &euro;
+$ &#36;
+£ &libra;
+¥ &yen;
+ç &ccedil;
+Ç &Ccedil;
+ü &uuml;
+Ü &Uuml;
+& &amp;
+¿ &iquest;
+¡ &iexcl;
+" &quot;
+· &middot;
+º &ordm;
+ª &ordf;
+¬ &not;
+© &copy;
+® &reg;
+Constituci&oacute;n
+Constitución
+_____________________________________
