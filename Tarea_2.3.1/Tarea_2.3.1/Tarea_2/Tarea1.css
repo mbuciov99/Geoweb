@@ -590,6 +590,90 @@ body {
     grid-area: resultados;
 }
 
+/*----------Formulario clase-----------------
+
+/*Contenedor principal (form)*/
+.formulario-clase{
+    max-width: 500px;
+    margin: 20px auto; /*Centra el formulario en la página*/
+    font-family: 'Trebuchet MS', Arial, sans-serif;
+}
+
+/*Cuadro agrupador (fieldset) y su título (legend)*/
+.formulario-clase fieldset{
+    border: 2px #3A4A5E;
+    border-radius: 8px;
+    padding: 25px;
+    background-color: #2C3B4D;
+}
+
+.formulario-clase legend{
+    background-color: #D9C5A7;
+    color: #1B2632;
+    padding: 5px 15px;
+    border-radius: 14px;
+    font-weight: bold;
+    font-size: 21px
+}
+
+/*Etiquetas de texto label*/
+.formulario-clase label{
+    display: block; /*hace que la etiqueta ocupe su propia linea*/
+    margin-bottom: 5px;
+    margin-top: 15px;
+    color: #D9C5A7;
+    font-weight: bold;
+    font-size: 14px
+}
+
+/*Los campos de entrada (input texto/email), desplegables (select)
+ y areas de texto (textarea)*/
+
+ .formulario-clase select,
+ .formulario-clase textarea{
+    width: 100%; /*Ocupa todo el ancho disponible*/
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 14px;
+    box-sizing: border-box; /*Evita que el padding rompa el ancho del 100%*/
+    font-family: inherit; /*Heredar la fuente del contenedor padre*/
+ }
+
+ /*Un pequeño efecto cuando el usuario hace clic en un campo (focus)*/
+
+ .formulario-clase select:focus,
+ .formulario-clase textarea:focus{
+    border-color: #0078A8;
+    outline: none;
+    box-shadow: 0 0 5px #A35139; /*Sombra suave para resaltar el campo activo*/
+ }
+
+
+
+ /*El botón de enviar (submit)*/
+ .formulario-clase .btn-enviar{
+    width: 100%;
+    background-color: #d77b19;
+    color: black;
+    border: none;
+    padding: 12px;
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s; /*Hace que el cambio de color sea suave*/
+ }
+
+.formulario-clase .btn-enviar:hover{
+    background-color: #A35139;
+    color: white
+ }
+
+ hr{
+    height: 3px;
+    color:#D9C5A7;
+  }  
 /*Diseño adaptativo responsivo*/
 @media screen and (max-width: 850px){
     .grid-visor{
