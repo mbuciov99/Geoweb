@@ -315,6 +315,97 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             pantallaResultados.innerHTML = '<span style="color: #A35139;">Error: ' + error.message + '</span>';
         }
-    }); 
-
+    });
 });
+
+// ============================================
+// INCISO: F Mètodos GET y POST con validacion
+// ============================================
+
+// Funciòn de Validaciòn (No envìa si hay vacios)
+function validarCampos() {
+    const palabra= document.getElementById("palabra_clave").value.trim();
+    const entidad= document.getElementById("entidad_fed").value;
+
+    if(palabra === ""|| entidad === ""){
+        alert("Error: Debes escribir una palabra y seleccionar una entidad antes de consultar.");
+        return false; //Bloque el envìo
+    }
+    if (palabra.length < 3) {
+        alert("Error: Debes escribir una palabra y seleccionar una entidad antes de consultar.");
+        return false;
+    }
+    return {palabra, entidad};
+}
+
+// Evento : Consulta con GET
+const btnGet= document.getElementById("btn-get");
+if (btnGet){
+    btnGet.addEventListener("click", async () => {
+        const datos= validarCampos();
+        if(!datos) return; // Se detiene si faltan datos
+
+        const pantallaResultados= document.getElementById('pantalla-resultados');
+        pantallaResultados.innerHTML= 'Consultando via GET ...';
+
+        // Construir la URL con los paràmetros visibles
+        const URL= `consulta_get_pdo.php?palabra=${encodeURIComponent(datos.palabra)}&entidad=${encodeURIComponent(datos.entidad)}`;
+
+        try{
+            const response = await fetch(URL, {method: 'GET', cache: 'no-cache'});
+            if (!response.ok) throw new Error("Error en servidor: " + response.status);
+            imprimirResultadosF(await response.json());
+        }catch (error) {
+            pantallaResultados.innerHTML= `<span style="color: #A35139;">Error: ${error.message}</span>`;
+        }
+    });
+}
+
+// Evento 2: Consulta por POST
+const btnPost= document.getElementById("btn-post");
+if (btnPost) {
+    btnPost.addEventListener("click", async() => {
+        const datos= validarCampos();
+        if (!datos) return; // Se detiene si faltan datos
+
+        const pantallaResultados= document.getElementById('pantalla-resultados');
+        pantallaResultados.innerHTML= 'Consultando via POST ...';
+
+        // Empaquetar los datos ocultos para el body
+        let dataParams= new URLSearchParams();
+        dataParams.append('palabra', datos.palabra);
+        dataParams.append('entidad', datos.entidad);
+
+        try{
+            const response= await fetch('consulta_post_pdo.php', {
+                method: 'POST',
+                body: dataParams,
+                headers: {'Content-Type':'application/x-www-form-urlencoded'}
+            });
+            if (!response.ok) throw new Error("Error en servidor: " + response.status);
+            imprimirResultadosF(await response.json());
+        } catch (error) {
+            pantallaResultados.innerHTML= `<span style= "color: #A35139;">Error: ${error.message}</span>`;
+        }
+    });
+}
+
+// Funciòn auxiliar para imprimir los resultados del Inciso F
+function imprimirResultadosF(jsonData) {
+    const pantallaResultados= document.getElementById('pantalla-resultados');
+    pantallaResultados.innerHTML= '';
+    if (jsonData.length > 0) {
+        jsonData.forEach(item => {
+            let contenido_html = `
+            <strong>Nombre:</strong> ${item.nombre}</br>
+            <strong>Tipo:</strong>${item.tipo}</br>
+            <strong>Municipio:</strong>${item.delmun}</br>
+            <strong>Entidad:</strong>${item.entidad}</br>
+            <hr style="border: 0.5px solid ·3A4A5E; margin: 10px 0;"/>
+            `;
+            pantallaResultados.innerHTML += contenido_html;
+        });
+    }else {
+        pantallaResultados.innerHTML= "La consulta avanzada no arrojò resultados. </br>";
+    }
+}
