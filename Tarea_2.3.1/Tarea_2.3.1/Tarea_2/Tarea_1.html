@@ -72,6 +72,25 @@
                     <button type="submit" class="btn-enviar">Enviar solicitud</button>
                 </fieldset>
             </form>
+            <!--Formulario de consulta RENIECYT-->
+            <form class="formulario-geo" style="margin-top: 30px;" id="formulario-clase">
+                <fieldset>
+                    <legend>Práctica de Clase (Consulta RENIECYT)</legend>
+
+                    <label for="tipo_inst">Tipo de institución</label>
+                    <select name="tipo_inst" id="tipo_inst">
+                        <option value="cpis">CENTROS DE INVESTIGACION</option>
+                        <option value="empresas">EMPRESAS</option>
+                        <option value="ies">INSTITUCIONES DE ENSEÑANZA SUPERIOR</option>
+                        <option value="iap">INSTITUCIONES DE LA ADMINISTRACION PUBLICA</option>
+                        <option value="ip">INSTITUCIONES PRIVADAS NO LUCRATIVAS</option>
+                        <option value="fisica">PERSONA FISICA</option>
+                        <option value="otracosa">OTRA COSA</option>
+                    </select>
+
+                    <button type="button" id="btn-consultar-clase" class="btn-enviar">Consultar base de clase</button>
+                </fieldset>
+            </form>
         </aside>
 
         <main class="mapa" id="mapa">
