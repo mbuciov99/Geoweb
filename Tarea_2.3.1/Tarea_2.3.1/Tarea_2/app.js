@@ -192,7 +192,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Eventos del Mouse y IU)
 
-// Asegurar que los elementos existan en HTML antes de asignar los eventos
 document.addEventListener("DOMContentLoaded", () => {
 
     // Evento: Click
@@ -208,61 +207,114 @@ document.addEventListener("DOMContentLoaded", () => {
             btnClick.textContent= "Centrar Mapa (Click)";
             btnClick.style.backgroundColor= "#A35139";
         }, 1500);
+    }); // <--- ¡AQUÍ SE CIERRA EL EVENTO CLICK CORRECTAMENTE!
 
-        // Evento: Double Click
-        const btnDblClick= document.getElementById("btn-doubleclick");
-        btnDblClick.addEventListener("dblclick", () => {
-            alert("Visor Reiniciado: Se han limpiado las capas temporales del satélite.");
-            console.log("Evento 'dblclick' ejecutado: Visor devuelto al estado predeterminado.");
-        });
 
-        // Evento: Mousedown (presionar click)
-        const btnPresion= document.getElementById("btn-presion");
-        btnPresion.addEventListener("mousedown", () => {
-            btnPresion.style.backgroundColor= "#D9C5A7";
-            btnPresion.style.color= "#1B2632";
-            btnPresion.textContent= "Calibrando rayo laser del sensor ... NO SUELTES!";
-            console.log("Evento 'mousedowns' activado.");
-        });
-
-        // Evento: Mouseover (Pasar el cursor por encima)
-        const zonaRadar= document.getElementById("zona-radar");
-        const textRadar= document.getElementById("texto-radar");
-
-        zonaRadar.addEventListener("mouseover", () => {
-            zonaRadar.style.borderColor= "#A35139";
-            textRadar.textContent= "Radar Activo: Escaneando pixeles...";
-            textoRadar.style.color= "#F0F3F5";
-            console.log("Evento 'moseover' activado");
-        });
-
-        // Evento: Mouseout (Sacar cursor del evento)
-        zonaRadar.addEventListener("mouseout", () => {
-            zonaRadar.style.borderColor= "#3A4A5E";
-            textRadar.textContent= "Radar Apagado (mouseover)";
-            textRadar.style.color= "#7A8B9F";
-            document.getElementById("Coordenadas-radar").textContent= ""; // Limpia el texto dinámico
-            console.log("Evento 'mouseout' activado.");
-        });
-
-        // Evento: mouseout
-        const coordsRadar= document.getElementById("coordenadas-radar");
-        zonaRadar.addEventListener("mousemove", (propiedades) => {
-            // obtener la posición del mouse relativa a la caja radar
-            let x= propiedades.offsetX;
-            let y= propiedades.offsetY;
-            coordsRadar.textContent= `X-Sat: ${x}px | Y-Sat: ${y}px (Procesando matriz...)`;
-        });
-
-        // Evento: Change
-        const selectorCapas= document.getElementById("selector-capas");
-        selectorCapas.addEventListener("change", (e) => {
-            const capaSeleccionada= e.target.value;
-            console.log(`Evento 'change' activado. Nueva capa: ${capaSeleccionada}`);
-
-            if (capaSeleccionada == "predeterminado") {
-                alert(`Cargando desde Dataspace: ${e.target.options[e.target.selectedIndex].text}`);
-            }
-        });
+    // Evento: Double Click
+    const btnDblClick= document.getElementById("btn-doubleclick");
+    btnDblClick.addEventListener("dblclick", () => {
+        alert("Visor Reiniciado: Se han limpiado las capas temporales del satélite.");
+        console.log("Evento 'dblclick' ejecutado: Visor devuelto al estado predeterminado.");
     });
-})
+
+    // Evento: Mousedown (presionar click)
+    const btnPresion= document.getElementById("btn-presion");
+    btnPresion.addEventListener("mousedown", () => {
+        btnPresion.style.backgroundColor= "#D9C5A7";
+        btnPresion.style.color= "#1B2632";
+        btnPresion.textContent= "Calibrando rayo laser del sensor ... NO SUELTES!";
+        console.log("Evento 'mousedowns' activado.");
+    });
+
+    // Evento: Mouseover (Pasar el cursor por encima)
+    const zonaRadar= document.getElementById("zona-radar");
+    const textRadar= document.getElementById("texto-radar");
+
+    zonaRadar.addEventListener("mouseover", () => {
+        zonaRadar.style.borderColor= "#A35139";
+        textRadar.textContent= "Radar Activo: Escaneando pixeles...";
+        textRadar.style.color= "#F0F3F5"; //
+        console.log("Evento 'moseover' activado");
+    });
+
+    // Evento: Mouseout (Sacar cursor del evento)
+    zonaRadar.addEventListener("mouseout", () => {
+        zonaRadar.style.borderColor= "#3A4A5E";
+        textRadar.textContent= "Radar Apagado (mouseover)";
+        textRadar.style.color= "#7A8B9F";
+        document.getElementById("coordenadas-radar").textContent= ""; // Corregido: la 'c' minúscula de coordenadas-radar
+        console.log("Evento 'mouseout' activado.");
+    });
+
+    // Evento: mousemove
+    const coordsRadar= document.getElementById("coordenadas-radar");
+    zonaRadar.addEventListener("mousemove", (propiedades) => {
+        // obtener la posición del mouse relativa a la caja radar
+        let x= propiedades.offsetX;
+        let y= propiedades.offsetY;
+        coordsRadar.textContent= `X-Sat: ${x}px | Y-Sat: ${y}px (Procesando matriz...)`;
+    });
+
+    // Evento: Change
+    const selectorCapas= document.getElementById("selector-capas");
+    selectorCapas.addEventListener("change", (e) => {
+        const capaSeleccionada= e.target.value;
+        console.log(`Evento 'change' activado. Nueva capa: ${capaSeleccionada}`);
+
+        if (capaSeleccionada == "predeterminado") {
+            alert(`Cargando desde Dataspace: ${e.target.options[e.target.selectedIndex].text}`);
+        }
+    });
+
+    // Evento: Submit (Formulario de consulta de clase de institución)
+    document.getElementById("btn-consultar-clase").addEventListener("click", async () => {
+        
+        const URL = 'listaInst_post_pdo.php';
+        const tipo = document.querySelector('#tipo_inst option:checked').text;
+        
+        let data = new URLSearchParams();
+        data.append('tipo', tipo);
+
+        // Seleccionamos la pantalla de resultados 
+        const pantallaResultados = document.getElementById('pantalla-resultados');
+        pantallaResultados.innerHTML = 'Consultando base de instituciones...';
+
+        try {
+            const response = await fetch(URL, {
+                method: 'POST',
+                body: data,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error("Error en la respuesta del servidor: " + response.status);
+            }
+
+            const jsonData = await response.json();
+            pantallaResultados.innerHTML = ''; 
+
+            if (jsonData.length > 0) {
+                jsonData.forEach(item => {
+                    // Adaptamos la impresión a las variables de la base de la clase (nombre, tipo, delmun, entidad)
+                    let contenido_html = `
+                        <strong>Nombre:</strong> ${item.nombre}<br/>
+                        <strong>Tipo:</strong> ${item.tipo}<br/>
+                        <strong>Municipio:</strong> ${item.delmun}<br/>
+                        <strong>Entidad:</strong> ${item.entidad}<br/>
+                        <strong>Sector:</strong> ${item.sector}<br/>
+                        <hr style="border: 0.5px solid #3A4A5E; margin: 10px 0;"/>
+                    `;
+                    pantallaResultados.innerHTML += contenido_html;
+                });
+            } else {
+                pantallaResultados.innerHTML = "La consulta no tiene resultados.<br/>";
+            }
+
+        } catch (error) {
+            pantallaResultados.innerHTML = '<span style="color: #A35139;">Error: ' + error.message + '</span>';
+        }
+    }); 
+
+});
