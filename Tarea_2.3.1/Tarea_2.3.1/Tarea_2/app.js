@@ -332,7 +332,7 @@ function validarCampos() {
         return false; //Bloque el envìo
     }
     if (palabra.length < 3) {
-        alert("Error: Debes escribir una palabra y seleccionar una entidad antes de consultar.");
+        alert("Seguridad: Favor de escribir al menos 3 letras para no saturar la base de datos.");
         return false;
     }
     return {palabra, entidad};
@@ -401,7 +401,7 @@ function imprimirResultadosF(jsonData) {
             <strong>Tipo:</strong>${item.tipo}</br>
             <strong>Municipio:</strong>${item.delmun}</br>
             <strong>Entidad:</strong>${item.entidad}</br>
-            <hr style="border: 0.5px solid ·3A4A5E; margin: 10px 0;"/>
+            <hr style="border: 0.5px solid #3A4A5E; margin: 10px 0;"/>
             `;
             pantallaResultados.innerHTML += contenido_html;
         });
