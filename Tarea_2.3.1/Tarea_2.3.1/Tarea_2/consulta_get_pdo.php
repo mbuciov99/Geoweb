@@ -15,7 +15,7 @@ try {
 
     // Nueva consulta combinada (Inciso F)
     $query = "SELECT nombre, tipo, delmun, entidad, sector, rama, clase FROM reniecyt2013a 
-              WHERE nombre ILIKE :palabra AND entidad = :entidad 
+              WHERE CONCAT(nombre, tipo, delmun, entidad, sector, rama, clase, tipo, delmun, entidad, sector, rama, clase) ILIKE :palabra AND entidad = :entidad 
               ORDER BY nombre LIMIT 50";
  
     $stmt = $pdo->prepare($query);
