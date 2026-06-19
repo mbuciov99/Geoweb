@@ -27,6 +27,7 @@ ul, ol {
     /* Ajustamos el padding para que no se corten los números o iconos */
     padding: 1rem 1rem 1rem 1.5rem; 
     border-radius: 12px;
+    word-break: break-word;
 }
 
 /* 1. Reglas exclusivas para Listas Ordenadas (ol) */
@@ -70,11 +71,22 @@ li:hover {
     background-color: rgba(163, 81, 57, 0.1);
 }
 
+@media (max-width: 480px) {
+    ul, ol {
+        padding: 0.8rem 0.8rem 0.8rem 1.2rem;
+    }
+    
+    li {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.9rem;
+    }
+}
+
 /* Tipografía */
    
 h1{
     color: #D9C5A7;
-    font-size: 2.2rem;
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
     margin-bottom: 0.5rem;
     font-weight: 700;
     letter-spacing: -0.01em;
@@ -126,11 +138,20 @@ p{
     background-color:#2C3B4D;
 }
 
+.tabla-geo-wrapper {
+    width: 100%;
+    overflow-x: auto;  /* ← Permite scroll horizontal en móviles */
+    -webkit-overflow-scrolling: touch;  /* ← Scroll suave en iOS */
+    margin-bottom: 20px;
+    border-radius: 12px;
+}
+
 /*Estilos compartidos para celdas (td) y Encabezados (th)*/
 .tabla-geo th,
 .tabla-geo td {
     padding: 12px; /*Espacio interno para que el texto no respira*/
     border-bottom: 1px solid #3A4A5E; /*Solo una linea divisoria bajo cada fila*/
+    font-size: 0.9rem
 }
 
 /*Estilos exclusivos para encabezados*/
@@ -144,6 +165,15 @@ p{
 .tabla-geo tr:nth-child(even){
     background-color: rgb(217, 197, 167, 0.05); /*Pinta las filas pares con otro color*/
 }  
+
+@media (max-width: 600px) {
+    .tabla-geo th,
+    .tabla-geo td {
+        padding: 8px 5px;
+        font-size: 0.75rem;  /* ← Texto más pequeño en móviles */
+        white-space: nowrap;  /* ← Evita que el texto se rompa en varias líneas */
+    }
+ }
 
 /*Estado normal del enlace*/
 .enlace-destacado{
@@ -161,7 +191,7 @@ p{
 
 /*Nivel 1 de cabecera*/
 .cabecera-1{
-    font-size: 36px;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
     color: #D9C5A7;
     font-weight: bold;
     margin-bottom: 20px;
@@ -169,7 +199,7 @@ p{
 
 /*Nivel 2 de cabecera: separación de secciones grandes*/
 .cabecera-2{
-    font-size: 28px;
+    font-size: clamp(1.5rem, 3.5vw, 2.2rem);
     color: #E2D2B8;
     border-bottom: 2px solid #D9C5A7; /*Linea sutil debajo del texto*/
     padding-bottom: 5px;
@@ -178,7 +208,7 @@ p{
 
 /*Nivel 3: Subtítulos estandar*/
 .cabecera-3{
-    font-size: 24px;
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
     color: #D9C5A7; 
     margin-bottom: 10px;
 }
@@ -223,7 +253,8 @@ input[type= "text"]{
     padding: 10px;
     border: 2px solid #3A4A5E;
     border-radius: 4px;
-    width: 250px;
+    width: 100%; 
+    max-width: 250px;
 }
 
 /*Buscar solo el input que funciona como botón*/
@@ -346,7 +377,7 @@ En CSS las imagenes son tratadas como elementos "en linea" (inline)  por defecto
 Para tener control total, el primer truco es convertirlas a "bloque"*/
 .logo-institucional{
     /*Control de tamaño*/
-    max-width: 250px; /*ancho máximo para que no se vea gigante*/
+    max-width: min(250px, 80%); /*ancho máximo para que no se vea gigante*/
     height: auto; /*Mantine la proporción original de la imagen al cambiar el ancho*/
 
     /*Diseño de border*/
@@ -372,6 +403,7 @@ Para tener control total, el primer truco es convertirlas a "bloque"*/
     max-width: 500px;
     margin: 20px auto; /*Centra el formulario en la página*/
     font-family: 'Plus Jakarta Sans', sans-serif;
+    padding: 0 15px;
 }
 
 /*Cuadro agrupador (fieldset) y su título (legend)*/
@@ -412,6 +444,7 @@ Para tener control total, el primer truco es convertirlas a "bloque"*/
     border-radius: 4px;
     box-sizing: border-box; /*Evita que el padding rompa el ancho del 100%*/
     font-family: inherit; /*Heredar la fuente del contenedor padre*/
+    font-size: 16px;
  }
 
  /*Un pequeño efecto cuando el usuario hace clic en un campo (focus)*/
@@ -459,6 +492,7 @@ Para tener control total, el primer truco es convertirlas a "bloque"*/
     max-width: 1400px; /*Limite maximo de ancho para monitores ultragrandes*/
     margin: 0 auto; /*Centra todo el visor en la pantalla*/
     box-sizing: border-box; /*evita que los bordes extra rompan las medidas*/
+    padding: 0 15px;
 }
 
 /*Colores y estilo para las cajas*/
@@ -490,6 +524,7 @@ Para tener control total, el primer truco es convertirlas a "bloque"*/
         "texto mapa"
         "imagen mapa"
         "footer footer";
+        gap: 20px;
     }
 
     /*Asignación de nombre a cada caja del rompecabezas*/
@@ -516,6 +551,8 @@ Para tener control total, el primer truco es convertirlas a "bloque"*/
         "form resultados texto"
         "form imagen texto"
         "footer footer footer";
+        gap: 25px;
+        padding: 0 30px;
     }
 
     /*El mapa debe ser mucho más alto en escritorio*/
@@ -681,7 +718,7 @@ body {
         flex-direction: column !important;
         width: 100% !important;
         margin: 0 !important;
-        padding: 10px !important;
+        padding: 15px !important;
     }
 
     .formulario, .mapa, .seccion-resultados-js, .textos, .imagen{
@@ -694,10 +731,62 @@ body {
         flex-wrap: wrap;
         justify-content: center;
         padding: 0;
+        gap: 5px; 
+    }
+
+    .menu a {
+        padding: 8px 12px;  
+        font-size: 0.9rem;  
     }
 
     .caja-resultados-js{
         overflow-x: auto !important;
         width: 100% !important;
     }
+
+    .tabla-geo-wrapper {
+        overflow-x: auto;
+    }
+}
+
+/* === AJUSTES ADICIONALES PARA RESPONSIVE === */
+
+/* Para pantallas muy pequeñas (teléfonos) */
+@media (max-width: 480px) {
+    body {
+        font-size: 15px;  /* ← Ligeramente más pequeño */
+    }
+    
+    .tarjeta-general {
+        padding: 15px;
+    }
+    
+    .btn-general {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        width: 100%;  /* ← Botones a ancho completo en móvil */
+    }
+    
+    .formulario-geo .btn-enviar,
+    .formulario-clase .btn-enviar {
+        padding: 14px;
+        font-size: 1rem;
+    }
+    
+    input[type="submit"] {
+        width: 100%;
+        padding: 12px;
+    }
+}
+
+/* Para tablets pequeñas */
+@media (min-width: 481px) and (max-width: 767px) {
+    .grid-visor {
+        padding: 0 20px;
+    }
+}
+
+/* Mejora de la legibilidad en todos los dispositivos */
+* {
+    -webkit-tap-highlight-color: transparent;  /* ← Elimina el destello azul en móviles */
 }
