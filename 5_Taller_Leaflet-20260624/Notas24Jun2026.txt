@@ -1,0 +1,80 @@
+_________________________________
+
+Iniciar Oracle VirtualBox
+Arrancar la máquina virtual->gwCIG2026
+_________________________________
+Ventana de ingreso
+Usuario->Contraseña
+ubuntu->ubuntu
+_________________________________
+//*****************************//
+Descargar un folder del sitio del curso,
+descomprimir y publicación de folder en web
+//*****************************//
+Abrir el navegador en la máquina virtual
+Inicio->Internet->Mozilla Firefox
+Abrir el sitio del curso
+https://educa.centrogeo.edu.mx/cig2025
+Descargar el folder 5_Taller_Leaflet
+_________________________________
+Inicio->Herramientas del sistema->QTerminal
+sudo su -> ubuntu
+Abrir el navegador de archivos
+pcmanfm-qt
+______________________________________________
+Ir al folder de descargas de la máquina virtual
+
+/home/ubuntu
+Seleccionar el folder Descargas
+/home/ubuntu/Descargas
+Clic derecho->Crear nuevo->Carpeta
+5_Taller_Leaflet
+_________________________________
+Clic derecho en 5_Taller_Leaflet-20260624.zip
+Extraer en ...
+Seleccionar el folder 5_Taller_Leaflet
+Clic en Extraer
+______________________________________________
+Eliminar el archivo .zip
+Clic derecho->Mover a la papelera
+_________________________________
+Copiar el folder 5_Taller_Leaflet en el directorio de publicación
+---------------------------------
+Origen
+/home/ubuntu/Descargas/
+Sobre el folder 5_Taller_Leaflet
+Clic derecho->Cortar
+--------------------------------
+Destino
+/var/www/html/5_Taller_Leaflet
+
+Pegar el folder html->/var/www/html/5_Taller_Leaflet
+_________________________________
+Acceso a la terminal
+Botón de inicio->Herramientas del sistema->QTerminal
+_________________________________
+Por default, al abrir la terminal, se ingresa con el
+usuario ubuntu, el cual no es un usuario con
+permisos de administrador de la máquina virtual
+ubuntu@gwCIG2026:~$
+_________________________________
+Ingresar como super usuario
+Escribir en la terminal:
+sudo su
+Password: ubuntu
+ubuntu@gwCIG2026:~$
+_________________________________
+Verificar IP local de la máquina virtual
+ifconfig
+_________________________________
+Aplicar permisos al directorio de publicación
+chmod -R 777 /var/www/html/5_Taller_Leaflet
+_________________________________
+Abrir en Visual Studio Code
+Inicio->Programación->Visual Studio Code
+File->Open Folder->/var/www/html/5_Taller_Leaflet
+Abrir el folder 5_Taller_Leaflet
+_________________________________
+Editar leaflet_previo.html
+
+
