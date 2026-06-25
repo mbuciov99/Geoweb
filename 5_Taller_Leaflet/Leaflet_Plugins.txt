@@ -1,0 +1,107 @@
+Sitio web de Leaflet
+https://leafletjs.com
+_______________________________________________________
+Plugins de Leaflet
+https://leafletjs.com/plugins.html
+_______________________________________________________
+Recomendaciones para agregar plugins a Leaflet
+///////////////////////////////////
+1. Ingresar al sitio de plugins de Leaflet
+2. Seleccionar un plugin
+3. Leer cuidadosamente las instrucciones para incorporar el plugin
+4. Realizar las descargas correspondientes js, css y/o svg o png 
+5. Probar en nuestra aplicación con Leaflet
+NOTA: Los plugins son escritos por desarrolladores que comparten su código con la comunidad
+pero a veces no están actualizados, por lo que es necesario revisar si funcionan con nuestra
+versión de Leaflet.
+_______________________________________________________
+Plugins->Map interaction
+Interactive pan/zoom
+En el sitio de Leaflet, buscar:
+Leaflet.BoxZoom
+Entrar a la explicacion
+Descargar css, js y svg del folder /dist
+///////////////////////////////////
+En el folder css descargar el svg tambien
+
+//////////////////////////////////
+Insertar el css y el js
+<link rel="stylesheet" href="css/leaflet-control-boxzoom.css" />
+<script src="js/leaflet-control-boxzoom.js"></script>
+abajo de L.control.scale
+Agregar:
+L.Control.boxzoom({ position:'topleft' }).addTo(map);
+_______________________________________________________
+Plugins->Map interaction
+Mouse coordinates
+Leaflet Coordinates Control
+Descargar Control.Coordinates.css, Control.Coordinates.js
+Agregarlos al html, css y js
+
+		var misCoords = new L.Control.Coordinates();
+			misCoords.addTo(map);
+
+		function onMapDobleClick(e) {
+			misCoords.setCoordinates(e);
+			alert("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng);
+			var lat = e.latlng.lat;
+			var lng = e.latlng.lng;
+		}
+
+		map.on('dblclick', onMapDobleClick);
+
+
+//***************************************************//
+// EJERCICIOS ADICIONALES, PARA DESARROLLAR EN LA ACTIVIDAD DE LEAFLET
+//***************************************************//
+_______________________________________________________
+Plugins->Map interaction
+Agregar coordenadas del mapa
+Mouse Coordinates -> Leaflet.MousePosition
+Descargar css y js de la carpeta /src
+Agregarlos al archivo
+Insertar la sig linea al final:
+L.control.mousePosition().addTo(map);
+_______________________________________________________
+Agregar fullScreen al mapa
+Plugins->Map interaction
+FullScreen-> leaflet.fullscreen
+Descargar css, js y svg
+agregarlos al archivo .css y .js
+Se adiciona el control fullscreen al mapa:
+
+		var map = L.map('map',{
+			minZoom:5,
+  		maxZoom:13,
+			maxBounds: bounds,
+			fullscreenControl: true,
+			fullscreenControlOptions: {
+				position: 'topleft'
+			}
+		}).setView([19.37504, -99.11346], 11);
+_______________________________________________________
+_______________________________________________________
+Agregando controles adicionales a los plugins en el mapa Leaflet
+_______________________________________________________
+Agregar una funcion al mapa que obtiene las coordenadas
+del centro del mapa y el nivel de zoom
+///////////////////////////////////
+Agregar alfinal de la etiqueta STYLE en el header
+#getZoomButton:hover {
+	background-color: #4CAF50; /* Verde */
+	color: white;
+	border-radius: 30%;
+}
+
+//////////////////////////////////
+En el html->body, debajo del <div de mapa...
+<button id="getZoomButton" onclick="getCenterAndZoom();">Coordenadas centrales y Zoom</button>
+///////////////////////////////////
+Al final del codigo javascript
+    //Función que se genera desde un boton y obtiene el centro y el zoom del mapa
+    function getCenterAndZoom(){
+        // console.log("Lat: "+map.getCenter().lat);
+        // console.log("Lon: "+map.getCenter().lng);
+        // console.log("Zoom: "+map.getZoom());
+        alert("Latitud: "+map.getCenter().lat+"\nLongitud: "+map.getCenter().lng+"\nZoom: "+map.getZoom());
+    }
