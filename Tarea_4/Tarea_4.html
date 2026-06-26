@@ -46,10 +46,16 @@
 
                     <label for="contaminante">Gas traza de interés</label>
                     <select id="contaminante" name="contaminante">
+                        <option value="" disabled selected>--- Selecciona un gas ---</option>
+                        <option value="CO">Monòxido de Carbono (CO)</option>
+                        <option value="NO">Monòxido de Nitrògeno (NO)</option>
                         <option value="NO2">Dióxido de Nitrógeno (NO2)</option>
+                        <option value="NOx">Òxidos de nitrògeno (NOx)</option>
                         <option value="O3">Ozono (O3)</option>
+                        <option value="PM10">Particulas menores a 10 micròmetros (PM10)</option>
+                        <option value="PM25">Particulas menores a 2.5 micròmetros (PM2.5)</option>
+                        <option value="PMCO">Partculas fraccion gruesa (PMCO)</option>
                         <option value="SO2">Dióxido de Azufre (SO2)</option>
-                        <option value="hcho">Formaldehído (HCHO)</option>
                     </select>
 
                     <label>Formato de Descarga</label>

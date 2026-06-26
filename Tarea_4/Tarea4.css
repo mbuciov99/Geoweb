@@ -41,20 +41,6 @@ ol li {
     margin-bottom: 0.5rem;
 }
 
-/* 2. Reglas exclusivas para Listas Desordenadas (ul) */
-ul {
-    list-style: none; /* Apaga los puntos feos por defecto */
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-ul li::before {
-    content: "✓"; /* El check */
-    margin-right: 8px; /* Espacio entre el check y el texto */
-    font-size: 14px;
-}
-
 /* 3. El diseño de las cajitas de la lista (li) */
 li {
     background-color: rgba(255, 255, 255, 0.03);
@@ -221,22 +207,6 @@ p{
     margin-bottom: 8px;
 }
 
-/*Nivel 5: Casi del tamaño del texto normal*/
-.cabecera-5{
-    font-size: 16px; /*Tamaño típico de un párrafo normal*/
-    color: #A8B5C2;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-/*Nivel 6: El más pequeño, etiquetas o metadatos*/
-.cabecera-6{
-    font-size: 14px;
-    color: #7A8B9F;
-    text-transform: uppercase; /*Convertir el texto a mayusculas automáticamente*/
-    letter-spacing: 1px; /*Separa un poco las letras para que se vea mejor*/
-}
-
 /*Buscar cualquier etiqueta <a> que tenga el atributo target="_blank"*/
 a[target="_blank"]{
     color: #A35139;
@@ -275,21 +245,6 @@ input[type="submit"]{
     border-radius: 5px;
     font-family: 'Plus Jakarta Sans', sans-serif;
     cursor: pointer; /*Cambia el cursor a la manita al pasar por encima*/
-}
-
-/*Adicional 1: Botón principal de acción*/
-.btn-primario{
-    background-color: #A35139;
-    color: white;
-}
-.btn-primario:hover {
-    background-color: var(--terracota-hover);
-}
-
-/*Adicional 2: Botón para acciones destructivas*/
-.btn-peligro{
-    background-color: #8B3C2A;
-    color: white;
 }
 
 /*Elemento <div>*/
@@ -532,7 +487,6 @@ Para tener control total, el primer truco es convertirlas a "bloque"*/
     .encabezado{grid-area: header; }
     .menu{grid-area: nav; }
     .formulario{grid-area: form; }
-    .caja-resultados-js{grid-area: resultados; }
     .mapa{grid-area: mapa; }
     .textos{grid-area: texto; }
     .imagen{grid-area: imagen; }
@@ -597,20 +551,6 @@ body {
 
 }
 
-/* Contenedor principal de los resultados */
-.caja-resultados-js {
-    background-color: #1B2632;
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid #A35139;
-    margin-top: 15px;
-
-    /*Activación de flexbox*/
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap; /*Si no caben entonces bajan de manera ordenada*/
-    gap: 15px; /*Espacio entre los elementos dentro de las cajas*/
-}
 
 /* Título de la caja de resultados */
 .titulo-resultados {
@@ -629,86 +569,6 @@ body {
 .seccion-resultados-js{
     grid-area: resultados;
 }
-
-/*----------Formulario clase-----------------
-
-/*Contenedor principal (form)*/
-.formulario-clase{
-    max-width: 500px;
-    margin: 20px auto; /*Centra el formulario en la página*/
-    font-family: 'Trebuchet MS', Arial, sans-serif;
-}
-
-/*Cuadro agrupador (fieldset) y su título (legend)*/
-.formulario-clase fieldset{
-    border: 2px #3A4A5E;
-    border-radius: 8px;
-    padding: 25px;
-    background-color: #2C3B4D;
-}
-
-.formulario-clase legend{
-    background-color: #D9C5A7;
-    color: #1B2632;
-    padding: 5px 15px;
-    border-radius: 14px;
-    font-weight: bold;
-    font-size: 16px
-}
-
-/*Etiquetas de texto label*/
-.formulario-clase label{
-    display: block; /*hace que la etiqueta ocupe su propia linea*/
-    margin-bottom: 5px;
-    margin-top: 15px;
-    color: #D9C5A7;
-    font-weight: bold;
-    font-size: 14px
-}
-
-/*Los campos de entrada (input texto/email), desplegables (select)
- y areas de texto (textarea)*/
-
- .formulario-clase select,
- .formulario-clase textarea{
-    width: 100%; /*Ocupa todo el ancho disponible*/
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 14px;
-    box-sizing: border-box; /*Evita que el padding rompa el ancho del 100%*/
-    font-family: inherit; /*Heredar la fuente del contenedor padre*/
- }
-
- /*Un pequeño efecto cuando el usuario hace clic en un campo (focus)*/
-
- .formulario-clase select:focus,
- .formulario-clase textarea:focus{
-    border-color: #0078A8;
-    outline: none;
-    box-shadow: 0 0 5px #A35139; /*Sombra suave para resaltar el campo activo*/
- }
-
-
-
- /*El botón de enviar (submit)*/
- .formulario-clase .btn-enviar{
-    width: 100%;
-    background-color: #d77b19;
-    color: black;
-    border: none;
-    padding: 12px;
-    margin-top: 20px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 14px;
-    cursor: pointer;
-    transition: background-color 0.3s; /*Hace que el cambio de color sea suave*/
- }
-
-.formulario-clase .btn-enviar:hover{
-    background-color: #A35139;
-    color: white
- }
 
  hr{
     height: 3px;
@@ -741,12 +601,7 @@ body {
         padding: 8px 12px;  
         font-size: 0.9rem;  
     }
-
-    .caja-resultados-js{
-        overflow-x: auto !important;
-        width: 100% !important;
-    }
-
+    
     .tabla-geo-wrapper {
         overflow-x: auto;
     }
