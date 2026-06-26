@@ -506,9 +506,9 @@ Para tener control total, el primer truco es convertirlas a "bloque"*/
 
 /*Hacer que le mapa sea un pocomás alto por defecto*/
 .mapa{
-    min-height: 250px;
     display: flex; /*Usamos flexbox para centrar el contenido del mapa*/
     flex-direction: column; /*Organiza el contenido en columna*/
+    gap: 15px;
 }
 
 /* Diseño para tabletas (2 columnas)*/

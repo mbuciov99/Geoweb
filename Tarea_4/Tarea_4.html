@@ -11,7 +11,7 @@
      <div class="grid-visor">
         <header class="encabezado">
             <h1 class="cabecera-1">
-                Visor de Concentraciones de Gases Contaminantes (Sujeto a cambios)
+                Visor de Concentraciones de Gases Contaminantes
             </h1>
         </header>
         
@@ -24,9 +24,9 @@
         		<li><a href="#enlaces">Enlaces</a></li>
     		</ul>
 	    </nav>
-
+        
         <aside class="formulario" id="formulario">
-            <!--I. Agregar un formulario con todas las etiquetas html de formulario y crear estilos para cada elemento.-->
+
             <form class="formulario-geo" action="#" method="post">
                 <fieldset>
                     <legend>Solicitud de Datos TEMPO</legend>
@@ -73,81 +73,6 @@
                 </fieldset>
             </form>
 
-            <hr>
-
-            <!--Formulario de consulta RENIECYT-->
-            <form class="formulario-clase" style="margin-top: 30px;" id="formulario-clase">
-                <fieldset>
-                    <legend>Práctica de Clase (Consulta RENIECYT)</legend>
-
-                    <label for="tipo_inst">Tipo de institución</label>
-                    <select name="tipo_inst" id="tipo_inst">
-                        <option value="cpis">CENTROS DE INVESTIGACION</option>
-                        <option value="empresas">EMPRESAS</option>
-                        <option value="ies">INSTITUCIONES DE ENSEÑANZA SUPERIOR</option>
-                        <option value="iap">INSTITUCIONES DE LA ADMINISTRACION PUBLICA</option>
-                        <option value="ip">INSTITUCIONES PRIVADAS NO LUCRATIVAS</option>
-                        <option value="fisica">PERSONA FISICA</option>
-                        <option value="otracosa">OTRA COSA</option>
-                    </select>
-
-                    <button type="button" id="btn-consultar-clase" class="btn-enviar">Consultar base de clase</button>
-                </fieldset>
-            </form>
-
-            <hr>
-
-            <form class="formulario-clase" style="margin-top: 30px;" id="formulario-avanzado">
-                <fieldset>
-                    <legend>Busqueda Avanzada (Inciso F)</legend>
-                    
-                    <label for="palabra_clave">Buscar palabra en el nombre:</label>
-                    <input type="text" id="palabra_clave" name="palabra_clave" placeholder="Ej. Universidad, Tecnologico, Centro">
-
-                    <label for="entidad_federativa">Entidad Federativa:</label>
-                    <select name="entidad_fed" id="entidad_fed">
-                        <option value="">-- Selecciona una entidad--</option>
-                        <option value="AGS">AGUASCALIENTE</option>
-                        <option value="BC">BAJA CLIFORNIA</option>
-                        <option value="BCS">BAJA CALIFORNIA SUR</option>
-                        <option value="CAM">CAMPECHE</option>
-                        <option value="CHIH">CHIHUAHUA</option>
-                        <option value="CHIS">CHIAPAS</option>
-                        <option value="COAH">COAHUILA</option>
-                        <option value="COL">COLIMA</option>
-                        <option value="DF">CIUDAD DE MEXICO</option>
-                        <option value="DGO">DURANGO</option>
-                        <option value="GRO">GUERRERO</option>
-                        <option value="GTO">GUANAJUATO</option>
-                        <option value="HGO">HIDALGO</option>
-                        <option value="JAL">JALISCO</option>
-                        <option value="GRO">GUERRERO</option>
-                        <option value="MEX">ESTADO DE MEXICO</option>
-                        <option value="MICH">MICHOACAN</option>
-                        <option value="MOR">MORELOS</option>
-                        <option value="NL">NUEVO LEON</option>
-                        <option value="OAX">OAXACA</option>
-                        <option value="PUE">PUEBLA</option>
-                        <option value="QRO">QUERETARO</option>
-                        <option value="QROO">QUINTANA ROO</option>
-                        <option value="SIN">SINALOA</option>
-                        <option value="SLP">SAL LUIS POTOSI</option>
-                        <option value="SON">SONORA</option>
-                        <option value="TAB">TABASCO</option>
-                        <option value="TAMPS">TAMAULIPAS</option>
-                        <option value="GRO">GUERRERO</option>
-                        <option value="TLAX">TLAXCALA</option>
-                        <option value="VER">VERACRUZ</option>
-                        <option value="YUC">YUCATAN</option>
-                        <option value="ZAC">ZACATECAS</option>
-                    </select>
-
-                    <div style="display: flex; gap: 10px; margin-top: 20px">
-                        <button type="button" id="btn-get" class="btn-enviar" style="flex:1;">Consulta GET</button>
-                        <button type="button" id="btn-post" class="btn-enviar" style="flex:1; background-color: #2c3b4d; border: 1px dashed #D9C5A7;">Consulta POST</button>
-                    </div>
-                </fieldset>
-            </form>
         </aside>
 
         <main class="mapa" id="mapa">
@@ -160,79 +85,27 @@
                 title="Mapa Base de la zona de estudio" 
                 allowfullscreen>
             </iframe>
+
         </main>
 
-        <section class="seccion-resultados-js" id="resultados">
-            <!--Resultados T2 A, B, C -->
-            <div class="caja-resultados-js">
-                <h3 class="cabecera-2 titulo-resultados">Resultados JavaScript</h3>
-                <p id="pantalla-resultados">Cargando resultados...</p>
-            </div>
-         
-            <hr class="divisor-resultados">
-            <h2 class="cabecera-4">Panel de control de Eventos (Mouse & UI)</h2>
-            <p class="texto-general texto-metadato">Interactua con los elementos
-                de abajo.
-            </p>
-
-            <div class="texto-general tarjeta-clara">
-                <label for="selector-capas" style="color: #D9C5A7; font-weight: bold; display: block; margin-bottom: 5px;">
-                    Cambiar Capa satelital (Evento Change):
-                </label>
-                <select id="selector-capas" style="width: 100%;padding: 8px; border-radius: 4px; background: #1B2632; color: #F0F3F5; border: 1px solid #3A4A5E">
-                    <option value="predeterminado">Selecciona una capa...</option>
-                    <option value="no2-dat">Capa de NO2 Absoluto (TEMPO)</option>
-                    <option value="o3-sat">Capa de Ozono Troposférico</option>
-                    <option value="rgb-true">Imagen Color Verdadero (RGB)</option>
-                </select>
-                <br><br>
-
-                <div style="display: flex; gap: 10px; margin-bottom: 15px";>
-                    <botton id="btn-click" class="btn-general btn-primario" style="flex:1;">
-                        Centrar Mapa (Click)
-                    </botton>
-                    <button id="btn-doubleclick" class="btn-general btn-peligro" style="flex:1; background-color: #8B3C2A;">
-                        Reiniciar Visor (Double Click)
-                    </button>
-                </div>
-                <button id="btn-presion" class="btn-general" style="width: 100%;background-color: #2c3b4d; color: #D9C5A7; border:1px dashed #D9C5A7; margin-bottom: 15px; padding: 12px;">
-                    Mantén presionado para calibrar sensor (mousedown / mouseup)
-                </button>
-                <div id="zona-radar" style="background-color: #1B2632; border: 2px solid #3A4A5E; border-radius: 8px; height: 120 px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor:crosshair; position: relative;">
-                    <span id="texto-radar" style="font-weight:bold; color: #7A8B9F;">Radar Apagado (mouseover)</span>
-                    <span id="coordenadas-radar" style="font-size: 0.8rem; color:#A35139; font-family: monospace; margin-top: 5px;"></span>
-                </div>
-            </div>
-
-        </section>
 
         <aside class="textos">
-            <header class="encabezado">
-            <h1>Encabezado Nivel 1</h1>
-            </header>
-            <p>Texto normal</p>
-            <p>Texto normal</p>
-            <p>Texto normal</p>
-
-            
-            <h3 class="cabecera-3" id="listas">
-                Encabezado Nivel 3 (Listas ordenadas)
-            </h3>
-            <ol>
-                <li>Texto</li>
-                <li>Texto</li>
-                <li>Texto</li>
-            </ol>
-
-            <h3 class="cabecera-3" id="conceptos">Encabezado Nivel 3 </h3>
-            <ul>
-                <li>Texto</li>
-                <li>Texto</li>
-                <li>Texto</li>
-            </ul>
+        
+            <h3 class="cabecera-3" id="listas"> Contaminantes medidos </h3> 
+                <ol> 
+                    <li>Ozono (O3)</li> 
+                    <li>Dióxido de Nitrogeno (NO2)</li>
+                    <li>Óxidos de Nitrógeno (NOx)</li> 
+                    <li>Monóxido de Nitrógeno (NO)</li> 
+                    <li>Dióxido de Azufre (SO2)</li> 
+                    <li>Monóxido de Carbono (CO)</li> 
+                    <li>Partículas menores a 10 micrómetros (PM10)</li> 
+                    <li>Partículas menores a 2.5 micrómetros (PM2.5)</li> 
+                    <li>Partículas fracción gruesa o "coarse" (PMCO)</li> 
+                </ol>
 
             <!-- B. Insertar una clase para <table> considerando sus componentes: <td><th><tr></tr>*/--->
-            <h2 class="cabecera-2">Estaciones de Monitoreo</h2>
+            <h3 class="cabecera-3">Estaciones de Monitoreo</h3>
                 <table class="tabla-geo" id="tabla">
                     <thead>
                         <tr>
@@ -254,70 +127,52 @@
                         </tr>
                     </tbody>
                 </table>
-
-                <h2 class="cabecera-2">Clasificaciones de Cabeceras</h2>
-            <!-- D. Crear una clase para cada uno de los tipos de cabeceras <h1...h6-->
-            <h1 class="cabecera-1">Título principal del proyecto</h1>
-            <h2 class="cabecera-2">Sección Principal</h2>
-            <h3 class="cabecera-3">Subsección</h3>
-            <h4 class="cabecera-4">Tema específico</h4>
-            <h5 class="cabecera-5">Nota o detalle menor</h5>
-            <h6 class="cabecera-6">Pie de página o texto muy pequeño</h6>
     
-            <h2 class="cabecera-2" id="enlaces">
-                Referencias dentro del documento y a otros documentos
-            </h2>
 
-            <!--E. Establecer al menos una regla general con el selector de atributos-->
-            <a href="Tarea_4.html">Leer metodología local</a>
-            <a href="https://browser.dataspace.copernicus.eu/?zoom=5&lat=50.16282&lng=20.78613&demSource3D=%22MAPZEN%22&cloudCoverage=30&dateMode=SINGLE" target="_blank">Descarga datos satelitales</a>
+            
+        </aside>
 
-            <div class="textos">
-                <h1 class="cabecera-4">Enlaces destacados</h1>
-            </div>
+        <!-- CONTENIDO -->
+        <aside class="contenido-mapa">
+            <h4 class="cabecera-4" id="listas"> Detalles de contenido</h4> 
 
-            <a class="enlace-destacado" href="https://www.aire.cdmx.gob.mx/default.php?opc=%27ZaBhnmI=&dc=%27ZA==">Consulta la pagina de la Red Automática de Monitoreo Atmosférico (RAMA)</a><br>
-            <a href="https://www.aire.cdmx.gob.mx/default.php?opc=%27ZaBhnmI=&dc=%27ZA==" class="enlace-destacado">Consulta las estaciones de monitoreo de contaminantes de la RAMA</a>
+                <div class="tarjeta-general tarjeta-clara">
+                    <p class="texto-general texto-intro">
+                        Este mapa muestra las mediciones satelitales.
+                    </p>
+                </div>
 
-            <h2 class="cabecera-2">
-                Elementos de texto destacados
-            </h2>
-            <!-- F. Hacer una clase general y al menos dos clases adicionales para los elementos: <p>, <div>, <span>, <button>-->
-            <button class="btn-general btn-primario">Descargar TIFF</button>
-            <button class="btn-general btn-peligro">Eliminar Capa</button>
+                <div class="tarjeta-general tarjeta-oscura">
+                    <p class="texto-general">
+                        Las concentraciones varía según la hora del día.
+                    </p>
+                </div>
 
-            <!-- Contenedor <div>: Contenedores o tarjetas-->
-                <div class="tarjeta-general tarjeta-clara"></div>
-                <div class="tarjeta-general tarjeta-oscura"></div>
+                <p>
+                    Etiqueta con span <br>
+                    <span class="etiqueta-general etiqueta-alta">Crítico</span>
+                </p>
 
-            <!-- Elemento <p>: parrafos de texto-->
-                <p class="texto-general texto-intro">Texto</p>
-                <p class="texto-general">Texto</p>
-                <p class="texto-general texto-metadato">Texto</p>
+                <p>
+                    Etiqueta con span <br>
+                    <span class="etiqueta-general etiqueta-baja">Óptimo</span>
+                </p>
 
-            <!-- Elemento <span>: Etiquetas en líneas. sirven para modificar
-                pedacitos de texto sin romper la línea. Perfectas para crear
-                pequeñas "pastillas" o "pildoras de estado"-->
-                <p>Etiqueta con span <br>
-                    <span class="etiqueta-general etiqueta-alta">Crítico</span></p>
-                <p>Etiqueta con span <br>
-                    <span class="etiqueta-general etiqueta-baja">Óptimo</span></p>
-
-            <br>
-
-            <!-- G. Realizar una clase que aplique sólo cuando un elemento <span> está anidado dentro de una etiqueta <div>-->
                 <div>
                     Etiqueta en div<br>
                     <span class="valor-sensor">Etiqueta de span en div</span>
                 </div>
 
-                <br>
-                
                 <p>
                     Texto normal <span class="valor-sensor">span</span>.
                 </p>
 
-            
+                <a href="Tarea_4.html">Leer metodología local</a>
+
+                <a href="https://browser.dataspace.copernicus.eu/?zoom=5&lat=50.16282&lng=20.78613&demSource3D=%22MAPZEN%22&cloudCoverage=30&dateMode=SINGLE" target="_blank">
+                    Descarga datos satelitales
+                </a>
+
         </aside>
 
         <aside class="imagen">
@@ -333,11 +188,13 @@
 		    Brenda Cecilia Ortíz Gómez<br>
 		    Coraima Reyes Urrego
 
-            <h3 class="cabecera-3">Referencias</h3>
-            1. </br>
-            2. </br>
-            3.
-	    </footer>
+            <h2 class="cabecera-2" id="enlaces">Enlaces destacados</h2>
+
+            <a class="enlace-destacado" href="https://www.aire.cdmx.gob.mx/default.php?opc=%27ZaBhnmI=&dc=%27ZA==">Consulta la pagina de la Red Automática de Monitoreo Atmosférico (RAMA)</a><br>
+            <a href="https://www.aire.cdmx.gob.mx/default.php?opc=%27ZaBhnmI=&dc=%27ZA==" class="enlace-destacado">Consulta las estaciones de monitoreo de contaminantes de la RAMA</a>
+
+                
+        </footer>
 
     </div> <script src="app.js"></script>
 </body>
