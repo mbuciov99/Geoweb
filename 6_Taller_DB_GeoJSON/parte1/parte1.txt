@@ -1,0 +1,101 @@
+//******************************************//
+Agregar a listaInst_geojson.php 
+//******************************************//
+$resultados = [];
+while($row = @pg_fetch_assoc($result)) {
+  $geometry = $row['coords'] = json_decode($row['coords']);
+  unset($row['coords']);
+  $feature = ["type"=>"Feature","geometry"=>$geometry,"properties" => $row];
+  array_push($resultados,$feature);
+}
+$featureCollection = ["type"=>"FeatureCollection","features"=>$resultados];
+echo json_encode($featureCollection);
+______________________________________________
+//******************************************//
+Agregar a final.html
+//******************************************//
+		  $('#contenido').html('');
+		  if(response.features.length > 0) {
+			//Recorre los resultados obtenidos
+        for(var i = 0; i < response.features.length; i++) {
+          contenido_html = "Nombre " + response.features[i].properties.nombre + "<br/>";
+          contenido_html += "Tipo: " + response.features[i].properties.tipo + "<br/>";
+          contenido_html += "Municipio: " + response.features[i].properties.delmun + "<br/>";
+          contenido_html += "Entidad: " + response.features[i].properties.entidad + "<br/>";
+          contenido_html += "Sector: " + response.features[i].properties.sector + "<br/>";
+          contenido_html += "Rama: " + response.features[i].properties.rama + "<br/>";
+          contenido_html += "Clase: " + response.features[i].properties.clase + "<br/>";
+          contenido_html += "<hr/>";
+          $('#contenido').append(contenido_html);
+        } //fin del for
+		  } else {
+				contenido_html = "La consulta no tiene resultados";
+				$('#contenido').append(contenido_html);
+		  }
+
+
+////////////////////////////////////////////////////////////////
+Aplicar estilo al mapa
+///////////////////////////////////////////////////////////////
+	html, body {
+		margin: 0;
+		padding: 0;
+	}
+	#map {
+		position: absolute;
+		top: 1;
+		bottom: 1;
+		width: 600px;
+		height: 400px;
+	}
+	#contenido {
+		position: relative;
+		top: 380px;
+	}
+	#formulario {
+		position: relative;
+		left: 600px;
+		width: 400px;
+	}
+
+//******************************************//
+Abrir el folder earthquakes
+//******************************************//
+Editar inicio.html
+................................................
+Revisar el geojson remoto
+https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson
+Ver sus geometrias y propiedades
+................................................
+///////////////////////////////////////////////////////////////
+Agregar GeoJSON generado por una consulta a BD
+///////////////////////////////////////////////////////////////
+	function popUpInfo(features,layer) {
+		if(features.properties && features.properties.nombre) {
+			layer.bindPopup("<b>"+features.properties.nombre+"</b><br/>"+features.properties.delmun+"</b><br/>"+features.properties.tamanio);
+		}
+	}
+
+//////////////////////////////////////////////
+Debajo de la funcion popUpInfo, agregar:
+................................................
+	var miconsulta = L.geoJson(null, {
+		pointToLayer: function(features,latlng) {
+			var tamanio = features.properties.tamanio;
+			if(tamanio =="GRANDE") {
+				return L.circleMarker(latlng, {color:"#ff0000",weight:25});
+			} else if(tamanio=="MEDIANA") {
+				return L.circleMarker(latlng, {color:"#fc8505",weight:20});
+			} else if(tamanio=="MICRO") {
+				return L.circleMarker(latlng, {color:"#4b6f9c",weight:10});
+			} else if(tamanio=="NINGUNA") {
+				return L.circleMarker(latlng, {color:"#767578",weight:5});
+			} else if(tamanio=="PEQUEÑA") {
+				return L.circleMarker(latlng, {color:"#118a11",weight:15});
+			} else {
+				return L.circleMarker(latlng, {color:"#000000",weight:3});
+			}
+		},
+		onEachFeature: popUpInfo
+	});
+................................................

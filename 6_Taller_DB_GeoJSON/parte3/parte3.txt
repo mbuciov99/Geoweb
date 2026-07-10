@@ -1,0 +1,86 @@
+En el folder /iconos
+Copiar el archivo cluster_previo.html y
+renombrarlo como cluster.html
+___________________________________
+-----------------------------------
+Vamos a implementar un cluster
+Plugins->Overlay Display->Clustering/Decluttering->Leaflet.markercluster
+Revisar en la web el plugin
+https://leafletjs.com/plugins.html
+___________________________________
+-----------------------------------
+En header incorporar css y js
+MarkerCluster.css
+MarkerCluster.Default.css
+MarkerCluster.js
+***********************************
+-----------------------------------
+Editar cluster.js
+-----------------------------------
+Debajo de var miconsulta = L.geoJson
+
+Y antes de  $(document).ready(function)
+////////////////////////////////////////////////////
+Agregar ....
+// Crear un grupo de marcadores en cluster
+var marcas = L.markerClusterGroup();
+-----------------------------------
+***********************************
+Debajo de miconsulta.clearLayers();	
+Agregar
+marcas.clearLayers();
+***********************************
+***********************************
+Debajo de miconsulta.addData(response);
+Agregar
+marcas.addLayer(miconsulta);
+***********************************
+***********************************
+Al finalizar ajax
+Debajo de miconsulta.addTo(map);
+map.addLayer(marcas);
+//previene el re-envío del requerimiento
+___________________________________
+
+***********************************
+***********************************
+PLUGIN LEAFLET-JQUERYDIALOGS
+***********************************
+***********************************
+Plugins->Integration->
+Frameworks & build systems->L.Control.jQueryDialog
+-----------------------------------
+-----------------------------------
+Revisar el folder JQueryDialogs
+***********************************
+***********************************
+***********************************
+***********************************
+EJERCICIO DE CLASE caminos.html
+1. Crear la bd caminos
+Hint. Revisar sus notas
+-----------------------------------
+2. Elaborar una sentencia SQL en DBeaver que seleccione los campos: 
+id_red, tipo_vial, nombre, recubri, carriles, velocidad, longitud, ancho, geom
+  2a. Restringir la consulta con el campo tipo_vial
+  2b. Ordenar la consulta por la clave primaria id_red
+
+-----------------------------------
+3. En caminos_geojson.php
+Recibir el valor del formulario que se envia desde el componente Ajax
+3a. Escribir en formato de Php la sentencia elaborada en el paso anterior
+3b. Probar los resultados en el navegador
+-----------------------------------
+4. En caminos.html
+Crear una variable L.geoJson para mostrar los resultados de la consulta.
+Hint. Revisar sus notas
+4a. Atributo onEachFeature: En la ventana de Popup mostrar: nombre, tipo_vial, recubri,longitud
+4b. Atributo style: Agregar estilo a los caminos en base al ancho de los segmentos carreteros
+    Si el ancho de la linea < 5 -> anchoLinea=1
+    Si el ancho de la linea esta entre 5 y 12 -> anchoLinea=4
+    Hint: return { color: "#999000", weight: anchoLinea, fillOpacity: .4 };
+4c. En el <span> de resultados, mostrar: nombre, ancho, carriles, velocidad, tipo_vial
+
+
+-----------------------------------
+-----------------------------------

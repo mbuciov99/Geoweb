@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>GeoWeb :: Leaflet Capa GeoJSON-DB</title>
+	<meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller Leaflet  BD GeoJSON" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui' />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+	<link href='../previo/css/alcaldias_mun.css' rel='stylesheet' />
+</head>
+
+<body>
+	<h2>Mapa de consulta a BD - GeoJSON</h2>
+
+	<div id='map'></div>
+	<div id="formulario">
+		<form action="#" method="post" id="envio_post">
+			<label for="mpios">Alcaldías CDMX</label><input type="radio" name="bdcdmx" id="mpios" value="alc" /><br/>
+			<label for="den_pob">Densidad de Población por km<sup>2</sup></label><input type="radio" name="bdcdmx" id="den_pob" value="den" /><br/>
+			<input type="submit" value="Enviar">
+		</form>
+	</div>	
+    <span id="contenido"></span>
+	<script>
+	var map = L.map('map').setView([19.29075, -99.22141], 10); // ajustar coordenadas y nivel de zoom
+
+	var Stadia_AlidadeSmooth = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+		maxZoom: 20,
+		attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+	}).addTo(map);
+
+////////////////////////////////////////////////////
+function popUpInfo(features,layer) {
+  if (features.properties && features.properties.nomgeo) {
+		layer.bindTooltip("<b>Alcaldia:" + features.properties.nomgeo + "</b><br/>Poblacion = " + features.properties.pob_2015);
+		//layer.bindPopup("<b>Alcaldia:" + features.properties.nomgeo + "</b><br/>Poblacion = " + features.properties.pob_2015);
+  }
+}
+
+var miconsulta = L.geoJson(null, {
+    style: function (feature) {
+			if(typeof(feature.properties.cve_mun) != 'undefined') {
+				optColorear = feature.properties.cve_mun;
+				columna = 'cve_mun';
+			} else {
+				optColorear = feature.properties.densidad_hab_km2;
+				columna = 'densidad_hab_km2';
+			}
+	return {
+	    stroke: true,
+	    color: getColour(optColorear, columna),
+	    opacity: 0.7,
+	    weight: 1
+	};
+    },
+    onEachFeature: popUpInfo
+});
+
+/* function getColour(feature, campo) {
+	if (campo=='cve_mun') {
+		return "#ff00f0";
+	} else if (campo=='densidad_hab_km2') {
+		return "#1f57a1";
+	}
+} */
+function getColour(feature, campo) {
+	if (campo=='cve_mun') {
+		if(feature == '002') {
+			return "#ff0000";
+		} else if(feature == '003') {
+			return "#ff6600";
+		} else if(feature == '004') {
+			return "#800080";
+		} else if(feature == '005') {
+			return "#00ff00";
+		} else if(feature == '006') {
+			return "#0000ff";
+		} else if(feature == '007') {
+			return "#0ff0ff";
+		} else if(feature == '008') {
+			return "#00bfff";
+		} else if (feature == '009') {
+			return "#efff22";
+		} else if (feature == '010') {
+			return "#55ff77";
+		} else if (feature == '011') {
+			return "#f0fff0";
+		} else if (feature == '012') {
+			return "#00ff00";
+		} else if (feature == '013') {
+			return "#ff2200";
+		} else if (feature == '014') {
+			return "#00ff33";
+		} else if (feature == '015') {
+			return "#ff2200";
+		} else if (feature == '016') {
+			return "#ff0044";
+		} else if (feature == '017') {
+			return "#ffff00";
+		} else {
+			return "#000000";
+		}
+	} else if (campo=='densidad_hab_km2') {
+		feature = parseInt(feature);
+		if(feature >= 668 && feature < 3500) {
+			return "#9ae9f5";
+		} else if(feature >= 3500 && feature < 10000) {
+			return "#0000ff";
+		} else if(feature >= 10000 && feature < 15000) {
+			return "#5466cc";
+		} else if(feature >= 15000 && feature < 18000) {
+			return "#1f57a1";
+		} else {
+			return "#000000";
+		}
+		
+	}
+}
+///////////////////////////////////////////////////
+document.addEventListener("DOMContentLoaded", function () {
+
+    const formulario = document.getElementById("envio_post");
+    const contenido = document.getElementById("contenido");
+
+    formulario.addEventListener("submit", async (e) => {
+        e.preventDefault(); // evita recarga
+
+        const radio1 = document.getElementById("mpios").checked;
+        const radio2 = document.getElementById("den_pob").checked;
+
+        if (!radio1 && !radio2) {
+            alert("Selecciona alguna de las dos opciones de consulta");
+            return;
+        }
+
+        const URL = 'php/alcaldias_mun_pdo.php';
+
+        try {
+
+            const response = await fetch(URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({
+                    alcaldia: radio1,
+                    densidad: radio2
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+
+            const respuesta = await response.json();
+
+            // limpiar capa anterior
+            miconsulta.clearLayers();
+            contenido.innerHTML = "";
+
+            if (respuesta.features.length > 0) {
+
+                miconsulta.addData(respuesta);
+                miconsulta.addTo(map);
+
+                respuesta.features.forEach(feature => {
+                    contenido.innerHTML += `
+                        Alcaldía: ${feature.properties.nomgeo}<br/>
+                        Población: ${feature.properties.pob_2015}<br/>
+                        Vulnerabilidad Social: ${feature.properties.vul_social}<br/>
+                        <hr/>
+                    `;
+                });
+
+            } else {
+                contenido.innerHTML = "La consulta no tiene resultados";
+            }
+
+        } catch (error) {
+            contenido.innerHTML = "Se produjo un error: " + error.message;
+        }
+
+    });
+});
+
+	</script>
+</body>
+</html>
+

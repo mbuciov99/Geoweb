@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>GeoWeb :: Leaflet Capa GeoJSON-DB</title>
+	<meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller leaflet BD GeoJSON" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui' />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+  <script src="https://code.jquery.com/jquery-4.0.0.js"></script>	
+	<style>
+	html, body {
+		margin: 0;
+		padding: 0;
+	}
+	#map {
+		position: absolute;
+		top: 1;
+		bottom: 1;
+		width: 600px;
+		height: 400px;
+	}
+	#contenido {
+		position: relative;
+		top: 380px;
+	}
+	#formulario {
+		position: relative;
+		left: 600px;
+		width: 400px;
+	}
+  </style>
+</head>
+
+<body>
+	<h2>Mapa de consulta a BD</h2>
+
+	<div id='map'></div>
+	<div id="formulario">
+		<form action="#" method="get" id="envio_get">
+			<select name="tipo" id="tipo">
+				<option value="Camino">Camino</option>
+				<option value="Calle">Calle</option>
+				<option value="Carretera">Carretera</option>
+				<option value="Vereda">Vereda</option>
+			</select>
+			<input type="submit" value="Enviar">
+		</form>
+	</div>	
+    <span id="contenido"></span>
+	<script>
+	var map = L.map('map').setView([16.813, -95.838], 10); // ajustar coordenadas y nivel de zoom
+	
+
+	var Stadia_AlidadeSmooth = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+		maxZoom: 20,
+		attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+	}).addTo(map);
+
+	//variable L.geoJson
+	var miconsulta= L.geoJson(null,{
+		style: function(feature){
+			var anchoLinea= 1;
+			var anchoSegmento= feature.properties.ancho;
+
+			if (anchoSegmento < 5) {
+				anchoLinea= 1;
+			} else if(anchoSegmento >= 5 && anchoSegmento <= 12){
+				anchoLinea= 4;
+			}
+			return {
+				color: "#999000",
+				weight: anchoLinea,
+				fillOpacity: 0.4
+			};
+		},
+		onEachFeature: function(feature, layer){
+			if(feature.properties) {
+				var textPopup= "<b> Nombre: </b>"+feature.properties.nombre + "<br/>" +
+											 "<b>Tipo vial:</b>" + feature.properties.tipo_vial + "<br/>" +
+											 "<b>Recubrimiento:</b>" + feature.properties.recubri + "<br/>" +
+											 "<b>Longitud:</b>" + feature.properties.longitud;
+				layer.bindPopup(textPopup);
+			}
+		}
+	}).addTo(map);
+
+////////////////////////////////////////////////////
+	
+$(document).ready(function(){
+  $('#envio_get').submit(function() {
+    var URL = 'php/caminos_geojson.php';
+    var contenido_html = "";
+    var ajax_get = $.ajax({
+	    type : "GET",
+      url : URL,
+      dataType : 'json',
+		  data : {
+				tipo : $('#tipo option:selected').html()
+		  } ,
+      contentType: 'application/json',
+	    timeout:10000,
+      success : function (response) {
+				miconsulta.clearLayers();
+				console.log(response);
+				console.log(response.features.length);
+				$('#contenido').html('');
+				if(response.features.length > 0) {
+					miconsulta.addData(response);
+				//Recorre los resultados obtenidos
+					for(var i = 0; i < response.features.length; i++) {
+						contenido_html = "Nombre " + response.features[i].properties.nombre + "<br/>";
+						contenido_html += "Ancho: " + response.features[i].properties.ancho + "<br/>";
+						contenido_html += "<b>Carriles: </b> " + response.features[i].properties.carriles + "<br/>";
+						contenido_html += "<b>Velocidad: <b>" + response.features[i].properties.velocidad + "</br>";
+						contenido_html += " <b>Tipo Vial: </b>" + response.features[i].properties.tipo_vial + "</br>";
+						contenido_html += "<hr/>";
+						$('#contenido').append(contenido_html);
+					} //fin del for
+				} else {
+				contenido_html = "La consulta no tiene resultados";
+				$('#contenido').append(contenido_html);
+				}
+			
+			},
+			error : function(jqXHR, estado, error) {
+				$('#contenido').html('Se produjo un error:' + estado + ' error: ' + error);
+			}
+    }); //fin de ajax
+		miconsulta.addTo(map);
+		//previene el re-envío del requerimiento
+		return false;
+	}); //fin de evento submit
+}); //fin de document.ready
+
+	
+	</script>
+</body>
+</html>

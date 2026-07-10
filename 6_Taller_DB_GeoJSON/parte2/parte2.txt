@@ -1,0 +1,72 @@
+//***************************************//
+alcaldias_mun.php
+//***************************************//
+Modificar el query SQL de la siguiente manera
+............................................
+$query = "SELECT nomgeo, pob_2015,sup_km2, vul_social ";
+$query = $query.", ST_AsGeoJson(geom,5) as coords ";
+$query = $query."FROM alcaldias ORDER BY cve_mun";
+............................................
+............................................
+$query = "SELECT nomgeo, pob_2015,sup_km2, vul_social ";
+if($_POST['alcaldia'] == 'true') {
+  $query = $query.", cve_mun ";
+} else if($_POST['densidad'] == 'true') {
+  $query = $query.", densidad_hab_km2 ";
+}
+$query = $query.", ST_AsGeoJson(geom,5) as coords ";
+$query = $query."FROM alcaldias ORDER BY cve_mun";
+............................................
+//***************************************//
+alcaldias_mun.html
+//***************************************//
+	if(respuesta.features.length > 0) {
+    for (var i = 0; i < respuesta.features.length; i++) {
+        contenido_html = "Alcaldía: " + respuesta.features[i].properties.nomgeo + "<br/>";
+        contenido_html += "Población: " + respuesta.features[i].properties.pob_2015 + "<br/>";
+        contenido_html += "Vulnerabilidad Social: " + respuesta.features[i].properties.vul_social + "<br/>";
+        contenido_html += "<hr/>";
+        $('#contenido').append(contenido_html);
+		} //fin del for
+	} else {
+			contenido_html = "La consulta no tiene resultados";
+			$('#contenido').append(contenido_html);
+	}
+............................................
+Agregar los resultados de la base de datos
+como una capa GeoJSON al mapa
+............................................
+function popUpInfo(features,layer) {
+    if (features.properties && features.properties.nomgeo) {
+	layer.bindPopup("<b>Alcaldia:" + features.properties.nomgeo + "</b><br/>Poblacion = " + features.properties.pob_2015);
+    }
+}
+
+var miconsulta = L.geoJson(null, {
+    style: function (feature) {
+	return {
+	    stroke: true,
+	    color: getColour(optColorear, columna),
+	    opacity: 0.7,
+	    weight: 1
+	};
+    },
+    onEachFeature: popUpInfo
+});
+
+function getColour(feature, campo) {
+	if (campo=='cve_mun') {
+		return "#ff00f0";
+	} else if (campo=='densidad_hab_km2') {
+		return "#1f57a1";
+	}
+}
+............................................
+
+		if(typeof(feature.properties.cve_mun) != 'undefined') {
+			optColorear = feature.properties.cve_mun;
+			columna = 'cve_mun';
+		} else {
+			optColorear = feature.properties.densidad_hab_km2;
+			columna = 'densidad_hab_km2';
+		}

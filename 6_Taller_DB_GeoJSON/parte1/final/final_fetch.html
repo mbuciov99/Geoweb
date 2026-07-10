@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>GeoWeb :: Leaflet Capa GeoJSON-DB</title>
+	<meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller leaflet BD GeoJSON" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui' />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+  <style>
+	html, body {
+		margin: 0;
+		padding: 0;
+	}
+	#map {
+		position: absolute;
+		top: 1;
+		bottom: 1;
+		width: 600px;
+		height: 400px;
+	}
+	#contenido {
+		position: relative;
+		top: 380px;
+	}
+	#formulario {
+		position: relative;
+		left: 600px;
+		width: 400px;
+	}
+  </style>
+</head>
+
+<body>
+	<h2>Mapa de consulta a BD</h2>
+
+	<div id='map'></div>
+	<div id="formulario">
+		<form action="#" method="get" id="envio_get">
+			<select name="tipo" id="tipo">
+				<option value="cpis">CENTROS DE INVESTIGACION</option>
+				<option value="empresas">EMPRESAS</option>
+				<option value="ies">INSTITUCIONES DE ENSEÑANZA SUPERIOR </option>
+				<option value="iap">INSTITUCIONES DE LA ADMINISTRACION PUBLICA</option>
+				<option value="ip">INSTITUCIONES PRIVADAS NO LUCRATIVAS</option>
+				<option value="fisica">PERSONA FISICA</option>
+			</select>
+			<input type="submit" value="Enviar">
+		</form>
+	</div>	
+    <span id="contenido"></span>
+
+	<script>
+	// Inicializa el mapa
+	var map = L.map('map').setView([19.29075, -99.22141], 5); // ajustar coordenadas y nivel de zoom
+
+	var osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap<\/a> contributors'
+	}).addTo(map);
+
+	function popUpInfo(features, layer) {
+		if (features.properties && features.properties.nombre) {
+			layer.bindPopup("<b>" + features.properties.nombre + "</b><br/>" + features.properties.delmun + "<br/>" + features.properties.tamanio);
+		}
+	}
+
+	var miconsulta = L.geoJson(null, {
+		pointToLayer: function (features, latlng) {
+			var tamanio = features.properties.tamanio;
+			if (tamanio == "GRANDE") {
+				return L.circleMarker(latlng, { color: "#ff0000", weight: 25 });
+			} else if (tamanio == "MEDIANA") {
+				return L.circleMarker(latlng, { color: "#fc8505", weight: 20 });
+			} else if (tamanio == "MICRO") {
+				return L.circleMarker(latlng, { color: "#4b6f9c", weight: 10 });
+			} else if (tamanio == "NINGUNA") {
+				return L.circleMarker(latlng, { color: "#767578", weight: 5 });
+			} else if (tamanio == "PEQUEÑA") {
+				return L.circleMarker(latlng, { color: "#118a11", weight: 15 });
+			} else {
+				return L.circleMarker(latlng, { color: "#000000", weight: 3 });
+			}
+		},
+		onEachFeature: popUpInfo
+	});
+
+	// Cuando se envíe el formulario
+	document.getElementById('envio_get').addEventListener('submit', async function (event) {
+		event.preventDefault(); // Previene el reenvío del formulario
+
+    let select = document.getElementById('tipo'); // Seleccionamos el <select> por su ID
+    var tipo = select.options[select.selectedIndex].textContent.trim(); // Obtenemos el texto de la opción seleccionada
+
+
+		var URL = 'php/listaInst_geojson_pdo.php';
+
+		try {
+			// Realiza la solicitud fetch
+			let response = await fetch(`${URL}?tipo=${encodeURIComponent(tipo)}`);
+			if (!response.ok) {
+				throw new Error('Error en la consulta: ' + response.statusText);
+			}
+
+			// Convierte la respuesta en formato JSON
+			let data = await response.json();
+
+			// Limpia las capas anteriores
+			miconsulta.clearLayers();
+			document.getElementById('contenido').innerHTML = '';
+
+			// Si hay resultados, añade los datos al mapa
+			if (data.features.length > 0) {
+				miconsulta.addData(data);
+
+				// Agrega los detalles al contenido
+				data.features.forEach(function (feature) {
+					var contenido_html = "Nombre " + feature.properties.nombre + "<br/>";
+					contenido_html += "Tipo: " + feature.properties.tipo + "<br/>";
+					contenido_html += "Municipio: " + feature.properties.delmun + "<br/>";
+					contenido_html += "Entidad: " + feature.properties.entidad + "<br/>";
+					contenido_html += "Sector: " + feature.properties.sector + "<br/>";
+					contenido_html += "Rama: " + feature.properties.rama + "<br/>";
+					contenido_html += "Clase: " + feature.properties.clase + "<br/>";
+					contenido_html += "<hr/>";
+					document.getElementById('contenido').innerHTML += contenido_html;
+				});
+			} else {
+				// Si no hay resultados
+				document.getElementById('contenido').innerHTML = "La consulta no tiene resultados";
+			}
+
+		} catch (error) {
+			// Manejo de errores
+			document.getElementById('contenido').innerHTML = 'Se produjo un error: ' + error.message;
+		}
+
+		// Agrega la capa al mapa
+		miconsulta.addTo(map);
+	});
+	</script>
+</body>
+</html>
