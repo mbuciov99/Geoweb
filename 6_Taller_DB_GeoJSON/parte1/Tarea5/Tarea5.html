@@ -1,170 +1,71 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>GeoWeb :: Leaflet Capa GeoJSON-DB</title>
-	<meta charset="utf-8" />
-  <link rel="icon" href="data:," />
-  <meta name="description" content="Taller leaflet BD GeoJSON" />
-  <meta name="keywords" content="html, geoweb, desarrollo web"/>
-  <meta name="author" content="Grupo de Geoweb CIG 2025" />
-  <meta name="copyright" content="CentroGeo 2026" />
-  <meta name="robots" content="index,follow" />
-  <meta http-equiv="cache-control" content="no-cache"/>
-  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui' />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
-  <script src="https://code.jquery.com/jquery-4.0.0.js"></script>	
-	<style>
-			html, body {
-		margin: 0;
-		padding: 0;
-	}
-	#map {
-		position: absolute;
-		top: 1;
-		bottom: 1;
-		width: 600px;
-		height: 400px;
-	}
-	#contenido {
-		position: relative;
-		top: 380px;
-	}
-	#formulario {
-		position: relative;
-		left: 600px;
-		width: 400px;
-	}
-
-  </style>
+    <title>GeoWeb :: Leaflet Capa GeoJSON-DB</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller leaflet BD GeoJSON" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb CIG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui' />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-4.0.0.js"></script>	
+    
+    <link rel="stylesheet" href="css/style.css" />
 </head>
-
 <body>
-	<h2>Mapa de consulta a BD</h2>
+    <h2>Consulta Integrada a Base de Datos Espacial</h2>
 
-	<div id='map'></div>
-	<div id="formulario">
-		<form action="#" method="get" id="envio_get">
-			<label for="palabra"> Buscar palabra:</label>
-			<input type="text" id="palabra" name="palabra" placeholder="Ej. EMPRESAS, INSTITUCIONES...">
-		</br></br>
+    <div id="menu-principal">
+        <button id="btn-parte1">Parte 1 (Instituciones)</button>
+        <button id="btn-parte2">Parte 2 (Vulnerabilidad)</button>
+        <button id="btn-parte3">Parte 3 (Población)</button>
+    </div>
 
-		<label for="tamanio">Tamaño de la instituciòn:</label>
-			<select name="tamanio" id="tamanio">
-				<option value="">---TODOS---</option>
-				<option value="MICRO">MICRO</option>
-				<option value="PEQUEÑA">PEQUEÑA</option>
-				<option value="MEDIANA">MEDIANA</option>
-				<option value="GRANDE">GRANDE</option>
-				<option value="NINGUNA">NINGUNA</option>
-			</select>
-		</br></br> 
-			<input type="submit" value="Enviar">
-		</form>
-	</div>	
-    <span id="contenido"></span>
-	<script>
-	var map = L.map('map').setView([19.29075, -99.22141], 5); // ajustar coordenadas y nivel de zoom
+    <hr>
 
-	var osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap<\/a> contributors'
-	}).addTo(map);
+    <div id="menu-parte1" class="menu-secundario" style="display: none;">
+        <form id="form_parte1">
+            <input type="text" id="busqueda" placeholder="Buscar palabra...">
+            <select id="tamanio">
+                <option value="">Selecciona tamaño...</option>
+                <option value="MICRO">MICRO</option>
+                <option value="PEQUEÑA">PEQUEÑA</option>
+                <option value="MEDIANA">MEDIANA</option>
+                <option value="GRANDE">GRANDE</option>
+                <option value="NINGUNA">NINGUNA</option>
+            </select>
+            <input type="submit" value="Buscar Instituciones">
+        </form>
+    </div>
 
-	function popUpInfo(features,layer) {
-		if(features.properties && features.properties.nombre) {
-			layer.bindPopup("<b>"+features.properties.nombre+"</b><br/>"+features.properties.delmun+"</b><br/>"+features.properties.tamanio);
-		}
-	}
+    <div id="menu-parte2" class="menu-secundario" style="display: none;">
+        <p style="margin: 0 0 10px 0;"><strong>Nivel de Vulnerabilidad Social:</strong></p>
+        <span style="color: #800026; font-size: 20px;">■</span> Muy Alto &nbsp;&nbsp;
+        <span style="color: #BD0026; font-size: 20px;">■</span> Alto &nbsp;&nbsp;
+        <span style="color: #FD8D3C; font-size: 20px;">■</span> Medio &nbsp;&nbsp;
+        <span style="color: #FEB24C; font-size: 20px;">■</span> Bajo &nbsp;&nbsp;
+        <span style="color: #FFEDA0; font-size: 20px;">■</span> Muy Bajo
+    </div>
 
-	var miconsulta = L.geoJson(null, {
-		pointToLayer: function(features,latlng) {
-			var tipo = features.properties.tipo;
+    <div id="menu-parte3" class="menu-secundario" style="display: none;">
+        <p style="margin: 0 0 10px 0;"><strong>Filtrar Alcaldías por Población (2015):</strong></p>
+        <button class="btn-filtro-pob" data-filtro="a">a) > 1 Millón</button>
+        <button class="btn-filtro-pob" data-filtro="b">b) 500k a 1 Millón</button>
+        <button class="btn-filtro-pob" data-filtro="c">c) 200k a 500k</button>
+        <button class="btn-filtro-pob" data-filtro="d">d) <= 200k</button>
+        <button class="btn-filtro-pob" data-filtro="e">e) Empiezan con 'C'</button>
+        <button class="btn-filtro-pob" data-filtro="f">f) Empiezan con 'T'</button>
+    </div>
 
-			// Color diferente para cada tipo de valor
-			if(tipo === "CENTROS DE INVESTIGACION") {
-				return L.circleMarker(latlng, {color:"#9400d3", radius: 8, weight:2, fillOpacity: 0.7});
-			} else if(tipo === "EMPRESAS") {
-				return L.circleMarker(latlng, {color:"#00FF00", radius: 8, weight:2, fillOpacity: 0.7});
-			} else if(tipo ==="INSTITUCIONES DE ENSEÑANZA SUPERIOR") {
-				return L.circleMarker(latlng, {color:"#0000FF", radius: 8, weight:2, fillOpacity: 0.7});
-			} else if(tipo ==="INSTITUCIONES DE LA ADMINISTRACION PUBLICA") {
-				return L.circleMarker(latlng, {color:"#FF8C00", radius: 8, weight:2, fillOpacity: 0.7});
-			} else if(tipo ==="INSTITUCIONES PRIVADAS NO LUCRATIVAS") {
-				return L.circleMarker(latlng, {color:"#FF1493", radius: 8, weight: 2, fillOpacity: 0.7});
-			} else if (tipo === "PERSONA FISICA"){
-				return L.circleMarker(latlng, {color:"#00FFFF", radius: 8, weight: 2, fillOpacity: 0.7})
-			} else {
-				return L.circleMarker(latlng, {color:"#76578", radius: 6, weight:2, fillOpacity: 0.5});
-			}
-		},
-		onEachFeature: popUpInfo
-	});
-
-
-////////////////////////////////////////////////////
-
-$(document).ready(function(){
-  $('#envio_get').submit(function(evento) {
-		evento.preventDefault();
-		// Validacion de solicitud
-		var valorPalabra= $('#palabra').val().trim();
-		var valorTamanio= $('#tamanio').val();
-		
-		// Si la palabra o el tamaño estàn vacios
-		if (valorPalabra === "" && valorTamanio === ""){
-			// Mensaje de error en pantalla
-			alert('Por favor escribe una palabra y selecciona un tamaño');
-			return; //Bloquear el envìo cancelando la funcion
-		}
-		// Curso normal del flujo si todo està en orden
-    var URL = 'php/listaInst_geojson.php';
-    var contenido_html = "";
-    var ajax_get = $.ajax({
-	    type : "GET",
-      url : URL,
-      dataType : 'json',
-		  data: {
-				palabra: $('#palabra').val().trim(), // atrapar lo que se puso en el texto
-				tamanio: $('#tamanio').val() // atrapa rlo que se puso en el select
-	},
-      contentType: 'application/json',
-	    timeout:10000,
-      success : function (response) {
-				console.log(response);
-				console.log(response.features.length);
-			
-				$('#contenido').html('');
-				miconsulta.clearLayers();
-		  	if(response.features.length > 0) {
-					miconsulta.addData(response);
-			//Recorre los resultados obtenidos
-					for(var i = 0; i < response.features.length; i++) {
-						contenido_html = "Nombre " + response.features[i].properties.nombre + "<br/>";
-						contenido_html += "Tipo: " + response.features[i].properties.tipo + "<br/>";
-						contenido_html += "Municipio: " + response.features[i].properties.delmun + "<br/>";
-						contenido_html += "Entidad: " + response.features[i].properties.entidad + "<br/>";
-						contenido_html += "Sector: " + response.features[i].properties.sector + "<br/>";
-						contenido_html += "Rama: " + response.features[i].properties.rama + "<br/>";
-						contenido_html += "Clase: " + response.features[i].properties.clase + "<br/>";
-						contenido_html += "<hr/>";
-						$('#contenido').append(contenido_html);
-					} //fin del for
-				} else {
-					contenido_html = "La consulta no tiene resultados";
-					$('#contenido').append(contenido_html);
-				}
-			},
-			error : function(jqXHR, estado, error) {
-				$('#contenido').html('Se produjo un error:' + estado + ' error: ' + error);
-			}
-    });
-		miconsulta.addTo(map);
-		//previene el re-envío del requerimiento
-		return false;
-	});
-});
-
-	
-	</script>
+    <div id="map"></div>
+    <div id="contenido">Haz clic en un botón del menú para comenzar.</div>
+    
+    <script src="js/mapa_integrado.js"></script>
 </body>
 </html>
