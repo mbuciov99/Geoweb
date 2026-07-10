@@ -1,10 +1,11 @@
 /*1. ESTILOS GLOBALES Y ETIQUETAS BASE*/
 html,
 body {
-    margin: 15px;
-    padding: 0;
+    margin: 0;
+    padding: 15px;
+    box-sizing: border-box;
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    background-color: #ffffff;
+    background-color: #d4e4ff;
     color: #333333;
 }
 
@@ -49,7 +50,8 @@ hr {
     background-color: #f8f9fa; /* Gris muy claro */
     border: 1px solid #e9ecef;
     border-radius: 4px;
-    width: 770px;
+    width:100%;
+    max-width:800px;
 }
 
 /* Elementos del formulario (Parte 1) */
@@ -93,7 +95,8 @@ hr {
 
 /*4. CONTENEDORES DEL MAPA Y RESULTADOS */
 #map {
-    width: 800px;
+    width: 100%;
+    max-width: 800px;
     height: 500px;
     margin-top: 20px;
     border: 2px solid #bdc3c7;
@@ -104,7 +107,8 @@ hr {
 #contenido {
     margin-top: 20px;
     padding: 15px;
-    width: 770px;
+    width:100%;
+    max-width:800px;
     font-size: 14px;
     line-height: 1.5;
     background-color: #fdfdfd;
@@ -112,4 +116,52 @@ hr {
     border-radius: 4px;
     max-height: 300px; /* Limita la altura */
     overflow-y: auto;  /* Crea un scroll si el texto es muy largo */
+}
+
+/* ===== Diseño responsivo ===== */
+
+@media (max-width: 768px) {
+
+    body{
+        margin:10px;
+    }
+
+    #menu-principal{
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+    }
+
+    #menu-principal button{
+        width:100%;
+        margin-right:0;
+    }
+
+    #form_parte1{
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+    }
+
+    #form_parte1 input[type="text"],
+    #form_parte1 select,
+    #form_parte1 input[type="submit"]{
+        width:100%;
+        box-sizing:border-box;
+        margin-right:0;
+    }
+
+    .btn-filtro-pob{
+        width:100%;
+        margin:5px 0;
+    }
+
+    #map{
+        height:350px;
+    }
+
+    #contenido,
+    .menu-secundario{
+        max-width:100%;
+    }
 }
