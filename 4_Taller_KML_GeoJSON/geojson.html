@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Geoweb: Formato GeoJSON</title>
+ <meta charset="utf-8" />
+ <link rel="icon" href="data:," />
+ <meta name="description" content="Inserta una capa local GeoJSON" />
+ <meta name="keywords" content="html, geoweb, desarrollo web"/>
+ <meta name="author" content="Grupo de Geoweb CIG 2025" />
+ <meta name="copyright" content="CentroGeo 2026" />
+ <meta name="robots" content="index,follow" />
+ <meta http-equiv="cache-control" content="no-cache"/>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+ <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+   <style>
+	body {
+	  margin: 0;
+	  padding: 0;
+	}
+	#map {
+	  position: absolute;
+	  top: 0;
+	  bottom: 0;
+	  width: 100%;
+	}
+  </style> 
+</head>
+
+<body>
+	<div id='map'></div>
+	<script>
+	var map = L.map('map').setView([20.71175, -99.22141], 5); // ajustar coordenadas y nivel de zoom
+
+	var osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap<\/a> contributors'
+	}).addTo(map);
+/*
+	// Mètodo 1
+	// Trabajar con las properties del archivo .geojson
+	function popUpInfo(feature, layer){
+		if (feature.properties && feature.properties.name) {
+			layer.bindPopup("<br>" + feature.properties.name + "</br><br/>" + feature.properties.description);
+		}
+	}
+
+	// Cargar el archivo GeoJSON
+	var misMarcadores= L.geoJson(null, {
+		onEachFeature: popUpInfo
+	});
+	$.getJSON("poi/Geoweb_CIG_2026.geojson", function(data){
+		misMarcadores.addData(data);
+	});
+	misMarcadores.addTo(map);
+	*/
+
+	// Mètodo 2
+	var mismarcadores = $.getJSON("poi/Geoweb_CIG_2026.geojson",function(featjson2data){
+    	// agrega la capa GeoJSON una vez que se carga el archivo
+    	L.geoJson(featjson2data, {
+		    onEachFeature: function( feature, layer ){
+                layer.bindPopup( "<strong>" + feature.properties.name + "</strong><br/>" + feature.properties.description + " Lugar");
+            }	
+	    }).addTo(map);
+  });
+
+
+	</script>
+</body>
+</html>

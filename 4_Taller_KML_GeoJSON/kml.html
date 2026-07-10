@@ -1,0 +1,54 @@
+<html>
+<head>
+   <title>Geoweb: Formato KML</title>
+   <meta charset="utf-8" />
+   <link rel="icon" href="data:," />
+   <meta name="description" content="Inserta una capa local KML" />
+   <meta name="keywords" content="html, geoweb, desarrollo web"/>
+   <meta name="author" content="Grupo de Geoweb CIG 2025" />
+   <meta name="copyright" content="CentroGeo 2026" />
+   <meta name="robots" content="index,follow" />
+   <meta http-equiv="cache-control" content="no-cache"/>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+   <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+   <!-- Realiza un acceso al plugin para KML -->
+   <!--<script src="https://harrywood.co.uk/maps/examples/leaflet/leaflet-plugins/layer/vector/KML.js"></script> -->
+   <script src='js/KML.js'></script>
+   <style>
+	body {
+	  margin: 0;
+	  padding: 0;
+	}
+	#map {
+	  position: absolute;
+	  top: 0;
+	  bottom: 0;
+	  width: 100%;
+	}
+  </style> 	
+   <script language="javascript">
+      window.addEventListener('DOMContentLoaded',init,false);
+      function init() {
+         var map = new L.Map('map').setView([20.71175, -99.22141], 5);                       
+        
+      	 L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+            maxZoom: 18
+         }).addTo(map);
+         map.attributionControl.setPrefix(''); // Oculta el texto 'Powered by Leaflet'.
+
+         var kmllayer= new L.KML("poi/Geoweb_CIG_2026.kml", {async:true});
+         kmllayer.on("loaded",function(e){
+            map.fitBounds(e.target.getBounds());
+         });
+         map.addLayer(kmllayer);
+      }
+   </script>
+</head>
+<body>
+   <div id="map"></div>
+   
+</body>            
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GeoWeb :: Taller_Leaflet</title>
+	<meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller Leaflet" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui' />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+  <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 800px;
+			height: 600px;
+    }
+    #getZoomButton {
+      position: absolute;
+      top: 15px;
+      left: 40px;
+      z-index: 1001;
+    }	
+  </style>
+</head>
+
+<body>
+	<div id='map'></div>
+	<script>
+		var surOeste = L.latLng(13.197164523281993, -112.28027343750001);
+		var norEste = L.latLng(28.34306490482549, -86.3525390625);
+		var bounds = L.latLngBounds(surOeste, norEste);
+		//var map = L.map('map').setView([19.37504, -99.11346], 11); // ajustar coordenadas y nivel de zoom
+
+		var map = L.map('map', {
+			minZoom: 8,
+			maxZoom: 13,
+			maxBounds: bounds
+		}).setView([19.37504, -99.11346], 11); // ajustar coordenadas y nivel de zoom
+
+		var osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap<\/a> contributors'
+		}).addTo(map);
+		var OpenStreetMap_Mapnik = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	       maxZoom: 19,
+	       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+	    });
+		var Esri_NatGeoWorldMap = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', {
+			attribution: 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC',
+				maxZoom: 16
+		});
+		var OpenTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+			maxZoom: 17,
+			attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+		});
+		var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+			attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+		});
+		//Mapas base Google
+		// Calles
+		var gCalles = googleStreets = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
+    	maxZoom: 20,
+    	subdomains:['mt0','mt1','mt2','mt3']
+		});
+		// Hibrido
+		var gHibrido = googleHybrid = L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
+    	maxZoom: 20,
+    	subdomains:['mt0','mt1','mt2','mt3']
+		});
+		// Satelite
+		var gSatelite = googleSat = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+    	maxZoom: 20,
+    	subdomains:['mt0','mt1','mt2','mt3']
+		});
+		// Terreno
+		var gTerreno = googleTerrain = L.tileLayer('https://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+    	maxZoom: 20,
+    	subdomains:['mt0','mt1','mt2','mt3']
+		});
+		// Stadia_Aliade_Smooth_Dark (Capa en modo oscuro)
+		var Stadia_AlidadeSmoothDark = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}', {
+			minZoom: 0,
+			maxZoom: 20,
+			attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+			ext: 'png'
+		});
+		// Stadia_AliadeSmooth (capa en tonos grises)
+		var Stadia_AlidadeSmooth = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.{ext}', {
+			minZoom: 0,
+			maxZoom: 20,
+			attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+			ext: 'png'
+		});
+		// Aliade Satellite
+		var Stadia_AlidadeSatellite = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.{ext}', {
+			minZoom: 0,
+			maxZoom: 20,
+			attribution: '&copy; CNES, Distribution Airbus DS, © Airbus DS, © PlanetObserver (Contains Copernicus Data) | &copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+			ext: 'jpg'
+		});
+		// Stamen WaterColor
+		var Stadia_StamenWatercolor = L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.{ext}', {
+			minZoom: 1,
+			maxZoom: 16,
+			attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+			ext: 'jpg'
+		});
+
+		var capasBase = {
+			"Calles Mapnik": OpenStreetMap_Mapnik,
+			"Nat Geo": Esri_NatGeoWorldMap,
+			"Carreteras": osmLayer,
+			"Topo": OpenTopoMap,
+			"Satelite": Esri_WorldImagery,
+			"Calles Google": gCalles,
+			"Hibrido Google": gHibrido,
+			"Satelite Google": gSatelite,
+			"Terreno Google": gTerreno,
+			"Stadia Aliade Smooth Dark": Stadia_AlidadeSmoothDark,
+			"Stadia Aliade Smooth": Stadia_AlidadeSmooth,
+			"Aliade Satellite": Stadia_AlidadeSatellite,
+			"Stamen Water Color": Stadia_StamenWatercolor
+		};
+		//L.control.layers(capasBase).addTo(map);
+
+	//Verificar que 'name' y 'description' sean los nombres correctos de cada elemento geográfico de tu archivo GeoJSON
+	function popUpInfo2(feature, layer) {
+		if (feature.properties && feature.properties.name) {
+			layer.bindPopup("<b>"+feature.properties.name+"</b><br>"+feature.properties.description);
+		}
+	}
+	
+	// Cargar GeoJSON desde un archivo externo
+	var misdatos = L.geoJson(null, {
+		onEachFeature: popUpInfo2
+	});
+
+	$.getJSON("poi/GeoWeb_CIG_2026.geojson", function (data) {
+		misdatos.addData(data);
+	});
+
+	misdatos.addTo(map);
+
+	$.getJSON("poi/coloniascdmx.geojson", function(coloniasdata) {
+		L.geoJson(coloniasdata).addTo(map);
+	});
+	/////////////////////////////////////////////////
+ 	function popUpInfo(feature, layer) {
+		if (feature.properties && feature.properties.col_name) {
+			layer.bindPopup("<b>"+feature.properties.col_name+"</b><br/>"+feature.properties.mun_name + "<br/>" + feature.properties.sta_name);
+		}
+	}
+	
+	// Cargar GeoJSON desde un archivo externo
+	var colonias = L.geoJson(null, {
+		style: function(feature){
+			var colorPoligono;
+			mun_code= feature.properties.mun_code;
+			if (mun_code == "09012") colorPoligono = "#680037";
+			else if(mun_code == "09015") colorPoligono= "#ff0000";
+			else colorPoligono = "#f7f7f7";
+			return {color: "#999000", weight: 1, fillColor: colorPoligono, fillOpacity: .4};
+		},
+		onEachFeature: popUpInfo
+	});
+
+	$.getJSON("poi/coloniascdmx.geojson", function (data) {
+		colonias.addData(data);
+	});
+
+	colonias.addTo(map);
+
+	// Lista de capas geojson
+	var overLayMaps= {
+		"CIG_2026":misdatos,
+		"Colonias CDMX": colonias
+	}
+	L.control.layers(capasBase, overLayMaps).addTo(map);
+
+	// Agregar un control de escala
+	L.control.scale().addTo(map);
+
+	//Estilo para marker
+    var greenIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+    L.marker([19.42147, -99.14601],{icon: greenIcon, draggable: true}).addTo(map);
+    L.circle([19.42147, -99.14601], {color: 'red',fillColor: '#f00030',fillOpacity: 0.3,radius: 5000}).addTo(map);
+    
+		var poligono = L.polygon([
+        [19.43507, -99.04121],
+        [19.44284, -99.02164],
+        [19.44899, -99.09571],
+        [19.24252, -99.04395],
+        [19.43507, -99.04121]
+    ],{color: '#ff31ac'}).addTo(map);
+
+
+		var polilinea = L.polyline([
+        [19.53377, -99.12842],
+        [19.51856, -99.00301],
+        [19.52600, -99.00922]
+    ],{color:'yellow',weight: 8}).addTo(map);
+
+	</script>
+</body>
+</html>

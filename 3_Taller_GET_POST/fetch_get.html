@@ -1,0 +1,209 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>GeoWeb: Taller GET y POST</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Intro a los metodos de formulario" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb CIG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+        body {
+            background-color: antiquewhite;
+            font-size: 14px;
+        }
+        select {
+            padding: 16px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #d4edf1;
+        }
+        span {
+            background-color: lightsteelblue;
+            font-family: "Times New Roman", Times, serif;
+        }
+    </style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const form = document.getElementById("envio_get");
+    var contenido = document.getElementById("contenido");
+
+    form.addEventListener("submit", function(event) {
+        event.preventDefault(); // evita el envío tradicional
+
+        var tipoSeleccionado = document.getElementById("tipo").options[document.getElementById("tipo").selectedIndex].text;
+        // var tipoSeleccionado = document.getElementById("tipo").value;
+
+        const URL = "php/listaInst_get_pdo.php?tipo=" + encodeURIComponent(tipoSeleccionado);
+
+        alert("Esperando respuesta desde servidor ubuntu");
+
+        fetch(URL, {
+            method: "GET",
+            cache: "no-cache",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error en la respuesta del servidor: " + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            contenido.innerHTML = ""; // limpia contenido previo
+
+            if (data.length > 0) {
+                data.forEach(item => {
+                    let contenido_html = `
+                        Nombre: ${item.nombre}<br/>
+                        Tipo: ${item.tipo}<br/>
+                        Municipio: ${item.delmun}<br/>
+                        Entidad: ${item.entidad}<br/>
+                        Sector: ${item.sector}<br/>
+                        Rama: ${item.rama}<br/>
+                        Clase: ${item.clase}<br/>
+                        <hr/>
+                    `;
+                    contenido.innerHTML += contenido_html;
+                });
+            } else {
+                contenido.innerHTML = "La consulta no tiene resultados<br/>";
+            }
+        })
+        .catch(error => {
+            contenido.innerHTML = "Se produjo un error: " + error.message;
+        })
+        .finally(() => {
+            alert("Se ha completado la solicitud al WS");
+        });
+    });
+});
+</script>
+</head>
+<body>
+<form action="#" method="get" id="envio_get">
+    <select name="tipo" id="tipo">
+        <option value="cpis">CENTROS DE INVESTIGACION</option>
+        <option value="empresas">EMPRESAS</option>
+        <option value="ies">INSTITUCIONES DE ENSEÑANZA SUPERIOR </option>
+        <option value="iap">INSTITUCIONES DE LA ADMINISTRACION PUBLICA</option>
+	    <option value="ip">INSTITUCIONES PRIVADAS NO LUCRATIVAS</option>
+	    <option value="fisica">PERSONA FISICA</option>
+		<option value="otracosa">OTRA COSA</option>
+    </select>
+	<input type="submit" value="Enviar">
+</form>
+<span id="contenido"></span>
+</body>
+</html>
+
+<!---
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>GeoWeb: Taller GET y POST</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Intro a los metodos de formulario" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb EG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<style>
+    body {
+        background-color: antiquewhite;
+        font-size: 14px;
+    }
+    select {
+        padding: 16px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #d4edf1;
+    }
+    span {
+        background-color: lightsteelblue;
+        font-family: "Times New Roman", Times, serif;
+    }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("envio_get");
+    const contenido = document.getElementById("contenido");
+
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault(); // evita el envío tradicional
+
+        const tipoSeleccionado = document.getElementById("tipo").options[document.getElementById("tipo").selectedIndex].text;
+        const URL = "php/listaInst_get.php?tipo=" + encodeURIComponent(tipoSeleccionado);
+
+        alert("Esperando respuesta desde servidor ubuntu");
+
+        try {
+            const response = await fetch(URL, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error("Error en la respuesta del servidor: " + response.status);
+            }
+
+            const data = await response.json();
+            contenido.innerHTML = ""; // limpia contenido previo
+
+            if (data.length > 0) {
+                for (const item of data) {
+                    let contenido_html = `
+                        Nombre: ${item.nombre}<br/>
+                        Tipo: ${item.tipo}<br/>
+                        Municipio: ${item.delmun}<br/>
+                        Entidad: ${item.entidad}<br/>
+                        Sector: ${item.sector}<br/>
+                        Rama: ${item.rama}<br/>
+                        Clase: ${item.clase}<br/>
+                        <hr/>
+                    `;
+                    contenido.innerHTML += contenido_html;
+                }
+            } else {
+                contenido.innerHTML = "La consulta no tiene resultados<br/>";
+            }
+        } catch (error) {
+            contenido.innerHTML = "Se produjo un error: " + error.message;
+        } finally {
+            alert("Se ha completado la solicitud al WS");
+        }
+    });
+});
+</script>
+</head>
+<body>
+<form action="#" method="get" id="envio_get">
+    <select name="tipo" id="tipo">
+        <option value="cpis">CENTROS DE INVESTIGACION</option>
+        <option value="empresas">EMPRESAS</option>
+        <option value="ies">INSTITUCIONES DE ENSEÑANZA SUPERIOR </option>
+        <option value="iap">INSTITUCIONES DE LA ADMINISTRACION PUBLICA</option>
+        <option value="ip">INSTITUCIONES PRIVADAS NO LUCRATIVAS</option>
+        <option value="fisica">PERSONA FISICA</option>
+        <option value="otracosa">OTRA COSA</option>
+    </select>
+    <input type="submit" value="Enviar">
+</form>
+<span id="contenido"></span>
+</body>
+</html>
+-->

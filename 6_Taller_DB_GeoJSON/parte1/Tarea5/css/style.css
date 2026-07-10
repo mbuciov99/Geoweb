@@ -1,0 +1,115 @@
+/*1. ESTILOS GLOBALES Y ETIQUETAS BASE*/
+html,
+body {
+    margin: 15px;
+    padding: 0;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #ffffff;
+    color: #333333;
+}
+
+h2 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: #cccccc;
+    margin: 15px 0;
+}
+
+/*2. MENÚ PRINCIPAL */
+#menu-principal {
+    margin-bottom: 15px;
+}
+
+#menu-principal button {
+    padding: 10px 15px;
+    margin-right: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #34495e; /* Azul oscuro */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Suaviza el cambio de color */
+}
+
+#menu-principal button:hover {
+    background-color: #2c3e50; /* Más oscuro al pasar el cursor */
+}
+
+/*3. MENÚS SECUNDARIOS (Formularios y Filtros) */
+.menu-secundario {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #f8f9fa; /* Gris muy claro */
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    width: 770px;
+}
+
+/* Elementos del formulario (Parte 1) */
+#form_parte1 input[type="text"],
+#form_parte1 select {
+    padding: 8px;
+    margin-right: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#form_parte1 input[type="submit"] {
+    padding: 8px 15px;
+    background-color: #27ae60; /* Verde */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#form_parte1 input[type="submit"]:hover {
+    background-color: #219150;
+}
+
+/* Botones de población (Parte 3) */
+.btn-filtro-pob {
+    margin: 4px 2px;
+    padding: 6px 10px;
+    background-color: #2980b9; /* Azul medio */
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.btn-filtro-pob:hover {
+    background-color: #2471a3;
+}
+
+/*4. CONTENEDORES DEL MAPA Y RESULTADOS */
+#map {
+    width: 800px;
+    height: 500px;
+    margin-top: 20px;
+    border: 2px solid #bdc3c7;
+    border-radius: 4px;
+    z-index: 1; /* Mantiene el mapa en su nivel correcto */
+}
+
+#contenido {
+    margin-top: 20px;
+    padding: 15px;
+    width: 770px;
+    font-size: 14px;
+    line-height: 1.5;
+    background-color: #fdfdfd;
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    max-height: 300px; /* Limita la altura */
+    overflow-y: auto;  /* Crea un scroll si el texto es muy largo */
+}

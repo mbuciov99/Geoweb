@@ -72,9 +72,53 @@
                     <button type="submit" class="btn-enviar">Enviar solicitud</button>
                 </fieldset>
             </form>
+            <hr>
+            <!--Formulario de consulta RENIECYT-->
+            <form class="formulario-clase" style="margin-top: 30px;" id="formulario-clase">
+                <fieldset>
+                    <legend>Práctica de Clase (Consulta RENIECYT)</legend>
+
+                    <label for="tipo_inst">Tipo de institución</label>
+                    <select name="tipo_inst" id="tipo_inst">
+                        <option value="cpis">CENTROS DE INVESTIGACION</option>
+                        <option value="empresas">EMPRESAS</option>
+                        <option value="ies">INSTITUCIONES DE ENSEÑANZA SUPERIOR</option>
+                        <option value="iap">INSTITUCIONES DE LA ADMINISTRACION PUBLICA</option>
+                        <option value="ip">INSTITUCIONES PRIVADAS NO LUCRATIVAS</option>
+                        <option value="fisica">PERSONA FISICA</option>
+                        <option value="otracosa">OTRA COSA</option>
+                    </select>
+
+                    <button type="button" id="btn-consultar-clase" class="btn-enviar">Consultar base de clase</button>
+                </fieldset>
+            </form>
+
+            <form class="formulario-geo" style="margin-top: 30px;" id="formulario-avanzado">
+                <fieldset>
+                    <legend>Busqueda Avanzada (Inciso F)</legend>
+                    
+                    <label for="palabra_clave">Buscar palabra en el nombre:</label>
+                    <input type="text" id="palabra_clave" name="palabra_clave" placeholder="Ej. Universidad, Tecnologico, Centro">
+
+                    <label for="entidad_federativa">Entidad Federativa:</label>
+                    <select name="entidad_fed" id="entidad_fed">
+                        <option value="">-- Selecciona una entidad--</option>
+                        <option value="CIUDAD DE MEXICO">CIUDAD DE MEXICO</option>
+                        <option value="ESTADO DE MEXICO">ESTADO DE MEXICO</option>
+                        <option value="JALISCO">JALISCO</option>
+                        <option value="NUEVO LEON">NUEVO LEON</option>
+                    </select>
+
+                    <div style="display: flex; gap: 10px; margin-top: 20px">
+                        <button type="button" id="btn-get" class="btn-enviar" style="flex:1;">Consulta GET</button>
+                        <button type="button" id="btn-post" class="btn-enviar" style="flex:1; background-color: #2c3b4d; border: 1px dashed #D9C5A7;">Consulta POST</button>
+                    </div>
+                </fieldset>
+            </form>
+
         </aside>
 
-        <main class="mapa" id="mapa">
+        <main class="mapa" id="mapa" style="display:none;">
             <h2 class="cabecera-2">
                 Mapa y Contenido (Visor NO2)
             </h2>

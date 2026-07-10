@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarea 4</title>
+
+    <link rel="stylesheet" href="Tarea4.css">
+</head>
+<body> 
+     <div class="grid-visor">
+        <header class="encabezado">
+            <h1 class="cabecera-1">
+                Visor de Concentraciones de Gases Contaminantes
+            </h1>
+        </header>
+        
+        <nav class="menu">
+    		<ul>
+        		<li><a href="#mapa">Mapa</a></li>
+        		<li><a href="#formulario">Formularios</a></li>
+        		<li><a href="#tabla">Tabla</a></li>
+			<li><a href="#listas">Listas</a></li>
+        		<li><a href="#enlaces">Enlaces</a></li>
+    		</ul>
+	    </nav>
+        
+        <aside class="formulario" id="formulario">
+
+            <form class="formulario-geo" action="#" method="post">
+                <fieldset>
+                    <legend>Solicitud de Datos TEMPO</legend>
+
+                    <label for="nombre">Nombre de la estación o investigador</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Ej. Estación Merced">
+
+                    <label for="ubicacion">Ubicación geográfica (latitud y longitud)</label>
+                    <input type="text" id="lat" name="lat" placeholder="Ingresa la latitud"> <br>
+                    <input type="text" id="lon" name="lon" placeholder="Ingresa la longitud"> <br>
+
+                    <label for="correo">Correo electrónico</label>
+                    <input type="email" id="correo" name="correo" placeholder="usuario@institucion.edu">
+
+                    <label for="clave-api">Contraseña de Acceso / Clave API:</label>
+                    <input type="password" id="clave-api" name="clave-api" placeholder="Ingresa tu contraseña de seguridad">
+
+                    <label for="contaminante">Gas traza de interés</label>
+                    <select id="contaminante" name="contaminante">
+                        <option value="" disabled selected>--- Selecciona un gas ---</option>
+                        <option value="CO">Monòxido de Carbono (CO)</option>
+                        <option value="NO">Monòxido de Nitrògeno (NO)</option>
+                        <option value="NO2">Dióxido de Nitrógeno (NO2)</option>
+                        <option value="NOx">Òxidos de nitrògeno (NOx)</option>
+                        <option value="O3">Ozono (O3)</option>
+                        <option value="PM10">Particulas menores a 10 micròmetros (PM10)</option>
+                        <option value="PM25">Particulas menores a 2.5 micròmetros (PM2.5)</option>
+                        <option value="PMCO">Partculas fraccion gruesa (PMCO)</option>
+                        <option value="SO2">Dióxido de Azufre (SO2)</option>
+                    </select>
+
+                    <label>Formato de Descarga</label>
+                    <div class="grupo-radio">
+                        <input type="radio" id="formato-csv" name="formato" value="csv" chacked>
+                        <label for="formato-csv">Tabla(.csv)</label>
+
+                        <input type="radio" id="formato-tiff" name="formato" value="tiff">
+                        <label for="formato-tiff">Imagen Raster (.tiff)</label>
+                    </div>
+
+                    <label for="justificacion">Justificación del uso de datos:</label>
+                    <textarea id="justificacion" name="justificacion" rows="4" placeholder="Describe brevemente tu investigación..."></textarea>
+
+                    <div class="grupo-chackbox">
+                        <input type="checkbox" id="terminos" name="terminos">
+                        <label for="terminos">Acepto los términos y condiciones de uso de datos</label>
+                    </div>
+
+                    <button type="submit" class="btn-enviar">Enviar solicitud</button>
+                </fieldset>
+            </form>
+
+        </aside>
+
+        <main class="mapa" id="mapa">
+            <h2 class="cabecera-2">
+                Mapa y Contenido (Visor NO2)
+            </h2>
+            <iframe 
+                src="https://www.openstreetmap.org/export/embed.html?bbox=-99.25%2C19.30%2C-99.05%2C19.50&amp;layer=mapnik" 
+                style="border: 1px solid black; width: 100%; height: 400px;" 
+                title="Mapa Base de la zona de estudio" 
+                allowfullscreen>
+            </iframe>
+
+        </main>
+
+
+        <aside class="textos">
+        
+            <h3 class="cabecera-3" id="listas"> Contaminantes medidos </h3> 
+                <ol> 
+                    <li>Ozono (O3)</li> 
+                    <li>Dióxido de Nitrogeno (NO2)</li>
+                    <li>Óxidos de Nitrógeno (NOx)</li> 
+                    <li>Monóxido de Nitrógeno (NO)</li> 
+                    <li>Dióxido de Azufre (SO2)</li> 
+                    <li>Monóxido de Carbono (CO)</li> 
+                    <li>Partículas menores a 10 micrómetros (PM10)</li> 
+                    <li>Partículas menores a 2.5 micrómetros (PM2.5)</li> 
+                    <li>Partículas fracción gruesa o "coarse" (PMCO)</li> 
+                </ol>
+
+            <!-- B. Insertar una clase para <table> considerando sus componentes: <td><th><tr></tr>*/--->
+            <h3 class="cabecera-3">Estaciones de Monitoreo</h3>
+                <table class="tabla-geo" id="tabla">
+                    <thead>
+                        <tr>
+                            <th>Estación de Monitoreo</th>
+                            <th>Coordenadas</th>
+                            <th>NO2 (ppb)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Merced</td>
+                            <td> 19.42, -99.11</td>
+                            <td>35.2</td>
+                        </tr>
+                        <tr>
+                            <td>Pedregal</td>
+                            <td>19.32, -99.19</td>
+                            <td>28.4</td>
+                        </tr>
+                    </tbody>
+                </table>
+    
+
+            
+        </aside>
+
+        <!-- CONTENIDO -->
+        <aside class="contenido-mapa">
+            <h4 class="cabecera-4" id="listas"> Detalles de contenido</h4> 
+
+                <div class="tarjeta-general tarjeta-clara">
+                    <p class="texto-general texto-intro">
+                        Este mapa muestra las mediciones satelitales.
+                    </p>
+                </div>
+
+                <div class="tarjeta-general tarjeta-oscura">
+                    <p class="texto-general">
+                        Las concentraciones varía según la hora del día.
+                    </p>
+                </div>
+
+                <p>
+                    Etiqueta con span <br>
+                    <span class="etiqueta-general etiqueta-alta">Crítico</span>
+                </p>
+
+                <p>
+                    Etiqueta con span <br>
+                    <span class="etiqueta-general etiqueta-baja">Óptimo</span>
+                </p>
+
+                <div>
+                    Etiqueta en div<br>
+                    <span class="valor-sensor">Etiqueta de span en div</span>
+                </div>
+
+                <p>
+                    Texto normal <span class="valor-sensor">span</span>.
+                </p>
+
+                <a href="Tarea_4.html">Leer metodología local</a>
+
+                <a href="https://browser.dataspace.copernicus.eu/?zoom=5&lat=50.16282&lng=20.78613&demSource3D=%22MAPZEN%22&cloudCoverage=30&dateMode=SINGLE" target="_blank">
+                    Descarga datos satelitales
+                </a>
+
+        </aside>
+
+        <aside class="imagen">
+            <div class="texto-imagen">
+                <p>Figura 1. Logotipo Centro Geo</p>
+            </div>
+            <!-- H. Insertar al menos una imagen y agregarle una clase.-->
+            <img src="https://www.centrogeo.org.mx/img/logo_centrogeo_wide.svg">
+            
+        </aside> <footer class="pie-pagina">
+            <h2 class="cabecera-2">Integrantes del equipo</h2>
+		    Mariajesús Bucio Villaseñor<br>
+		    Brenda Cecilia Ortíz Gómez<br>
+		    Coraima Reyes Urrego
+
+            <h2 class="cabecera-2" id="enlaces">Enlaces destacados</h2>
+
+            <a class="enlace-destacado" href="https://www.aire.cdmx.gob.mx/default.php?opc=%27ZaBhnmI=&dc=%27ZA==">Consulta la pagina de la Red Automática de Monitoreo Atmosférico (RAMA)</a><br>
+            <a href="https://www.aire.cdmx.gob.mx/default.php?opc=%27ZaBhnmI=&dc=%27ZA==" class="enlace-destacado">Consulta las estaciones de monitoreo de contaminantes de la RAMA</a>
+
+                
+        </footer>
+
+    </div> <script src="app.js"></script>
+</body>
+</html>

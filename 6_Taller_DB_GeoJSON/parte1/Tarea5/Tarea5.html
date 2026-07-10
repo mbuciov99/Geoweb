@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GeoWeb :: Leaflet Capa GeoJSON-DB</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller leaflet BD GeoJSON" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb CIG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui' />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-4.0.0.js"></script>	
+    
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <h2>Consulta Integrada a Base de Datos Espacial</h2>
+
+    <div id="menu-principal">
+        <button id="btn-parte1">Parte 1 (Instituciones)</button>
+        <button id="btn-parte2">Parte 2 (Vulnerabilidad)</button>
+        <button id="btn-parte3">Parte 3 (Población)</button>
+    </div>
+
+    <hr>
+
+    <div id="menu-parte1" class="menu-secundario" style="display: none;">
+        <form id="form_parte1">
+            <input type="text" id="busqueda" placeholder="Buscar palabra...">
+            <select id="tamanio">
+                <option value="">Selecciona tamaño...</option>
+                <option value="MICRO">MICRO</option>
+                <option value="PEQUEÑA">PEQUEÑA</option>
+                <option value="MEDIANA">MEDIANA</option>
+                <option value="GRANDE">GRANDE</option>
+                <option value="NINGUNA">NINGUNA</option>
+            </select>
+            <input type="submit" value="Buscar Instituciones">
+        </form>
+    </div>
+
+    <div id="menu-parte2" class="menu-secundario" style="display: none;">
+        <p style="margin: 0 0 10px 0;"><strong>Nivel de Vulnerabilidad Social:</strong></p>
+        <span style="color: #800026; font-size: 20px;">■</span> Muy Alto &nbsp;&nbsp;
+        <span style="color: #BD0026; font-size: 20px;">■</span> Alto &nbsp;&nbsp;
+        <span style="color: #FD8D3C; font-size: 20px;">■</span> Medio &nbsp;&nbsp;
+        <span style="color: #FEB24C; font-size: 20px;">■</span> Bajo &nbsp;&nbsp;
+        <span style="color: #FFEDA0; font-size: 20px;">■</span> Muy Bajo
+    </div>
+
+    <div id="menu-parte3" class="menu-secundario" style="display: none;">
+        <p style="margin: 0 0 10px 0;"><strong>Filtrar Alcaldías por Población (2015):</strong></p>
+        <button class="btn-filtro-pob" data-filtro="a">a) > 1 Millón</button>
+        <button class="btn-filtro-pob" data-filtro="b">b) 500k a 1 Millón</button>
+        <button class="btn-filtro-pob" data-filtro="c">c) 200k a 500k</button>
+        <button class="btn-filtro-pob" data-filtro="d">d) <= 200k</button>
+        <button class="btn-filtro-pob" data-filtro="e">e) Empiezan con 'C'</button>
+        <button class="btn-filtro-pob" data-filtro="f">f) Empiezan con 'T'</button>
+    </div>
+
+    <div id="map"></div>
+    <div id="contenido">Haz clic en un botón del menú para comenzar.</div>
+    
+    <script src="js/mapa_integrado.js"></script>
+</body>
+</html>

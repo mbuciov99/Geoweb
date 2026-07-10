@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>GeoWeb :: Leaflet Capa GeoJSON-DB</title>
+	<meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller Leaflet  BD GeoJSON" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui' />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+  <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+	<link href='css/alcaldias_mun.css' rel='stylesheet' />
+</head>
+
+<body>
+	<h2>Mapa de consulta a BD - GeoJSON</h2>
+
+	<div id='map'></div>
+	<div id="formulario">
+		<form action="#" method="post" id="envio_post">
+			<label for="mpios">Alcaldías CDMX</label><input type="radio" name="bdcdmx" id="mpios" value="alc" /><br/>
+			<label for="den_pob">Densidad de Población por km<sup>2</sup></label><input type="radio" name="bdcdmx" id="den_pob" value="den" /><br/>
+			<input type="submit" value="Enviar">
+		</form>
+	</div>	
+    <span id="contenido"></span>
+	<script>
+	var map = L.map('map').setView([19.29075, -99.22141], 10); // ajustar coordenadas y nivel de zoom
+
+	var Stadia_AlidadeSmooth = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+		maxZoom: 20,
+		attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+	}).addTo(map);
+
+////////////////////////////////////////////////////
+function popUpInfo(features,layer) {
+    if (features.properties && features.properties.nomgeo) {
+			//layer.bindPopup("<b>Alcaldia:" + features.properties.nomgeo + "</b><br/>Poblacion = " + features.properties.pob_2015);
+			layer.bindTooltip("<b>Alcaldia:" + features.properties.nomgeo + "</b><br/>Poblacion = " + features.properties.pob_2015);
+    }
+}
+
+var miconsulta = L.geoJson(null, {
+    style: function (feature) {
+			if(typeof(feature.properties.cve_mun)!='undefined'){
+				optColorear= feature.properties.cve_mun;
+				columna= 'cve_mun';
+			}else{
+				optColorear= feature.properties.densidad_hab_km2;
+				columna= 'densidad_hab_km2';
+			};
+			return {
+					stroke: true,
+					color: getColour(optColorear, columna),
+					opacity: 0.7,
+					weight: 1
+			};
+    },
+    onEachFeature: popUpInfo
+});
+
+/*function getColour(feature, campo) {
+	if (campo=='cve_mun') {
+		return "#ff00f0";
+	} else if (campo=='densidad_hab_km2') {
+		return "#1f57a1";
+	}
+}*/
+
+function getColour(feature, campo) {
+	console.log("Lo que llega como 'feature':", feature);
+	if(!feature || !feature.properties){
+		console.warn("El objeto no tiene propiedades:", feature);
+		return "#808080";
+	}
+	if (campo=='cve_mun') {
+		let valor= feature.properties[campo];
+		if (valor == '005') {
+			return "#39CBE6";
+		};
+		return coloresMunicipios[valor]|| "#CCCCCC";
+	} else if (campo=='densidad_hab_km2') {
+		return "#1f57a1";
+	}
+}
+
+///////////////////////////////////////////////////
+	
+$(document).ready(function(){
+    $('#envio_post').submit(function() {
+		//alert("Alcaldías = " + document.getElementById('mpios').checked);
+		//alert("Densidad = " + document.getElementById('den_pob').checked);
+		//alert($('input:radio[name=bdcdmx]:checked').val());
+		var radio1 = $("#mpios").is(":checked");
+		var radio2 = $("#den_pob").is(":checked");
+		if (radio1 == false && radio2==false){
+			alert("Selecciona alguna de las dos opciones de consulta");
+			return false;
+		} else {
+			var URL = 'php/alcaldias_mun.php';
+			var contenido_html = "";
+			var ajax_post = $.ajax({
+				type : "POST",
+				url : URL,
+				dataType : 'json',
+				data : {
+					alcaldia: radio1,
+					densidad: radio2
+				},
+				cache: false,
+				timeout:10000,
+			success : function (respuesta) {
+			//limpia la capa temporal de consulta anterior
+			miconsulta.clearLayers();
+			$('#contenido').html('');
+			if(respuesta.features.length > 0) {
+				miconsulta.addData(respuesta);
+				//Recorre los resultados obtenidos
+				console.log(respuesta);
+					if(respuesta.features.length > 0) {
+						for (var i = 0; i < respuesta.features.length; i++) {
+								contenido_html = "Alcaldía: " + respuesta.features[i].properties.nomgeo + "<br/>";
+								contenido_html += "Población: " + respuesta.features[i].properties.pob_2015 + "<br/>";
+								contenido_html += "Vulnerabilidad Social: " + respuesta.features[i].properties.vul_social + "<br/>";
+								contenido_html += "<hr/>";
+								$('#contenido').append(contenido_html);
+						} //fin del for
+					} else {
+							contenido_html = "La consulta no tiene resultados";
+							$('#contenido').append(contenido_html);
+					}
+			} else {
+				contenido_html = "La consulta no tiene resultados";
+				$('#contenido').append(contenido_html);
+			}
+				
+			},
+			error : function(jqXHR, estado, error) {
+				$('#contenido').html('Se produjo un error:' + estado + ' error: ' + error);
+			}
+			});
+			///////////////////////////////////////
+			miconsulta.addTo(map);
+
+			//previene el re-envío del requerimiento
+			return false;
+		} //fin del if que verifica la seleccion de radio button
+	}); //fin del evento submit
+}); //fin de la fn document.ready
+
+	</script>
+</body>
+</html>
+

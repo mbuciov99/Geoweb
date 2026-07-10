@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>GeoWeb :: Leaflet Capa GeoJSON-DB</title>
+	<meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller Leaflet  BD GeoJSON" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui' />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+  <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+	<link rel="stylesheet" href="css/cluster.css" />
+	<!--<link rel="stylesheet" href="http://192.168.1.92/6_Taller_BD_GeoJSON/parte3/MarkerCluster/css/MarkerCluster.css"/> -->
+	<link rel="stylesheet" href="../MarkerCluster/css/MarkerCluster.css"/>
+	<link rel="stylesheet" href="../MarkerCluster/css/MarkerCluster.Default.css"/>
+	<script src="../MarkerCluster/js/MarkerCluster.js"></script>
+</head>
+
+<body>
+	<h2>Mapa de consulta a BD - GeoJSON</h2>
+
+	<div id='map'></div>
+	<div id="formulario">
+		<form action="#" method="get" id="envio_get">
+			<select name="tipo" id="tipo">
+				<option value="cpis">CENTROS DE INVESTIGACION</option>
+				<option value="empresas">EMPRESAS</option>
+				<option value="ies">INSTITUCIONES DE ENSEÑANZA SUPERIOR</option>
+				<option value="iap">INSTITUCIONES DE LA ADMINISTRACION PUBLICA</option>
+				<option value="ip">INSTITUCIONES PRIVADAS NO LUCRATIVAS</option>
+				<option value="fisica">PERSONA FISICA</option>
+			</select><br/>
+			<input type="submit" value="Enviar">
+		</form>
+	</div>	
+    <span id="contenido"></span>
+		<script src="js/cluster.js"></script>
+</body>
+</html>

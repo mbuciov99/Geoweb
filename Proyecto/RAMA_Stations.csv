@@ -1,0 +1,45 @@
+﻿Clave,Nombre,ID,Representatividad,Estatus,Alcaldía/Municipio,Estado,Latitud,Longitud,Altitud
+ACO,Acolman,4.84E+11,"O3, CO, SO2, NO2, PM10,PM2.50",Activa,Acolman,Estado de Mexico,19.635501,-98.912003,2198
+AJU,Ajusco,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Tlapan,CDMX,19.154286,-99.162611,2953
+AJM,Ajusco Medio,4.84E+11,"O3, CO, SO2, NO2, PM10,PM2.50",Activa,Tlapan,CDMX,19.272161,-99.207744,2619
+ATI,Atizapan,4.84E+11,"O3, CO, SO2, NO2, PM10,PM2.50",Activa,Atizapan de Zaragoza,Estado de Mexico,19.576963,-99.254133,2341
+BJU,Benito Juarez,4.84E+11,"03, CO, SO2, NO2, PM10, PM2.5",Activa,Benito Juzrez,CDMX,19.371675,-99.1509074,2250
+CAM,Camarones,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Azacapotzalco,CDMX,19.468404,-99.169794,2233
+CCA,Centro de Ciencias Atmosfericas,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Coyoacan,CDMX,19.3262,-99.1761,2280
+TEC,Cerro del Tepeyac,4.84E+11,,Activa,Gustavo A. Madero,CDMX,19.487227,-99.114229,2265
+CHO,Chalco,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Chalco,Estado de Mexico,19.266948,-98.886088,2253
+COR,Corena,4.84E+11,,Activa,Xochimilco,CDMX,19.265346,-99.02604,2242
+CUA,Cuajimalpa,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Cuajimalpa de Morelos,CDMX,19.365313,-99.291705,2704
+CUT,Cuajimalpa,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Cautitlán Izcalli,Estado de Mexico,19.64678,-99.21024,2271
+DIC,Diconsa,4.84E+11,,Activa,Tlapan,CDMX,19.298819,-99.185774,2305
+EAJ,Ecoguardas Ajusco,4.84E+11,,Activa,Tlapan,CDMX,19.271222,-99.203971,2584
+EDL,Ex Convento Desierto de los Leones,4.84E+11,,Activa,Cuajimalpa de Morelos,CDMX,19.313357,-99.310635,2980
+FAC,Fes Acatlan,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Naucalpan de Juarez,Estado de Mexico,19.482473,-99.243524,2299
+FAR,FES Aragon,4.85E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Nezahualcoyotl,Estado de Mexico,19.483692,-99.046176,2230
+GAM,Gustavo A. MDERO,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Gustavo A. Madero,CDMX,19.482758,-99.094648,2227
+HGM,Hospital General de Mexico,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Cuauhtemoc,CDMX,19.411617,-99.152207,2234
+INN,Investigaciones Nucleares,4.84E+11,"O3, CO, SO2, NO2, PM10, |",Activa,Ocoyoacac,Estado de Mexico,19.291968,-99.38052,3082
+IZT,Iztacalco,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Iztacalco,CDMX,19.384413,-99.117641,2238
+LPR,La Presa,4.84E+11,"O3, CO, SO2, NO2, PM10,PM2.50",Activa,Tlalnepantla de Baz,Estado de Mexico,19.534727,-99.11772,2302
+LAA,Laboratorio de Analisis Ambiental,4.84E+11,,Activa,Gustavo A. Madero,CDMX,19.483781,-99.147312,2255
+IBM,Legaria,4.84E+11,,Activa,Miguel Hidalgo,CDMX,19.443319,-99.21536,2314
+LOM,Lomas,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Miguel Hidalgo,CDMX,19.403,-99.242062,2434
+LLA,Los Laureles,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Ecatepec de Morelos,Estado de Mexico,19.578792,-99.039644,2230
+MER,Merced,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Venustiano Carranza,CDMX,19.42461,-99.119594,2245
+MGH,Miguel Hidalgo,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Miguel Hidalgo,CDMX,19.40405,-99.20266,2366
+MPA,Milpa Alta,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Milpa Alta,CDMX,19.200712,-99.011325,2594
+MON,Montecillo,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Texcoco,Estado de Mexico,19.460415,-98.902853,2252
+MCM,Museo de la Ciudad de Mexico,4.84E+11,,Activa,Cuauhtemoc,CDMX,19.429071,-99.131924,2237
+NEZ,Nezahualcoyotl,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Nezahualcoyotl,Estado de Mexico,19.393734,-99.028212,2235
+PED,Pedregal,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Alvaro Obregon,CDMX,19.325146,-99.204136,2326
+SAG,San Agustin,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Ecatepec de Morelos,Estado de Mexico,19.532968,-99.030324,2241
+SNT,San Nicolas Totolapan,4.84E+11,,Activa,La Magdalena Contreras,CDMX,19.250385,-99.256462,2946
+SFE,Santa Fe,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Cuajimalpa de Morelos,CDMX,19.357357,-99.262865,2599
+SAC,Santiago Acahualtepec,4.85E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Iztapalapa,CDMX,19.34561,-99.009381,2293
+TAH,Tlahuac,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Xochimilco,CDMX,19.246459,-99.010564,2297
+TLA,Tlalnepantla,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Tlalnepantla de Baz,Estado de Mexico,19.529077,-99.204597,2311
+TLI,Tultutlan,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Tultitlan,Estado de Mexico,19.602542,-99.177173,2313
+UIZ,UAM Iztaplapa,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Iztapalapa,CDMX,19.360794,-99.07388,2221
+UAX,UAM Xochimilco,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Coyoacan,CDMX,19.304441,-99.103629,2246
+VIF,Villa de la Flores,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Coacalco de Berriozabal,Estado de Mexico,19.658223,-99.09659,2242
+XAL,Xalostoc,4.84E+11,"O3, CO, SO2, NO2, PM10, PM2.5",Activa,Ecatepec de Morelos,Estado de Mexico,19.525995,-99.0824,2160

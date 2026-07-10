@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>GeoWeb :: L.Control.jQueryDialog</title>
+	<meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller Leaflet  BD GeoJSON" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui' />
+    <!-- Se agregan las librerías de Leaflet... y JQuery -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+  <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+  <!-- Se agregan librerias de componentes UI de JQuery -->
+  <script type="text/javascript" src="https://code.jquery.com/ui/1.14.2/jquery-ui.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.14.2/themes/smoothness/jquery-ui.css" /> 
+    <!-- jQuery utiliza FontAwesome como un conjunto de iconos, puede ser otra fuente similar  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+    <!-- Las librerías de diálogos jQuery en Leaflet -->
+  <link rel="stylesheet" type="text/css" href="css/leaflet-jquerydialog.css" />
+  <script type="text/javascript" src="js/leaflet-jquerydialog.js"></script>
+  <style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    html, body, #map {
+        height: 100%;
+    }
+    div.ui-dialog {
+        z-index: 1000;
+    }
+    .ui-widget-overlay {
+        z-index:1000;
+        opacity:0.8;
+    }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+$(document).ready(function () {
+    // mapa básico
+    var map = L.map('map');
+    map.setView([20.71175, -99.22141],5);
+    /*
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright/">OpenStreetMap contributors</a>'
+	}).addTo(map);  */
+    map.createPane('pane_GoogleMaps_1');
+    map.getPane('pane_GoogleMaps_1').style.zIndex = 401;
+        var layer_GoogleMaps_1 = L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleMaps_1',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 18
+        });
+    map.addLayer(layer_GoogleMaps_1);
+
+    // Los diálogos, una ventana es modal y la otra no lo es
+    $('#dialog-about').dialog({
+        modal: false, autoOpen: false, closeOnEsc: true, draggable: false,
+        position: { my:'center top', at:'center top+100', or:'#map' }
+    });
+    $('#dialog-help').dialog({
+        modal: true, autoOpen: true, closeOnEsc: false, draggable: false,
+    });
+    
+    // Controles en el mapa para manejar los diálogos
+    new L.Control.jQueryDialog({
+        dialogId: 'dialog-help',
+        tooltip: "Ayuda",
+        iconClass: 'fa fa-question-circle'
+    }).addTo(map);
+    new L.Control.jQueryDialog({
+        dialogId: 'dialog-about',
+        tooltip: "Acerca de",
+        iconClass: 'fa-solid fa-circle-info'
+    }).addTo(map);
+});
+</script>
+
+
+
+<!-- Mostrar el mapa -->
+<div id="map"></div>
+
+
+<!-- El diálogo que se abre con el control -->
+<div id="dialog-about" title="Acerca de...">
+    <p>Para mayor información en el uso del plugin de este control, consulta el <a href="https://github.com/gregallensworth/L.Control.BootstrapModal" target="_blank">sitio del proyecto en Github</a>.</p>
+</div> 
+
+<!-- El diálogo que se abre con el control -->
+<div id="dialog-help" title="Ventana de ayuda">
+    <p>Este control abre una ventana modal. En este control se pueden ubicar links de ayuda, avisos, formularios de contacto o de retroalimentación.</p>
+    <p>Para mayor información en el uso del plugin de este control, consulta el <a href="https://github.com/gregallensworth/L.Control.BootstrapModal" target="_blank">sitio del proyecto en Github</a>.</p>
+</div>
+
+
+</body>
+</html>
+
+

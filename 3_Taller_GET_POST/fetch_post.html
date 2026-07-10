@@ -1,0 +1,209 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>GeoWeb: Taller GET y POST</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Intro a los metodos de formulario" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb CIG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+	body {
+		background-color: lightblue;
+		font-size: 14px;
+	}
+	select {
+		padding: 16px 20px;
+  	border: none;
+  	border-radius: 4px;
+  	background-color: #d4edf1;
+	}
+	span {
+		background-color: lightgreen;
+		font-family: "Times New Roman", Times, serif;
+	}
+</style>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("submit").addEventListener("click", function() {
+      const URL = 'php/listaInst_post_pdo.php';
+      var tipo = document.querySelector('#tipo option:checked').text;
+      let data = new URLSearchParams();
+        data.append('tipo', tipo);
+
+        // Antes de enviar
+        alert("Esperando respuesta desde mi servidor ubuntu");
+        fetch(URL, {
+            method: 'POST',
+            body: data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error en la respuesta del servidor: " + response.status);
+            }
+            return response.json();
+        })
+        .then(response => {
+            const contenido = document.getElementById('contenido');
+            contenido.innerHTML = '';
+
+            if (response.length > 0) {
+                response.forEach(item => {
+                    let contenido_html = `
+                        Nombre: ${item.nombre}<br/>
+                        Tipo: ${item.tipo}<br/>
+                        Municipio: ${item.delmun}<br/>
+                        Entidad: ${item.entidad}<br/>
+                        Sector: ${item.sector}<br/>
+                        Rama: ${item.rama}<br/>
+                        Clase: ${item.clase}<br/>
+                        <hr/>
+                    `;
+                    contenido.innerHTML += contenido_html;
+                });
+            } else {
+                contenido.innerHTML = "La consulta no tiene resultados<br/>";
+            }
+        })
+        .catch(error => {
+            document.getElementById('contenido').innerHTML = 'Se produjo un error: ' + error.message;
+        })
+        .finally(() => {
+            alert("Se ha completado la solicitud al WS");
+        });
+
+        return false;
+    });
+});
+</script>
+
+</head>
+<body>
+<form action="#" method="post" id="envio_post">
+    <select name="tipo" id="tipo">
+      <option value="cpis">CENTROS DE INVESTIGACION</option>
+      <option value="empresas">EMPRESAS</option>
+      <option value="ies">INSTITUCIONES DE ENSEÑANZA SUPERIOR </option>
+      <option value="iap">INSTITUCIONES DE LA ADMINISTRACION PUBLICA</option>
+	    <option value="ip">INSTITUCIONES PRIVADAS NO LUCRATIVAS</option>
+	    <option value="fisica">PERSONA FISICA</option>
+      <option value="otracosa">OTRA COSA</option>
+    </select>
+	<input id="submit" type="button" value="Submit">
+</form>
+
+<span id="contenido"></span>
+</body>
+</html>
+<!--
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>GeoWeb: Taller GET y POST</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Intro a los metodos de formulario" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb EG 2025" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+	body {
+		background-color: lightblue;
+		font-size: 14px;
+	}
+	select {
+		padding: 16px 20px;
+  	border: none;
+  	border-radius: 4px;
+  	background-color: #d4edf1;
+	}
+	span {
+		background-color: lightgreen;
+		font-family: "Times New Roman", Times, serif;
+	}
+</style>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("submit").addEventListener("click", async () => {
+      const URL = 'php/listaInst_post.php';
+      var tipo = document.querySelector('#tipo option:checked').text;
+      let data = new URLSearchParams();
+        data.append('tipo', tipo);
+
+      // Antes de enviar
+      alert("Esperando respuesta desde mi servidor ubuntu");
+
+      try {
+        const response = await fetch(URL, {
+          method: 'POST',
+          body: data,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error("Error en la respuesta del servidor: " + response.status);
+        }
+
+        var jsonData = await response.json();
+        const contenido = document.getElementById('contenido');
+        contenido.innerHTML = '';
+
+        if (jsonData.length > 0) {
+          jsonData.forEach(item => {
+            let contenido_html = `
+              Nombre: ${item.nombre}<br/>
+              Tipo: ${item.tipo}<br/>
+              Municipio: ${item.delmun}<br/>
+              Entidad: ${item.entidad}<br/>
+              Sector: ${item.sector}<br/>
+              Rama: ${item.rama}<br/>
+              Clase: ${item.clase}<br/>
+              <hr/>
+            `;
+            contenido.innerHTML += contenido_html;
+          });
+        } else {
+          contenido.innerHTML = "La consulta no tiene resultados<br/>";
+        }
+      } catch (error) {
+        document.getElementById('contenido').innerHTML = 'Se produjo un error: ' + error.message;
+      } finally {
+        alert("Se ha completado la solicitud al WS");
+      }
+
+      return false;
+    }); //Fin del evento submit del formulario
+  }); // Fin del evento DOMContentLoaded
+</script>
+
+</head>
+<body>
+<form action="#" method="post" id="envio_post">
+    <select name="tipo" id="tipo">
+      <option value="cpis">CENTROS DE INVESTIGACION</option>
+      <option value="empresas">EMPRESAS</option>
+      <option value="ies">INSTITUCIONES DE ENSEÑANZA SUPERIOR </option>
+      <option value="iap">INSTITUCIONES DE LA ADMINISTRACION PUBLICA</option>
+	    <option value="ip">INSTITUCIONES PRIVADAS NO LUCRATIVAS</option>
+	    <option value="fisica">PERSONA FISICA</option>
+      <option value="otracosa">OTRA COSA</option>
+    </select>
+	<input id="submit" type="button" value="Submit">
+</form>
+
+<span id="contenido"></span>
+</body>
+</html>
+-->
