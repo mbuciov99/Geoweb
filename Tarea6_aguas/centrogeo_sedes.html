@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GeoWeb :: Leaflet Capa GeoJSON-DB</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Taller leaflet BD GeoJSON" />
+    <meta name="keywords" content="html, geoweb, desarrollo web"/>
+    <meta name="author" content="Grupo de Geoweb CIG 2026" />
+    <meta name="copyright" content="CentroGeo 2026" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui' />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+    
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <h2>Consulta Sedes CentroGeo</h2>
+    <hr>
+
+    <div id="form_parte1" class="menu-secundario">
+        <div style="margin-bottom: 10px;">
+          <label><strong>¿Qué deseas buscar?</strong></label><br>
+          <input type="radio" id="incisoA" name="tipo_busqueda" value="A" onchange="toggleOpciones()" checked>
+          <label for="incisoA">A) Instituciones más cercanas</label><br>
+          
+          <input type="radio" id="incisoB" name="tipo_busqueda" value="B" onchange="toggleOpciones()">
+          <label for="incisoB">B) Centros Públicos de Investigación (CPI)</label><br>
+
+          <input type="radio" id="incisoC" name="tipo_busqueda" value="C" onchange="toggleOpciones()">
+          <label for="incisoC">C) Distancia desde mi Domicilio</label><br>
+
+          <input type="radio" id="incisoD" name="tipo_busqueda" value="D" onchange="toggleOpciones()">
+          <label for="incisoD">D) Centros de Investigación por radio máximo</label><br>
+
+          <input type="radio" id="incisoE" name="tipo_busqueda" value="E" onchange="toggleOpciones()">
+          <label for="incisoE">E) Empresas Grandes por radio máximo</label><br>
+
+          <input type="radio" id="incisoF" name="tipo_busqueda" value="F" onchange="toggleOpciones()">
+          <label for="incisoF">F) Área de influencia (Polígono Buffer ST_Buffer)</label>
+        </div>
+
+        <div id="div_cantidad" style="margin-bottom: 10px;">
+          <label for="cantidad">Cantidad de resultados:</label>
+          <select id="cantidad">
+            <option value="5">5</option>
+            <option value="8">8</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+          </select>
+        </div>
+
+        <div id="div_distancia" style="margin-bottom: 10px; display: none;">
+          <label for="distancia">Distancia máxima (km):</label>
+          <select id="distancia">
+            <option value="5">5</option>
+            <option value="8">8</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="25">25</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+          <label for="sede">Sede CentroGeo:</label>
+          <select id="sede">
+            <option value="CDMX">CDMX</option>
+            <option value="Aguascalientes">Aguascalientes</option>
+            <option value="Merida">Mérida</option>
+          </select>
+        </div>
+
+        <button onclick="buscarDatos()">Consultar</button>
+    </div>
+    
+    <div id="map"></div>
+    <div id="contenido"></div>
+    
+    <script src="js/mapa.js"></script>
+</body>
+</html>
