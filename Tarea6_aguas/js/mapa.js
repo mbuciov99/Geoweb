@@ -89,6 +89,12 @@ function buscarDatos() {
                            popupContent += `Distancia: ${parseFloat(feature.properties.distancia_km).toFixed(2)} km`;
                         }
                         layer.bindPopup(popupContent);
+                        layer.on('mouseover', function (e){
+                            this.openPopup();
+                        });
+                        layer.on('mouseout', function (e){
+                            this.closePopup();
+                        });
                     }
                 }
             }).addTo(map);
