@@ -10,6 +10,7 @@ try {
     $parametro = isset($_GET['parametro']) ? (float)$_GET['parametro'] : 5; 
     $sede = isset($_GET['sede']) ? $_GET['sede'] : 'CDMX';
 
+
     $coordenadas = [
         'CDMX' => '-99.1836, 19.3041', 
         'Merida' => '-89.7807, 21.1309',
@@ -39,15 +40,18 @@ try {
         if($sede == 'Aguascalientes'){
             $mi_lon = -102.2960; 
             $mi_lat = 21.8823;
-            $etiqueta= 'Linea a Domicilio (Aguascalientes)'; 
+            $domicilio = 'Casa de Brenda';
+            $etiqueta= 'Distancia de la sede a casa de Brenda'; 
         } elseif ($sede == 'CDMX') {
             $mi_lon= -98.99947484959046;
             $mi_lat= 19.378648413678867;
-            $etiqueta= 'Lìnea a Mi Domicilio (Zona Metropolitana CDMX)';
-        } elseif ($sede = 'Merida'){
+            $domicilio = 'Casa de Marichuy';
+            $etiqueta= 'Distancia de la sede a casa de Marichuy'; 
+        } elseif ($sede == 'Merida'){
             $mi_lon= -89.57913448136577;
             $mi_lat= 20.974512342502887;
-            $etiqueta= 'Linea a Domicilio (Merida)';
+            $domicilio = 'Casa de Coraima';
+            $etiqueta= 'Distancia de la sede a casa de Coraima'; 
         }
         // Coordenadas aproximadas de las tres cedes de Centro Geo (Aguascalientes, CDMX y Merida)
         $query = "SELECT '{$etiqueta}' AS nombre,
@@ -62,17 +66,15 @@ try {
                     )
                 ) AS coords
                 UNION ALL
-                SELECT 'Mi Domicilio' AS nombre,
+                SELECT 
+                    '{$domicilio}' AS nombre,
                     ST_Distance(
                         ST_SetSRID(ST_MakePoint({$mi_lon}, {$mi_lat}),4326):: geography,
                         ST_SetSRID(ST_MakePoint({$punto_origen}), 4326):: geography
                         )/1000 AS distancia_km,
                         ST_AsGeoJSON(ST_SetSRID(ST_MakePoint({$mi_lon}, {$mi_lat}), 4326)) AS coords
                         
-                UNION ALL
-                SELECT '{$sede}' AS nombre,
-                0 AS distancia_km,
-                ST_ASGeoJSON(ST_SetSRID(ST_MakePoint({$punto_origen}),4326)) AS coords
+                
                 ;";
     }  
     // d: Centros a distancia máxima

@@ -1,10 +1,58 @@
 // Inicializar el mapa
 var map = L.map('map').setView([19.35, -99.15], 10);
 var capaActual = null; 
+var capaSedes = L.layerGroup().addTo(map);
 
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
+
+const iconoCentroGeo = L.icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+
+const sedesCentroGeo = [
+    {
+        nombre: "CentroGeo Ciudad de México",
+        lat: 19.3041,
+        lon: -99.1836
+    },
+    {
+        nombre: "CentroGeo Mérida",
+        lat: 21.1309,
+        lon: -89.7807
+    },
+    {
+        nombre: "CentroGeo Aguascalientes",
+        lat: 21.9288,
+        lon: -102.3458
+    }
+];
+
+
+sedesCentroGeo.forEach(function(sede){
+
+    const marcador = L.marker([sede.lat, sede.lon], {
+    icon: iconoCentroGeo
+    })
+        .bindPopup("<b>" + sede.nombre + "</b>")
+        .addTo(capaSedes);
+
+    marcador.on('mouseover', function () {
+        this.openPopup();
+    });
+
+    marcador.on('mouseout', function () {
+        this.closePopup();
+    });
+
+});
 
 function limpiarTodo() {
     if (capaActual) {

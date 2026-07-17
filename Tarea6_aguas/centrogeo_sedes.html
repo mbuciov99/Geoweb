@@ -22,65 +22,73 @@
     <h2>Consulta Sedes CentroGeo</h2>
     <hr>
 
-    <div id="form_parte1" class="menu-secundario">
-        <div style="margin-bottom: 10px;">
-          <label><strong>¿Qué deseas buscar?</strong></label><br>
-          <input type="radio" id="incisoA" name="tipo_busqueda" value="A" onchange="toggleOpciones()" checked>
-          <label for="incisoA">A) Instituciones más cercanas</label><br>
-          
-          <input type="radio" id="incisoB" name="tipo_busqueda" value="B" onchange="toggleOpciones()">
-          <label for="incisoB">B) Centros Públicos de Investigación (CPI)</label><br>
+    <div class="contenedor">
 
-          <input type="radio" id="incisoC" name="tipo_busqueda" value="C" onchange="toggleOpciones()">
-          <label for="incisoC">C) Distancia desde mi Domicilio</label><br>
+      <div class="panel">
 
-          <input type="radio" id="incisoD" name="tipo_busqueda" value="D" onchange="toggleOpciones()">
-          <label for="incisoD">D) Centros de Investigación por radio máximo</label><br>
+        <div id="form_parte1" class="menu-secundario">
+            <div style="margin-bottom: 10px;">
+              <label><strong>¿Qué deseas buscar?</strong></label><br>
+              <input type="radio" id="incisoA" name="tipo_busqueda" value="A" onchange="toggleOpciones()" checked>
+              <label for="incisoA">A) Instituciones más cercanas</label><br>
+              
+              <input type="radio" id="incisoB" name="tipo_busqueda" value="B" onchange="toggleOpciones()">
+              <label for="incisoB">B) Centros Públicos de Investigación (CPI)</label><br>
 
-          <input type="radio" id="incisoE" name="tipo_busqueda" value="E" onchange="toggleOpciones()">
-          <label for="incisoE">E) Empresas Grandes por radio máximo</label><br>
+              <input type="radio" id="incisoC" name="tipo_busqueda" value="C" onchange="toggleOpciones()">
+              <label for="incisoC">C) Distancia desde mi Domicilio</label><br>
 
-          <input type="radio" id="incisoF" name="tipo_busqueda" value="F" onchange="toggleOpciones()">
-          <label for="incisoF">F) Área de influencia (Polígono Buffer ST_Buffer)</label>
-        </div>
+              <input type="radio" id="incisoD" name="tipo_busqueda" value="D" onchange="toggleOpciones()">
+              <label for="incisoD">D) Centros de Investigación por radio máximo</label><br>
 
-        <div id="div_cantidad" style="margin-bottom: 10px;">
-          <label for="cantidad">Cantidad de resultados:</label>
-          <select id="cantidad">
-            <option value="5">5</option>
-            <option value="8">8</option>
-            <option value="10">10</option>
-            <option value="15">15</option>
-            <option value="20">20</option>
-          </select>
-        </div>
+              <input type="radio" id="incisoE" name="tipo_busqueda" value="E" onchange="toggleOpciones()">
+              <label for="incisoE">E) Empresas Grandes por radio máximo</label><br>
 
-        <div id="div_distancia" style="margin-bottom: 10px; display: none;">
-          <label for="distancia">Distancia máxima (km):</label>
-          <select id="distancia">
-            <option value="5">5</option>
-            <option value="8">8</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="25">25</option>
-          </select>
-        </div>
+              <input type="radio" id="incisoF" name="tipo_busqueda" value="F" onchange="toggleOpciones()">
+              <label for="incisoF">F) Área de influencia (Polígono Buffer ST_Buffer)</label>
+            </div>
 
-        <div style="margin-bottom: 15px;">
-          <label for="sede">Sede CentroGeo:</label>
-          <select id="sede">
-            <option value="Aguascalientes">Aguascalientes</option>
-            <option value="CDMX">CDMX</option>
-            <option value="Merida">Mérida</option>
-          </select>
-        </div>
+            <div id="div_cantidad" style="margin-bottom: 10px;">
+              <label for="cantidad">Cantidad de resultados:</label>
+              <select id="cantidad">
+                <option value="5">5</option>
+                <option value="8">8</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+              </select>
+            </div>
 
-        <button onclick="buscarDatos()">Consultar</button>
+            <div id="div_distancia" style="margin-bottom: 10px; display: none;">
+              <label for="distancia">Distancia máxima (km):</label>
+              <select id="distancia">
+                <option value="5">5</option>
+                <option value="8">8</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="25">25</option>
+              </select>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+              <label for="sede">Sede CentroGeo:</label>
+              <select id="sede">
+                <option value="Aguascalientes">Aguascalientes</option>
+                <option value="CDMX">CDMX</option>
+                <option value="Merida">Mérida</option>
+              </select>
+            </div>
+
+            <button onclick="buscarDatos()">Consultar</button>
+          </div>
+  
+     
+      <div id="contenido"></div>
+
     </div>
-    
     <div id="map"></div>
-    <div id="contenido"></div>
-    
-    <script src="js/mapa.js"></script>
+  </div> 
+  <script src="js/mapa.js"></script>
+  
 </body>
 </html>

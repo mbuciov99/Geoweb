@@ -49,8 +49,8 @@ hr {
     background-color: #f8f9fa; /* Gris muy claro */
     border: 1px solid #e9ecef;
     border-radius: 4px;
-    width:100%;
-    max-width:800px;
+    width:350px;
+    box-sizing: border-box;
 }
 
 /* Elementos del formulario (Parte 1) */
@@ -92,34 +92,69 @@ hr {
     background-color: #2471a3;
 }
 
+/* Contenedor principal */
+
+.contenedor{
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.panel{
+    width: 380px;
+    flex-shrink: 0;
+}
+
 /*4. CONTENEDORES DEL MAPA Y RESULTADOS */
 #map {
-    width: 100%;
-    max-width: 800px;
-    height: 500px;
-    margin-top: 20px;
-    border: 2px solid #bdc3c7;
-    border-radius: 4px;
+    flex:1;
+    height:650px;
+    border:2px solid #bdc3c7;
+    border-radius:4px;
+    margin-top:15px;
     z-index: 1; /* Mantiene el mapa en su nivel correcto */
 }
 
-#contenido {
-    margin-top: 20px;
-    padding: 15px;
-    width:100%;
-    max-width:800px;
-    font-size: 14px;
-    line-height: 1.5;
-    background-color: #fdfdfd;
-    border: 1px solid #dddddd;
-    border-radius: 4px;
-    max-height: 300px; /* Limita la altura */
-    overflow-y: auto;  /* Crea un scroll si el texto es muy largo */
+#contenido{
+    width: 350px;
+    box-sizing: border-box;
+
+    margin-top:20px;
+    padding:15px;
+    font-size:14px;
+    line-height:1.5;
+    background:#fdfdfd;
+    border:1px solid #ddd;
+    border-radius:4px;
+    max-height:300px;
+    overflow-y:auto;
 }
 
 /* ===== Diseño responsivo ===== */
 
-@media (max-width: 768px) {
-    body{
-        margin:10px;
-    }}
+@media (max-width:768px){
+
+    .contenedor{
+        flex-direction:column;
+    }
+
+    .panel{
+        width:95%;
+    }
+
+    .menu-secundario{
+        max-width:95%;
+    }
+
+    #contenido{
+        max-width:100%;
+    }
+
+    #map{
+    width:100%;
+    height:450px;
+    min-height:450px;
+    flex:none;
+    }
+
+}
