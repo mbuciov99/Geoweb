@@ -1,5 +1,5 @@
 // Inicializar el mapa
-var map = L.map('map').setView([19.35, -99.15], 10);
+var map = L.map('map').setView([19.291903, -99.221414], 15);
 var capaActual = null; 
 var capaSedes = L.layerGroup().addTo(map);
 
@@ -20,8 +20,8 @@ const iconoCentroGeo = L.icon({
 const sedesCentroGeo = [
     {
         nombre: "CentroGeo Ciudad de México",
-        lat: 19.3041,
-        lon: -99.1836
+        lat: 19.291666,
+        lon: -99.221416
     },
     {
         nombre: "CentroGeo Mérida",
