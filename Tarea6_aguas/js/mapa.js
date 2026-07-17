@@ -90,10 +90,10 @@ function buscarDatos() {
                         }
                         layer.bindPopup(popupContent);
                         layer.on('mouseover', function (e){
-                            this.openPopup();
+                            this.openPopup(); // Cuando el mouse està sobre algun marcador salta un popup
                         });
                         layer.on('mouseout', function (e){
-                            this.closePopup();
+                            this.closePopup(); // Cuando se quita al puntero del marcador se apaga
                         });
                     }
                 }
