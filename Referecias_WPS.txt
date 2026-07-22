@@ -1,0 +1,143 @@
+REFERENCIAS SERVICIOS OGC
+http://docs.geoserver.org/stable/en/user/services/wps/operations.html
+/*****************************/
+4.0 WPS
+/*****************************/
+
+
+4.1 WPS :: GetCapabilities
+
+http://192.168.1.92/pywps?
+service=WPS
+&version=1.0.0
+&request=GetCapabilities
+
+4.2  WPS  ::  DescribeProcess
+http://192.168.1.92/pywps?service=WPS
+&version=1.0.0
+&request=DescribeProcess
+&identifier=all
+
+http://192.168.1.92/pywps?service=WPS
+&version=1.0.0
+&request=DescribeProcess
+&identifier=buffer
+
+http://192.168.1.92/pywps?service=WPS
+&version=1.0.0
+&request=DescribeProcess
+&identifier=bufferWPS
+
+http://192.168.1.92/pywps?
+service=WPS
+&version=1.0.0
+&request=DescribeProcess
+&identifier=RasterClipProcess
+
+http://192.168.1.92/pywps?
+service=WPS
+&version=1.0.0
+&request=DescribeProcess
+&identifier=FiltroEspacialWPS
+
+
+4.3  WPS  ::  Execute
+
+http://192.168.1.92/pywps?
+service=wps
+&version=1.0.0
+&request=execute
+&identifier=say_hello
+&dataInputs=name=alumnes%20de%20Geoweb
+
+http://192.168.1.92/pywps?
+service=wps
+&version=1.0.0
+&request=execute
+&identifier=ultimate_question
+&dataInputs=[]
+
+
+http://192.168.1.92/pywps?
+REQUEST=execute
+&SERVICE=WPS
+&version=1.0.0
+&identifier=RasterClipProcess
+&dataInputs=geometria=POLYGON((-117.15 32.511, -95.311 31.624, -86.85 21.09, -92.22 14.53, -113.49 21.99, -117.15 32.511))
+
+http://192.168.1.92/pywps?
+REQUEST=execute
+&SERVICE=WPS
+&version=1.0.0
+&identifier=RasterClipProcess
+&dataInputs=geometria=GEOMETRYCOLLECTION (POLYGON ((-89.802246 20.981957, -89.25293 18.437925, -87.231445 21.227942, -89.802246 20.981957)), POLYGON ((-104.677734 23.443089, -103.029785 20.220966, -99.030762 21.412162, -101.601562 23.301901, -104.677734 23.443089)))
+
+http://192.168.1.92/pywps?
+REQUEST=execute
+&SERVICE=WPS
+&version=1.0.0
+&identifier=bufferWPS
+&dataInputs=geo=POLYGON((-117.15 32.511, -95.311 31.624, -86.85 21.09, -92.22 14.53, -113.49 21.99, -117.15 32.511));format=wkt;radio=1.25
+
+http://192.168.1.92/pywps?
+REQUEST=execute
+&SERVICE=WPS
+&version=1.0.0
+&identifier=bufferWPS
+&dataInputs=geo=GEOMETRYCOLLECTION (POLYGON ((-89.802246 20.981957, -89.25293 18.437925, -87.231445 21.227942, -89.802246 20.981957)), POLYGON ((-104.677734 23.443089, -103.029785 20.220966, -99.030762 21.412162, -101.601562 23.301901, -104.677734 23.443089)));format=wkt;radio=1.25
+
+http://192.168.1.92/pywps?
+REQUEST=execute
+&SERVICE=WPS
+&version=1.0.0
+&identifier=FiltroEspacialWPS
+&dataInputs=geo=POLYGON((-99.46022033691405 19.820500696285727,-98.76258850097655 19.820500696285727,-98.76258850097655 19.406546539913453,-99.46022033691405 19.406546539913453,-99.46022033691405 19.820500696285727))
+
+http://192.168.1.92/pywps?
+REQUEST=execute
+&SERVICE=WPS
+&version=1.0.0
+&identifier=FiltroEspacialWPS
+&dataInputs=geo=POINT(-99.13 19.43)
+
+http://192.168.1.92/pywps?
+REQUEST=execute
+&SERVICE=WPS
+&version=1.0.0
+&identifier=FiltroEspacialWPS
+&dataInputs=geo=LINESTRING(-99.60304 19.28993,-99.27894 19.11874,-99.01252 19.12133,-98.78730 19.24326)
+
+http://192.168.1.92/pywps?
+REQUEST=execute
+&SERVICE=WPS
+&version=1.0.0
+&identifier=FiltroEspacialWPS
+&dataInputs=geo=MULTIPOINT((-99.13 19.374), (-99.13 19.43))
+
+http://192.168.1.92/pywps?
+REQUEST=execute
+&SERVICE=WPS
+&version=1.0.0
+&identifier=FiltroEspacialWPS
+&dataInputs=geo=GEOMETRYCOLLECTION(POINT(-99.13 19.374),LINESTRING(-99.60304 19.28993,-99.27894 19.11874,-99.01252 19.12133,-98.78730 19.24326))
+
+/*****************************************************************************************/
+/*****************************************************************************************/
+/*****************************************************************************************/
+
+
+
+POLYGON ((-117.15 32.511, -95.311 31.624, -86.85 21.09, -92.22 14.53, -113.49 21.99, -117.15 32.511),(-107.34 29.29, -98.74 25.32, -100.55 20.04, -107.34 29.29))
+
+MULTIPOLYGON (((-107.34 29.29, -98.74 25.32, -100.55 20.04, -107.34 29.29)),((-95.66 19.96, -91.99 18.68, -93.09 16.71, -96.31 16.45,-95.66 19.96)))
+
+
+LISTADO DE SERVIDORES WEB OGC WMS, WFS...
+
+http://www.iieg.gob.mx/contenido/GeografiaMedioAmbiente/listadoservicioswebsitel.pdf
+http://uniatmos.atmosfera.unam.mx/geoserver7/wms?
+http://www.conabio.gob.mx/informacion/explorer/wms?
+http://geomapas.centrogeo.org.mx/geoserver/siicyt2013/wfs?
+http://gaia.inegi.org.mx/NLB/mdm5.wms
+http://wms.lizardtech.com/lizardtech/iserv/ows
+

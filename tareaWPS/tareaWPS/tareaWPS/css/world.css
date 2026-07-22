@@ -1,0 +1,20 @@
+	html, body {
+		margin: 0;
+		padding: 0;
+	}
+	#map {
+		position: absolute;
+		top: 1;
+		bottom: 1;
+		width: 600px;
+		height: 400px;
+	}
+	#contenido {
+		position: relative;
+		top: 340px;
+	}
+	#formulario {
+		position: relative;
+		left: 600px;
+		width: 400px;
+	}

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>GeoWeb :: Leaflet Servicio WPS</title>
+	<meta charset="utf-8" />
+  <link rel="icon" href="data:," />
+  <meta name="description" content="Taller WPS Consulta espacial" />
+  <meta name="keywords" content="html, geoweb, desarrollo web"/>
+  <meta name="author" content="Grupo de Geoweb CIG 2025" />
+  <meta name="copyright" content="CentroGeo 2026" />
+  <meta name="robots" content="index,follow" />
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui' />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+  <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+	<link href='css/world.css' rel='stylesheet' />
+</head>
+
+<body>
+	<h2>Mapa de consulta a WPS-Consulta espacial</h2>
+
+	<div id='map'></div>
+	<div id="formulario">
+		<form action="#" method="post" id="envio_post">
+			Punto wkt <input type="radio" name="optFiltro" id="puntoWkt" /><br/>
+			Linea wkt <input type="radio" name="optFiltro" id="lineaWkt" /><br/>
+			Polígono wkt <input type="radio" name="optFiltro" id="poligonoWkt" /><br/>
+			Multipunto wkt <input type="radio" name="optFiltro" id="multipuntoWkt" /><br/>
+			Colección de geometrías wkt <input type="radio" name="optFiltro" id="geometrycollectionWkt" /><br/>			
+			<input type="submit" value="Enviar">
+		</form>
+	</div>	
+    <span id="contenido"></span>
+	<script>
+	var map = L.map('map').setView([19.29075, -99.22141], 10); // ajustar coordenadas y nivel de zoom
+
+	var Stadia_AlidadeSmooth = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+		maxZoom: 20,
+		attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+	}).addTo(map);
+
+////////////////////////////////////////////////////
+function popUpInfo(features,layer) {
+    if (features.properties && features.properties.cve_nomgeo && features.properties.cve_cve_mun) {
+			//layer.bindPopup("<b>Alcaldia:" + features.properties.cve_nomgeo + "</b><br/>Poblacion = " + features.properties.cve_pob_2015);
+			layer.bindTooltip("<b>Alcaldia:" + features.properties.cve_nomgeo + "</b><br/>Poblacion = " + features.properties.cve_pob_2015 + "<br/>Clave =" + features.properties.cve_cve_mun);
+    }
+}
+var miconsulta = L.geoJson(null, {
+  style: function (feature) {
+/*		if(typeof(feature.properties.cve_cve_mun) != 'undefined') {
+			optColorear = feature.properties.cve_cve_mun;
+			columna = 'cve_cve_mun';
+		}
+	return {
+	    stroke: true,
+	    color: getColour(optColorear, columna),
+	    opacity: 0.7,
+	    weight: 1
+	}; */
+    },
+    onEachFeature: popUpInfo
+});
+
+function getColour(feature, campo) {
+	if (campo=='cve_cve_mun') {
+		if(feature == '002') {
+			return "#ff0000";
+		} else if(feature == '003') {
+			return "#ff6600";
+		} else if(feature == '004') {
+			return "#800080";
+		} else if(feature == '005') {
+			return "#00ff00";
+		} else if(feature == '006') {
+			return "#0000ff";
+		} else if(feature == '007') {
+			return "#0ff0ff";
+		} else if(feature == '008') {
+			return "#00bfff";
+		} else if (feature == '009') {
+			return "#efff22";
+		} else if (feature == '010') {
+			return "#55ff77";
+		} else if (feature == '011') {
+			return "#f0fff0";
+		} else if (feature == '012') {
+			return "#00ff00";
+		} else if (feature == '013') {
+			return "#ff2200";
+		} else if (feature == '014') {
+			return "#00ff33";
+		} else if (feature == '015') {
+			return "#ff2200";
+		} else if (feature == '016') {
+			return "#ff0044";
+		} else if (feature == '017') {
+			return "#ffff00";
+		} else {
+			return "#000000";
+		}
+	} 
+} //fin de la funcion
+///////////////////////////////////////////////////
+var micapaWkt = L.geoJson(null, {});
+$(document).ready(function(){
+    $('#envio_post').submit(function() {
+		var opcionPunto = $("#puntoWkt").is(":checked");
+		var opcionLinea = $("#lineaWkt").is(":checked");
+		var opcionPoligono = $("#poligonoWkt").is(":checked");
+		var opcionMultipunto = $("#multipuntoWkt").is(":checked");
+		var opcionGeometrycollection = $("#geometrycollectionWkt").is(":checked");		
+		
+		if (opcionPunto == false && opcionLinea==false  && opcionPoligono==false  && opcionMultipunto==false && opcionGeometrycollection==false){
+			alert("Selecciona alguna de las opciones de consulta");
+			return false;
+		} else {
+			micapaWkt.clearLayers();
+			if (opcionPunto == true) {
+				var valores = { "type": "Point", "coordinates": [-99.13, 19.43] };
+				var URL = 'http://192.168.6.XX/pywps?REQUEST=execute&SERVICE=WPS&version=1.0.0&identifier=FiltroEspacialWPS&dataInputs=geo=POINT(-99.13 19.43)';
+			} else if (opcionLinea == true) {	
+				var valores = {
+						"type": "LineString",
+						"coordinates": [
+								[ -99.60304, 19.28993 ],
+								[ -99.27894, 19.11874 ],
+								[ -99.01252, 19.12133 ],
+								[ -98.78730, 19.24326 ]
+						]
+				};
+				var URL = 'http://192.168.6.XX/pywps?REQUEST=execute&SERVICE=WPS&version=1.0.0&identifier=FiltroEspacialWPS&dataInputs=geo=LINESTRING(-99.60304 19.28993,-99.27894 19.11874,-99.01252 19.12133,-98.78730 19.24326)';
+			} else if(opcionPoligono == true) {
+				var valores = {
+						"type": "Polygon",
+						"coordinates": [
+								[
+										[ -99.46022, 19.82050 ],
+										[ -98.76258, 19.82050 ],
+										[ -98.76258, 19.40654 ],
+										[ -99.46022, 19.40654 ],
+										[ -99.46022, 19.82050 ]
+								]
+						]
+				};
+				var URL = 'http://192.168.6.XX/pywps?REQUEST=execute&SERVICE=WPS&version=1.0.0&identifier=FiltroEspacialWPS&dataInputs=geo=POLYGON((-99.46022 19.8205,-98.76258 19.8205,-98.76258 19.40654,-99.46022 19.40654,-99.46022 19.8205))';
+			} else if(opcionMultipunto == true) {
+				var valores = {
+    			"type": "MultiPoint",
+    			"coordinates": [ [-99.13, 19.374], [-99.13, 19.43] ]
+				};				
+				var URL = 'http://192.168.6.XX/pywps?REQUEST=execute&SERVICE=WPS&version=1.0.0&identifier=FiltroEspacialWPS&dataInputs=geo=MULTIPOINT((-99.13 19.374), (-99.13 19.43))';
+			} else {
+				var valores = {
+						"type": "GeometryCollection",
+						"geometries": [
+								{ "type": "Point", "coordinates": [-99.2,19.436] },
+								{
+									"type": "LineString",
+										"coordinates": [
+												[ -99.60304, 19.28993 ],
+												[ -99.27894, 19.11874 ],
+												[ -99.01252, 19.12133 ],
+												[ -98.78730, 19.24326 ]
+										]
+								}
+						]
+				};
+				var URL = 'http://192.168.6.XX/pywps?REQUEST=execute&SERVICE=WPS&version=1.0.0&identifier=FiltroEspacialWPS&dataInputs=geo=GEOMETRYCOLLECTION(POINT(-99.2 19.436),LINESTRING(-99.60304 19.28993,-99.27894 19.11874,-99.01252 19.12133,-98.78730 19.24326))';
+			}
+			micapaWkt.addData(valores);
+			micapaWkt.addTo(map);
+			var contenido_html = "";
+			var ajax_wps = $.ajax({
+        type: "GET",
+			  url: URL,
+        dataType: "xml",
+				success : function (xml_res) {
+					var data = $(xml_res).children().children().children().children().children()[0];
+					var respuesta = $(data).text();
+					var respuesta = JSON.parse(respuesta);
+					console.log(respuesta);				
+					//limpia la capa temporal de consulta anterior
+					miconsulta.clearLayers();
+					$('#contenido').html('');
+
+					if(respuesta.features.length > 0) {
+						miconsulta.addData(respuesta);
+						//Recorre los resultados obtenidos
+						//console.log(respuesta);
+						for (var i = 0; i < respuesta.features.length; i++) {
+							contenido_html = "Alcaldía: " + respuesta.features[i].properties.cve_nomgeo + "<br/>";
+							contenido_html += "Población: " + respuesta.features[i].properties.cve_pob_2015 + "<br/>";
+							contenido_html += "Vulnerabilidad Social: " + respuesta.features[i].properties.cve_vul_social + "<br/>";
+							contenido_html += "Clave Alcaldía: " + respuesta.features[i].properties.cve_cve_mun + "<br/>";
+							contenido_html += "Densidad de Población (hab/km<sup>2</sup>): " + respuesta.features[i].properties.cve_densidad_hab_km2 + "<br/>";
+							contenido_html += "<hr/>";
+							$('#contenido').append(contenido_html);
+						} //fin del for
+					} else {
+						contenido_html = "La consulta no tiene resultados";
+						$('#contenido').append(contenido_html); 
+					}
+				
+			},
+			error : function(jqXHR, estado, error) {
+				$('#contenido').html('Se produjo un error:' + estado + ' error: ' + error);
+			}
+			});
+			///////////////////////////////////////
+			miconsulta.addTo(map);
+
+			//previene el re-envío del requerimiento
+			return false;
+		} //fin del if que verifica la seleccion de radio button
+	}); //fin del evento submit
+}); //fin de la fn document.ready
+
+	</script>
+</body>
+</html>
+
