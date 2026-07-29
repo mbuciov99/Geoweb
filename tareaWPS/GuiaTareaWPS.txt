@@ -1,0 +1,73 @@
+En el folder /home/ubuntu/Descargas
+Descargar el archivo comprimido, crear el folder tareaWPS
+descomprimir los archivos en el folder tareaWPS 
+Ubicar el folder tareaWPS en:
+/var/www/html/7_Taller_WPS
+**************************************
+Aplicar permisos al directorio de publicación
+como super usuario -> sudo su
+chmod -R 777 /var/www/html/7_Taller_WPS
+
+......................................
+Crear la base de datos
+......................................
+Identificar el archivo world.backup
+En DBeaver crear una base de datos nueva
+Database Name -> world
+Habilitar la extension postgis
+Restaurar backup en la base de datos recien creada
+
+Revisar que se encuentre la tabla world_borders
+en el esquema public
+......................................
+Crear un nuevo servicio WPS
+......................................
+Editar el archivo FiltroEspacialWorld.py
+Adaptar el codigo para conectar la base de datos
+recien creada y la tabla world_borders
+Modificar los nombres de los campos a mostrar en los resultados
+
+**************************************
+Publicar el archivo FiltroEspacialWorld.py como servicio WPS
+(revisar las notas de clase para publicar servicios WPS)
+**************************************
+Revisar la operacion GetCapabilities de WPS
+para verificar que el servicio ya aparece publicado.
+//////////////////////////////////////
+http://10.1.7.XX/pywps?
+service=WPS
+&version=1.0.0
+&request=GetCapabilities
+//////////////////////////////////////
+Verificar la operacion Execute del WPS para verificar 
+que la respuesta y los resultados obtenidos sean exitosos.
+
+[Una sola línea]
+http://10.1.7.XX/pywps?service=WPS&REQUEST=execute&version=1.0.0&identifier=FiltroEspacialWorld&dataInputs=geo=POLYGON((-99.46022033691405 19.820500696285727,-98.76258850097655 19.820500696285727,-98.76258850097655 19.406546539913453,-99.46022033691405 19.406546539913453,-99.46022033691405 19.820500696285727))
+
+[Varias líneas]
+http://10.1.7.XX/pywps?
+service=WPS
+&REQUEST=execute
+&version=1.0.0
+&identifier=FiltroEspacialWorld
+&dataInputs=geo=POLYGON((-99.46022033691405 19.820500696285727,-98.76258850097655 19.820500696285727,-98.76258850097655 19.406546539913453,-99.46022033691405 19.406546539913453,-99.46022033691405 19.820500696285727))
+**************************************
+
+Dentro del folder tareaWPS 
+/var/www/html/7_Taller_WPS/tareaWPS/tareaWPS
+Aplicar cambios en el archivo world.html
+  1. Cambiar el nombre del servicio WPS
+  2. Cambiar la IP del servidor WPS
+  3. Cambiar la vista inicial del mapa para mostrarlo a escala mundial
+  4. Cambiar los nombres de las columnas en resultados y popup
+
+**************************************
+Para generar las geometrías, les dejo estos enlaces:
+Generador de WKT => https://arthur-e.github.io/Wicket/sandbox-gmaps3.html
+Convertidor WKT-GeoJSON y viceversa => https://geojson-to-wkt-converter.onrender.com/
+GeoJSON validator => https://jsonlint.com/
+
+
+
+
