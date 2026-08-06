@@ -1,20 +1,381 @@
-	html, body {
-		margin: 0;
-		padding: 0;
-	}
-	#map {
-		position: absolute;
-		top: 1;
-		bottom: 1;
-		width: 600px;
-		height: 400px;
-	}
-	#contenido {
-		position: relative;
-		top: 340px;
-	}
-	#formulario {
-		position: relative;
-		left: 600px;
-		width: 400px;
-	}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@600;700&display=swap');
+
+:root {
+    --fondo: #edf4ff;   /* Azul muy claro */
+    --superficie: #ffffff;
+    --superficie-suave: #f7faf9;
+
+    --texto: #24322f;
+    --texto-secundario: #66756f;
+
+    --primario: #176b5b;
+    --primario-oscuro: #105347;
+    --primario-suave: #e2f1ed;
+
+    --acento: #d99a44;
+
+    --borde: #d5e0dc;
+    --borde-activo: #4f9588;
+
+    --sombra:
+        0 10px 30px rgba(30, 67, 59, 0.08);
+
+    --radio: 14px;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(310px, 1.15fr);
+    grid-template-areas:
+        "titulo titulo"
+        "mapa formulario"
+        "resultados resultados";
+    gap: 20px;
+    padding: 22px;
+
+    font-family: "Inter", Arial, sans-serif;
+    color: var(--texto);
+    background:
+        radial-gradient(
+            circle at top left,
+            rgba(23, 107, 91, 0.08),
+            transparent 34%
+        ),
+        var(--fondo);
+}
+
+/* Título principal */
+
+h2 {
+    grid-area: titulo;
+    margin: 0;
+    padding: 21px 26px;
+
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: clamp(1.35rem, 2vw, 1.8rem);
+    line-height: 1.25;
+    color: var(--primario-oscuro);
+
+    background:
+        linear-gradient(
+            120deg,
+            #ffffff 0%,
+            #164938 100%
+        );
+
+    border: 1px solid var(--borde);
+    border-left: 6px solid var(--primario);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+}
+
+/* Mapa */
+
+#map {
+    grid-area: mapa;
+    width: 100%;
+    height: 560px;
+    min-height: 560px;
+
+    background-color: #dce9e5;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    overflow: hidden;
+    box-shadow: var(--sombra);
+}
+
+/* Formulario */
+
+#formulario {
+    grid-area: formulario;
+    width: 100%;
+    min-height: 560px;
+    padding: 25px;
+
+    background-color: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+}
+
+#formulario h3 {
+    margin: 0 0 8px;
+
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 1.35rem;
+    color: var(--primario-oscuro);
+}
+
+.descripcion-formulario {
+    margin: 0 0 22px;
+    color: var(--texto-secundario);
+    font-size: 0.91rem;
+    line-height: 1.55;
+}
+
+#formulario form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Tarjetas de opciones */
+
+#formulario label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    min-height: 58px;
+    padding: 12px 14px;
+
+    background-color: var(--superficie-suave);
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.18s ease,
+        background-color 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+#formulario label:hover {
+    transform: translateY(-1px);
+    background-color: #f0f7f5;
+    border-color: #9abeb6;
+    box-shadow:
+        0 5px 14px rgba(23, 107, 91, 0.08);
+}
+
+#formulario label:has(input[type="radio"]:checked) {
+    background-color: var(--primario-suave);
+    border-color: var(--borde-activo);
+    box-shadow:
+        0 0 0 3px rgba(23, 107, 91, 0.1);
+}
+
+#formulario input[type="radio"] {
+    width: 17px;
+    height: 17px;
+    margin: 0;
+    flex: 0 0 auto;
+
+    accent-color: var(--primario);
+    cursor: pointer;
+}
+
+#formulario label span {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+#formulario label strong {
+    color: var(--texto);
+    font-size: 0.94rem;
+    font-weight: 600;
+}
+
+#formulario label small {
+    color: var(--texto-secundario);
+    font-size: 0.78rem;
+    line-height: 1.35;
+}
+
+/* Botón */
+
+#formulario input[type="submit"] {
+    width: 100%;
+    margin-top: 10px;
+    padding: 13px 18px;
+
+    font-family: "Inter", Arial, sans-serif;
+    font-size: 0.96rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+
+    color: #ffffff;
+    background:
+        linear-gradient(
+            135deg,
+            var(--primario),
+            var(--primario-oscuro)
+        );
+
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+
+    box-shadow:
+        0 7px 18px rgba(23, 107, 91, 0.22);
+
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        filter 0.18s ease;
+}
+
+#formulario input[type="submit"]:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.06);
+    box-shadow:
+        0 10px 22px rgba(23, 107, 91, 0.28);
+}
+
+#formulario input[type="submit"]:active {
+    transform: translateY(0);
+    box-shadow:
+        0 4px 10px rgba(23, 107, 91, 0.2);
+}
+
+/* Resultados */
+
+#contenido {
+    grid-area: resultados;
+    display: block;
+    width: 100%;
+    min-height: 85px;
+    padding: 22px 25px;
+
+    color: var(--texto);
+    font-size: 0.92rem;
+    line-height: 1.65;
+
+    background-color: var(--superficie);
+    border: 1px solid var(--borde);
+    border-top: 4px solid var(--acento);
+    border-radius: var(--radio);
+
+    overflow-wrap: anywhere;
+    box-shadow: var(--sombra);
+}
+
+#contenido:empty::before {
+    content:
+        "Seleccione una geometría y presione “Realizar consulta” para mostrar los países intersectados.";
+
+    color: var(--texto-secundario);
+    font-style: italic;
+}
+
+#contenido strong {
+    color: var(--primario-oscuro);
+    font-weight: 600;
+}
+
+#contenido hr {
+    margin: 17px 0;
+    border: 0;
+    border-top: 1px solid var(--borde);
+}
+
+/* Controles de Leaflet */
+
+.leaflet-control-zoom {
+    border: none !important;
+    box-shadow:
+        0 4px 14px rgba(31, 55, 49, 0.18) !important;
+}
+
+.leaflet-control-zoom a {
+    color: var(--primario-oscuro) !important;
+}
+
+.leaflet-tooltip {
+    padding: 9px 11px;
+
+    font-family: "Inter", Arial, sans-serif;
+    color: var(--texto);
+
+    background-color: rgba(255, 255, 255, 0.96);
+    border: 1px solid var(--borde);
+    border-radius: 7px;
+
+    box-shadow:
+        0 5px 16px rgba(31, 55, 49, 0.16);
+}
+
+/* Tablet */
+
+@media (max-width: 950px) {
+    body {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "titulo"
+            "mapa"
+            "formulario"
+            "resultados";
+
+        padding: 16px;
+    }
+
+    #map {
+        height: 470px;
+        min-height: 470px;
+    }
+
+    #formulario {
+        min-height: auto;
+    }
+}
+
+/* Celular */
+
+@media (max-width: 600px) {
+    body {
+        gap: 13px;
+        padding: 10px;
+    }
+
+    h2 {
+        padding: 17px;
+        border-left-width: 4px;
+        font-size: 1.24rem;
+        text-align: center;
+    }
+
+    #map {
+        height: 350px;
+        min-height: 350px;
+        border-radius: 10px;
+    }
+
+    #formulario {
+        padding: 18px;
+        border-radius: 10px;
+    }
+
+    #formulario h3 {
+        font-size: 1.18rem;
+    }
+
+    #formulario label {
+        min-height: 60px;
+        padding: 12px;
+    }
+
+    #formulario input[type="submit"] {
+        padding: 14px 16px;
+    }
+
+    #contenido {
+        min-height: 75px;
+        padding: 18px;
+        border-radius: 10px;
+        font-size: 0.9rem;
+    }
+}

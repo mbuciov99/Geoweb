@@ -54,31 +54,54 @@ class FiltroEspacialWorld(Process):
 
         dic_geojson = {'type': 'FeatureCollection', 'features': []}
         try:
-            conexionBD = psycopg2.connect(host='localhost', dbname='cdmx', user='postgres', password='ubuntu', port=5432)
+            conexionBD = psycopg2.connect(host='localhost', dbname='world', user='postgres', password='ubuntu', port=5432)
             cursor = conexionBD.cursor()
 
             for geometria in geometrias:
-                strSQL = "SELECT gid, nomgeo, cve_mun, municipio, pob_2015, vul_social, sup_km2, densidad_hab_km2, ST_AsBinary(geom) "
-                strSQL += "FROM alcaldias "
-                strSQL += f"WHERE (ST_Intersects(alcaldias.geom,ST_GeomFromText('{geometria.ExportToWkt()}',4326)))"
-                cursor.execute(strSQL)
+                strSQL = """
+                    SELECT
+                        id,
+                        fips,
+                        iso3,
+                        un,
+                        name,
+                        area,
+                        pop2005,
+                        region,
+                        ST_AsBinary(geom)
+                    FROM public.world_borders
+                    WHERE ST_Intersects(
+                        geom,
+                        ST_GeomFromText(%s, 4326)
+                    )
+                """
+
+                cursor.execute(strSQL, (geometria.ExportToWkt(),))
                 registros = cursor.fetchall()
 
                 for registro in registros:
-                    cve_gid, cve_nomgeo, cve_cve_mun, cve_municipio, cve_pob_2015, cve_vul_social, cve_sup_km2, cve_densidad_hab_km2, geom_bytes = registro
+                    id_pais, fips, iso3, un, nombre, area, pop2005, region, geom_bytes = registro
+
                     res_geometria = ogr.CreateGeometryFromWkb(geom_bytes)
                     geometria_json = json.loads(res_geometria.ExportToJson())
+
                     propiedades = {
-                        'cve_gid': cve_gid,
-                        'cve_nomgeo': cve_nomgeo,
-                        'cve_cve_mun': cve_cve_mun,
-                        'cve_municipio': cve_municipio,
-                        'cve_pob_2015': cve_pob_2015,
-                        'cve_vul_social': cve_vul_social,
-                        'cve_sup_km2': str(cve_sup_km2),
-                        'cve_densidad_hab_km2': str(cve_densidad_hab_km2)
+                        'id': id_pais,
+                        'fips': fips,
+                        'iso3': iso3,
+                        'un': un,
+                        'nombre': nombre,
+                        'area': area,
+                        'pop2005': pop2005,
+                        'region': region
                     }
-                    feature = {'type': 'Feature', 'properties': propiedades, 'geometry': geometria_json}
+
+                    feature = {
+                        'type': 'Feature',
+                        'properties': propiedades,
+                        'geometry': geometria_json
+                    }
+
                     dic_geojson['features'].append(feature)
 
             response.outputs['output'].data = json.dumps(dic_geojson)

@@ -18,20 +18,84 @@
 </head>
 
 <body>
-	<h2>Mapa de consulta a WPS-Consulta espacial</h2>
+	<h2>Consulta espacial mediante Web Processing Service (WPS)</h2>
 
-	<div id='map'></div>
-	<div id="formulario">
-		<form action="#" method="post" id="envio_post">
-			Punto wkt <input type="radio" name="optFiltro" id="puntoWkt" /><br/>
-			Linea wkt <input type="radio" name="optFiltro" id="lineaWkt" /><br/>
-			Polígono wkt <input type="radio" name="optFiltro" id="poligonoWkt" /><br/>
-			Multipunto wkt <input type="radio" name="optFiltro" id="multipuntoWkt" /><br/>
-			Colección de geometrías wkt <input type="radio" name="optFiltro" id="geometrycollectionWkt" /><br/>			
-			<input type="submit" value="Enviar">
-		</form>
-	</div>	
-    <span id="contenido"></span>
+<div id="map"></div>
+
+<div id="formulario">
+    <h3>Tipo de geometría</h3>
+
+    <p class="descripcion-formulario">
+        Seleccione una geometría WKT para consultar los países que la intersectan.
+    </p>
+
+    <form action="#" method="post" id="envio_post">
+
+        <label for="puntoWkt">
+            <input
+                type="radio"
+                name="optFiltro"
+                id="puntoWkt"
+            />
+            <span>
+                <strong>Punto WKT</strong>
+                <small>Consulta el país donde se localiza un punto.</small>
+            </span>
+        </label>
+
+        <label for="lineaWkt">
+            <input
+                type="radio"
+                name="optFiltro"
+                id="lineaWkt"
+            />
+            <span>
+                <strong>Línea WKT</strong>
+                <small>Consulta los países atravesados por una línea.</small>
+            </span>
+        </label>
+
+        <label for="poligonoWkt">
+            <input
+                type="radio"
+                name="optFiltro"
+                id="poligonoWkt"
+            />
+            <span>
+                <strong>Polígono WKT</strong>
+                <small>Consulta los países intersectados por un área.</small>
+            </span>
+        </label>
+
+        <label for="multipuntoWkt">
+            <input
+                type="radio"
+                name="optFiltro"
+                id="multipuntoWkt"
+            />
+            <span>
+                <strong>Multipunto WKT</strong>
+                <small>Consulta varios puntos distribuidos en el mundo.</small>
+            </span>
+        </label>
+
+        <label for="geometrycollectionWkt">
+            <input
+                type="radio"
+                name="optFiltro"
+                id="geometrycollectionWkt"
+            />
+            <span>
+                <strong>Colección de geometrías WKT</strong>
+                <small>Combina diferentes tipos de geometría.</small>
+            </span>
+        </label>
+
+        <input type="submit" value="Realizar consulta">
+    </form>
+</div>
+
+<span id="contenido"></span>
 	<script>
 	var map = L.map('map').setView([20.0, -10.0], 2); // ajustar coordenadas y nivel de zoom
 
@@ -41,10 +105,13 @@
 	}).addTo(map);
 
 ////////////////////////////////////////////////////
-function popUpInfo(features,layer) {
+function popUpInfo(features, layer) {
     if (features.properties && features.properties.nombre) {
-			//layer.bindPopup("<b>Alcaldia:" + features.properties.cve_nomgeo + "</b><br/>Poblacion = " + features.properties.cve_pob_2015);
-			layer.bindTooltip("<b>Pais:" + features.properties.nombre + "</b><br/>Poblacion 2005= " + features.properties.pop2005 + "<br/>Clave de ISO3 =" + features.properties.iso3);
+        layer.bindTooltip(
+            "<b>País: " + features.properties.nombre + "</b><br/>" +
+            "Población en 2005: " + features.properties.pop2005 + "<br/>" +
+            "Clave ISO3: " + features.properties.iso3
+        );
     }
 }
 var miconsulta = L.geoJson(null, {
@@ -100,7 +167,7 @@ $(document).ready(function(){
 				// Punto sobre la Penìsula de Yucatàn
 				var valores = { "type": "Point", "coordinates": [-89.62, 20.96] };
 				wkt= 'POINT(-89.62 20.96)';
-				URL = 'http://10.20.2.186/pywps?REQUEST=execute&SERVICE=WPS&version=1.0.0&identifier=FiltroEspacialWorld&dataInputs=geo='+ encodeURIComponent(wkt);
+				URL = '/pywps?REQUEST=execute&SERVICE=WPS&version=1.0.0&identifier=FiltroEspacialWorld&dataInputs=geo=' + encodeURIComponent(wkt);
 			} else if (opcionLinea == true) {	
 				// Linea trasatlàntica: CDMX, Nueva York -> Londres -> Roma
 				var valores = {
@@ -113,7 +180,7 @@ $(document).ready(function(){
 						]
 				};
 				var wkt= 'LINESTRING(-99.13 19.43, -74.00 40.71, -0.12 51.50, 12.49 41.90)';
-				var URL = 'http://10.20.2.186/pywps?REQUEST=execute&SERVICE=WPS&version=1.0.0&identifier=FiltroEspacialWorld&dataInputs=geo=' + encodeURIComponent(wkt);
+				var URL = '/pywps?REQUEST=execute&SERVICE=WPS&version=1.0.0&identifier=FiltroEspacialWorld&dataInputs=geo=' + encodeURIComponent(wkt);
 			} else if(opcionPoligono == true) {
 				// Triàngulo gigante: Maiami -> Londres -> Dakar
 				var valores = {
@@ -128,7 +195,7 @@ $(document).ready(function(){
 						]
 				};
 				wkt= 'POLYGON((-80.19 25.76, -0.12 51.50,-17.49 14.71, -80.19 25.76))';
-				var URL = 'http://10.20.2.186/pywps?REQUEST=execute&SERVICE=WPS&version=1.0.0&identifier=FiltroEspacialWorld&dataInputs=geo=' + encodeURIComponent(wkt);
+				var URL = '/pywps?REQUEST=execute&SERVICE=WPS&version=1.0.0&identifier=FiltroEspacialWorld&dataInputs=geo=' + encodeURIComponent(wkt);
 			} else if(opcionMultipunto == true) {
 				// Puntos globales: CDMX, Tokio, El Cairo, Sidney
 				var valores = {
@@ -136,7 +203,7 @@ $(document).ready(function(){
     			"coordinates": [ [-99.13, 19.43], [139.69, 35.68], [ 31.23, 30.04 ], [ 151.20, -33.86 ] ]
 				};
 				var wkt= 'MULTIPOINT((-99.13 19.43),(139.69 35.68), (31.23 30.04), (151.20 -33.86))';		
-				var URL = 'http://10.20.2.186/pywps?REQUEST=execute&SERVICE=WPS&version=1.0.0&identifier=FiltroEspacialWorld&dataInputs=geo=' + encodeURIComponent(wkt);
+				var URL = '/pywps?REQUEST=execute&SERVICE=WPS&version=1.0.0&identifier=FiltroEspacialWorld&dataInputs=geo=' + encodeURIComponent(wkt);
 			} else {
 				var valores = {
 					// Colecciòn de Geometrìas: El punto de Yucatan + Linea trasatlàntica
@@ -155,7 +222,7 @@ $(document).ready(function(){
 						]
 				};
 				var wkt= 'GEOMETRYCOLLECTION(POINT(-89.62 20.96), LINESTRING(-99.13 19.43, -74.00 40.71, -0.12 51.50, 12.49 41.90))';
-				var URL = 'http://10.20.2.186/pywps?REQUEST=execute&SERVICE=WPS&version=1.0.0&identifier=FiltroEspacialWorld&dataInputs=geo=' + encodeURIComponent(wkt);
+				var URL = '/pywps?REQUEST=execute&SERVICE=WPS&version=1.0.0&identifier=FiltroEspacialWorld&dataInputs=geo=' + encodeURIComponent(wkt);
 			}
 			micapaWkt.addData(valores);
 			micapaWkt.addTo(map);
