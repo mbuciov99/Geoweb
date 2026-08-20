@@ -1,6 +1,6 @@
 <?php
 try {
-    $dsn = "pgsql:host=localhost;port=5432;dbname=siicyt;";
+    $dsn = "pgsql:host=localhost;port=5432;dbname=RAMA;";
     $user = "postgres";
     $password = "ubuntu";
 
@@ -9,25 +9,55 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
     ]);
     
-    // Recibimos tus nuevas variables
-    $palabra = $_GET['palabra'] ?? '';
-    $entidad = $_GET['entidad'] ?? '';
+    $estacion = $_GET['estacion'] ?? '';
+    $latitud = $_GET['latitud'] ?? '';
+    $longitud = $_GET['longitud'] ?? '';
+    $gas = $_GET['gas'] ?? '';
+    $formato = $_GET['formato'] ?? 'csv';
 
-    // Nueva consulta combinada (Inciso F)
-    $query = "SELECT nombre, tipo, delmun, entidad, sector, rama, clase FROM reniecyt2013a 
-              WHERE CONCAT(nombre, tipo, delmun, entidad, sector, rama, clase, tipo, delmun, entidad, sector, rama, clase) ILIKE :palabra AND entidad = :entidad 
-              ORDER BY nombre LIMIT 50";
- 
+    $gases_permitidos = ['co', 'no', 'no2', 'nox', 'o3', 'pm10', 'pm25', 'pmco', 'so2'];
+
+    if (!in_array($gas, $gases_permitidos)) {
+        die(json_encode(['error' => 'El gas seleccionado no es válido.']));
+    }
+
+    // Usamos comillas dobles para respetar las mayúsculas con las que se importó la tabla
+    $query = "SELECT m.fecha, m.hora, m.clave_estacion, rs.\"Nombre\", m.{$gas} 
+              FROM mediciones_rama m
+              JOIN rama_stations rs ON m.clave_estacion = rs.\"Clave\"
+              WHERE 1=1";
+
+    $params = [];
+
+    if (!empty($estacion)) {
+        $query .= " AND (rs.\"Nombre\" ILIKE :estacion OR m.clave_estacion ILIKE :estacion)";
+        $params['estacion'] = '%' . $estacion . '%';
+    }
+
+    if (!empty($latitud) && !empty($longitud)) {
+        $query .= " AND ST_DWithin(
+                        rs.geom::geography, 
+                        ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)::geography, 
+                        5000
+                    )";
+        $params['lat'] = $latitud;
+        $params['lon'] = $longitud;
+    }
+
     $stmt = $pdo->prepare($query);
-    // Ejecutamos inyectando los comodines para la búsqueda de palabra
-    $stmt->execute([
-        ':palabra' => '%' . $palabra . '%',
-        ':entidad' => $entidad
-    ]);
-
+    $stmt->execute($params);
     $data = $stmt->fetchAll();
-    echo json_encode($data);
-} catch (PDOException $e) {
-    die ("Error de conexión: " . $e->getMessage());
+    
+    if ($formato === 'csv') {
+        header('Content-Type: application/json');
+        echo json_encode(['mensaje' => 'CSV listo', 'datos' => $data]);
+    } else {
+        header('Content-Type: application/json');
+        echo json_encode($data);
+    }
+
+} catch (Exception $e) {
+    header('HTTP/1.1 500 Internal Server Error');
+    echo json_encode(['error' => $e->getMessage()]);
 }
 ?>

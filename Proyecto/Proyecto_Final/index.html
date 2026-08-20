@@ -19,7 +19,7 @@
      <div class="grid-visor">
         <header class="encabezado">
             <h1 class="cabecera-1">
-                Geoportal Analìtico Multipropòsito
+                Geoportal Analítico Multipropósito
             </h1>
         </header>
         
@@ -67,29 +67,29 @@
           <!-- Herramientas y Formularios-->
         <aside class="formulario" id="herramientas">
 
-            <form class="formulario-geo" action="#" method="post" id="form-consultas">
+            <form class="formulario-geo" action="#" method="get" id="form-consultas">
                 <fieldset>
                     <legend>Busqueda de estaciones RAMA</legend>
 
-                    <label for="nombre">Nombre de la estación o investigador</label>
-                    <input type="text" id="nombre" name="nombre" placeholder="Ej. Estación Merced">
+                    <label for="estacion">Nombre de la estación o investigador</label>
+                    <input type="text" id="estacion" name="estacion" placeholder="Ej. Estación Merced">
 
                     <label for="ubicacion">Ubicación geográfica (latitud y longitud)</label>
-                    <input type="text" id="lat" name="lat" placeholder="Ingresa la latitud"> <br>
-                    <input type="text" id="lon" name="lon" placeholder="Ingresa la longitud"> <br>
+                    <input type="text" id="latitud" name="latitud" placeholder="Ingresa la latitud"> <br>
+                    <input type="text" id="longitud" name="longitud" placeholder="Ingresa la longitud"> <br>
 
-                    <label for="contaminante">Gas traza de interés</label>
-                    <select id="contaminante" name="contaminante">
+                    <label for="gas">Gas traza de interés</label>
+                    <select id="gas" name="gas">
                         <option value="" disabled selected>--- Selecciona un gas ---</option>
-                        <option value="co_ppm">Monòxido de Carbono (CO)</option>
-                        <option value="no_ppb">Monòxido de Nitrògeno (NO)</option>
-                        <option value="no2_ppb">Dióxido de Nitrógeno (NO2)</option>
-                        <option value="nox_ppb">Òxidos de nitrògeno (NOx)</option>
-                        <option value="o3_ppb">Ozono (O3)</option>
-                        <option value="pm10_ugm3">Particulas menores a 10 micròmetros (PM10)</option>
-                        <option value="pm25_ugm3">Particulas menores a 2.5 micròmetros (PM2.5)</option>
-                        <option value="pmco_ugm3">Partculas fraccion gruesa (PMCO)</option>
-                        <option value="so2_ppb">Dióxido de Azufre (SO2)</option>
+                        <option value="co">Monóxido de Carbono (CO)</option>
+                        <option value="no">Monóxido de Nitrógeno (NO)</option>
+                        <option value="no2">Dióxido de Nitrógeno (NO2)</option>
+                        <option value="nox">Oxidos de nitrógeno (NOx)</option>
+                        <option value="o3">Ozono (O3)</option>
+                        <option value="pm10">Particulas menores a 10 micrómetros (PM10)</option>
+                        <option value="pm25">Particulas menores a 2.5 micrómetros (PM2.5)</option>
+                        <option value="pmco">Partículas fraccion gruesa (PMCO)</option>
+                        <option value="so2">Dióxido de Azufre (SO2)</option>
                     </select>
 
                     <label>Formato de Descarga</label>
@@ -109,7 +109,7 @@
                         <label for="terminos">Acepto los términos y condiciones de uso de datos</label>
                     </div>
 
-                    <button type="submit" class="btn-enviar">Consultar Base de Datos</button>
+                    <button type="submit" id="btn-consultar-gas" class="btn-enviar">Consultar Base de Datos</button>
                 </fieldset>
             </form>
         </aside>
