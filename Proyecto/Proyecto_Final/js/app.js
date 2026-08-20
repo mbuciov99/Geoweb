@@ -1,5 +1,5 @@
 /**
- * TAREA 2 - Geoweb
+ * Proyecto final - Geoweb
  */
 
 //*A. Estructura condicional múltiple
@@ -319,93 +319,98 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ============================================
-// INCISO: F Mètodos GET y POST con validacion
+// CONSULTA DE GASES (Formulario de la imagen)
 // ============================================
 
-// Funciòn de Validaciòn (No envìa si hay vacios)
-function validarCampos() {
-    const palabra= document.getElementById("palabra_clave").value.trim();
-    const entidad= document.getElementById("entidad_fed").value;
+// 1. Validar los campos del nuevo formulario
+function validarCamposGas() {
+    
+    const estacion = document.getElementById("estacion").value.trim();
+    const lat = document.getElementById("latitud").value.trim();
+    const lon = document.getElementById("longitud").value.trim();
+    const gas = document.getElementById("gas").value;
+    
+    // Saber qué radio button está seleccionado
+    const formato = document.querySelector('input[name="formato"]:checked').value;
 
-    if(palabra === ""|| entidad === ""){
-        alert("Error: Debes escribir una palabra y seleccionar una entidad antes de consultar.");
-        return false; //Bloque el envìo
-    }
-    if (palabra.length < 3) {
-        alert("Seguridad: Favor de escribir al menos 3 letras para no saturar la base de datos.");
+    if (gas === "") {
+        alert("Error: Debes seleccionar un gas traza de interés.");
         return false;
     }
-    return {palabra, entidad};
+    
+    if (estacion === "" && (lat === "" || lon === "")) {
+        alert("Atención: Por favor ingresa el nombre de una estación o sus coordenadas para no saturar la base de datos.");
+        return false;
+    }
+
+    return { estacion, lat, lon, gas, formato };
 }
 
-// Evento : Consulta con GET
-const btnGet= document.getElementById("btn-get");
-if (btnGet){
-    btnGet.addEventListener("click", async () => {
-        const datos= validarCampos();
-        if(!datos) return; // Se detiene si faltan datos
+// 2. Evento para el botón de consultar la base de datos
+const btnConsultarGas = document.getElementById("btn-consultar-gas"); 
 
-        const pantallaResultados= document.getElementById('pantalla-resultados');
-        pantallaResultados.innerHTML= 'Consultando via GET ...';
+if (btnConsultarGas) {
+    btnConsultarGas.addEventListener("click", async (evento) => {
+        evento.preventDefault(); // Evita que la página se recargue
 
-        // Construir la URL con los paràmetros visibles
-        const URL= `consulta_get_pdo.php?palabra=${encodeURIComponent(datos.palabra)}&entidad=${encodeURIComponent(datos.entidad)}`;
+        const datos = validarCamposGas();
+        if (!datos) return; 
 
-        try{
-            const response = await fetch(URL, {method: 'GET', cache: 'no-cache'});
-            if (!response.ok) throw new Error("Error en servidor: " + response.status);
-            imprimirResultadosF(await response.json());
-        }catch (error) {
-            pantallaResultados.innerHTML= `<span style="color: #A35139;">Error: ${error.message}</span>`;
-        }
-    });
-}
+        const pantallaResultados = document.getElementById('pantalla-resultados');
+        pantallaResultados.innerHTML = 'Procesando datos espaciales y mediciones...';
 
-// Evento 2: Consulta por POST
-const btnPost= document.getElementById("btn-post");
-if (btnPost) {
-    btnPost.addEventListener("click", async() => {
-        const datos= validarCampos();
-        if (!datos) return; // Se detiene si faltan datos
+        // Construir la URL con parámetros GET
+        const URL = `php/consulta_get_pdo.php?estacion=${encodeURIComponent(datos.estacion)}&latitud=${encodeURIComponent(datos.lat)}&longitud=${encodeURIComponent(datos.lon)}&gas=${encodeURIComponent(datos.gas)}&formato=${encodeURIComponent(datos.formato)}`;
 
-        const pantallaResultados= document.getElementById('pantalla-resultados');
-        pantallaResultados.innerHTML= 'Consultando via POST ...';
+        try {
+            const response = await fetch(URL, { method: 'GET', cache: 'no-cache' });
+            
+            if (!response.ok) throw new Error("Error en el servidor de base de datos: " + response.status);
+            
+            const jsonData = await response.json();
+            
+            if (datos.formato === 'csv') {
+                 // Si pediste CSV, por ahora el PHP mandó JSON de prueba. 
+                 // Aquí podrías descargar el archivo.
+                 console.log("Datos para CSV listos", jsonData);
+                 pantallaResultados.innerHTML = "Generando archivo de descarga...";
+            } else {
+                 // Imprimir los resultados en pantalla
+                 imprimirResultadosGas(jsonData, datos.gas);
+            }
 
-        // Empaquetar los datos ocultos para el body
-        let dataParams= new URLSearchParams();
-        dataParams.append('palabra', datos.palabra);
-        dataParams.append('entidad', datos.entidad);
-
-        try{
-            const response= await fetch('consulta_post_pdo.php', {
-                method: 'POST',
-                body: dataParams,
-                headers: {'Content-Type':'application/x-www-form-urlencoded'}
-            });
-            if (!response.ok) throw new Error("Error en servidor: " + response.status);
-            imprimirResultadosF(await response.json());
         } catch (error) {
-            pantallaResultados.innerHTML= `<span style= "color: #A35139;">Error: ${error.message}</span>`;
+            pantallaResultados.innerHTML = `<span style="color: #A35139;">Error de conexión: ${error.message}</span>`;
         }
     });
 }
 
-// Funciòn auxiliar para imprimir los resultados del Inciso F
-function imprimirResultadosF(jsonData) {
-    const pantallaResultados= document.getElementById('pantalla-resultados');
-    pantallaResultados.innerHTML= '';
+// 3. Función para pintar los resultados en pantalla
+function imprimirResultadosGas(jsonData, gasSeleccionado) {
+    const pantallaResultados = document.getElementById('pantalla-resultados');
+    pantallaResultados.innerHTML = '';
+    
     if (jsonData.length > 0) {
-        jsonData.forEach(item => {
+        // Limitamos a los primeros 50 para no desbordar el HTML si hay muchas fechas
+        const resultadosVisibles = jsonData.slice(0, 50); 
+        
+        resultadosVisibles.forEach(item => {
+            // Usamos item[gasSeleccionado] para acceder dinámicamente al valor del gas
+            let valorGas = item[gasSeleccionado] !== null ? item[gasSeleccionado] + ' ppb' : 'Sin datos';
+            
             let contenido_html = `
-            <strong>Nombre:</strong> ${item.nombre}</br>
-            <strong>Tipo:</strong>${item.tipo}</br>
-            <strong>Municipio:</strong>${item.delmun}</br>
-            <strong>Entidad:</strong>${item.entidad}</br>
+            <strong>Estación:</strong> ${item.nombre} (${item.clave_estacion})</br>
+            <strong>Fecha y Hora:</strong> ${item.fecha} a las ${item.hora}</br>
+            <strong>Lectura de ${gasSeleccionado.toUpperCase()}:</strong> <span style="color:#43a047;">${valorGas}</span></br>
             <hr style="border: 0.5px solid #3A4A5E; margin: 10px 0;"/>
             `;
             pantallaResultados.innerHTML += contenido_html;
         });
-    }else {
-        pantallaResultados.innerHTML= "La consulta avanzada no arrojò resultados. </br>";
+        
+        if (jsonData.length > 50) {
+             pantallaResultados.innerHTML += `<p><em>Se muestran 50 de ${jsonData.length} registros encontrados.</em></p>`;
+        }
+    } else {
+        pantallaResultados.innerHTML = "No se encontraron mediciones para esa estación/coordenadas. </br>";
     }
 }
