@@ -109,12 +109,52 @@
                 <fieldset>
                     <legend>Busqueda de estaciones RAMA</legend>
 
-                    <label for="estacion">Nombre de la estación o investigador</label>
-                    <input type="text" id="estacion" name="estacion" placeholder="Ej. Estación Merced">
+                    <label for="fecha_consulta">Fecha de Medicion:</label>
+                    <input type="date" id="fecha_consulta" name="fecha_consulta" min="2025-01-01" max="2025-12-31">
 
-                    <label for="ubicacion">Ubicación geográfica (latitud y longitud)</label>
-                    <input type="text" id="latitud" name="latitud" placeholder="Ingresa la latitud"> <br>
-                    <input type="text" id="longitud" name="longitud" placeholder="Ingresa la longitud"> <br>
+                    <label for="hora_consulta">Hora de Medicion:</label>
+                    <input type="number" id="hora_consulta" name="hora_consulta" min="1" max="24" placeholder="Escribe hora (Ej. 14)">
+
+                    <label for="estacion_rama">Estacion de Monitoreo (RAMA):</label>
+                    <select id="estacion_rama" name="estacion_rama">
+                        <option value="" disabled selected>---- Selecciona Estacion ----</option>
+                        <option value="ACO">ACO</option>
+                        <option value="AJM">AJM</option>
+                        <option value="AJU">AJU</option>
+                        <option value="ATI">ATI</option>
+                        <option value="BJU">BJU</option>
+                        <option value="CAM">CAM</option>
+                        <option value="CCA">CCA</option>
+                        <option value="CHO">CHO</option>
+                        <option value="COY">COY</option>
+                        <option value="CUA">CUA</option>
+                        <option value="CUT">CUT</option>
+                        <option value="FAC">FAC</option>
+                        <option value="FAR">FAR</option>
+                        <option value="GAM">GAM</option>
+                        <option value="HGM">HGM</option>
+                        <option value="INN">INN</option>
+                        <option value="IZT">IZT</option>
+                        <option value="LLA">LLA</option>
+                        <option value="LPR">LPR</option>
+                        <option value="MER">MER</option>
+                        <option value="MGH">MGH</option>
+                        <option value="MON">MON</option>
+                        <option value="MPA">MPA</option>
+                        <option value="NEZ">NEZ</option>
+                        <option value="PED">PED</option>
+                        <option value="SAC">SAC</option>
+                        <option value="SAG">SAG</option>
+                        <option value="SFE">SFE</option>
+                        <option value="SJA">SJA</option>
+                        <option value="TAH">TAH</option>
+                        <option value="TLA">TLA</option>
+                        <option value="TLI">TLI</option>
+                        <option value="UAX">UAX</option>
+                        <option value="UIZ">UIZ</option>
+                        <option value="VIF">VIF</option>
+                        <option value="XAL">XAL</option>
+                    </select>
 
                     <label>Formato de descarga</label>
                     <div class="grupo-radio">
