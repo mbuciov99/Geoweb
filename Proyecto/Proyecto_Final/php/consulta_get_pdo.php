@@ -3,7 +3,7 @@
 header('Content-Type: application/json; charset=utf-8');
 
 try {
-    $dsn = "pgsql:host=localhost;port=5432;dbname=rama";
+    $dsn = "pgsql:host=localhost;port=5432;dbname=RAMA";
     // $dsn = "pgsql:host=localhost;port=5432;dbname=rama"; // para Coraima
     $user = "postgres";
     $password = "ubuntu";

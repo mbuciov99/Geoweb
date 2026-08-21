@@ -8,6 +8,7 @@ let capaResultados;
 let capaEstaciones;
 let graficaConcentraciones = null;
 let parametrosUltimaConsulta = null;
+let capaO3Wfs;
 
 // ============================================
 // DICCIONARIOS Y MENÚS DINÁMICOS
@@ -97,6 +98,35 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
         inicializarMapa();
         cargarEstacionesLocales();
+        cargarO3Wfs();
+        var drawnItems= new L.featureGroup();
+        mapa.addLayer(drawnItems);
+
+        var drawControl = new L.Control.Draw({
+        edit: { featureGroup: drawnItems },
+        draw: {
+            polygon: true,
+            rectangle: true,
+            circle: false,
+            marker: false,
+            polyline: false
+        }
+    });
+    mapa.addControl(drawControl);
+
+    // 3. ¡Aquí es donde ocurre la magia!
+    mapa.on(L.Draw.Event.CREATED, function (e) {
+        var layer = e.layer;
+        drawnItems.clearLayers(); // Limpia dibujos anteriores
+        drawnItems.addLayer(layer);
+
+        // Obtenemos el polígono en formato GeoJSON
+        var geojson = layer.toGeoJSON();
+        console.log("Polígono dibujado:", geojson);
+
+        // Aquí es donde llamarías a tu servicio WPS (por ahora, un alert de victoria)
+        alert("¡Polígono capturado! Ahora podrías enviar estas coordenadas a tu proceso WPS en GeoServer.");
+    });
     } catch (error) {
         console.error("No fue posible inicializar el mapa:", error);
     }
@@ -277,6 +307,7 @@ function inicializarMapa() {
     openStreetMap.addTo(mapa);
     capaResultados = L.layerGroup().addTo(mapa);
     capaEstaciones = L.layerGroup();
+    capaO3Wfs= L.layerGroup();
 
     L.control.scale({ position: "bottomleft", metric: true, imperial: false }).addTo(mapa);
 
@@ -321,6 +352,11 @@ function inicializarMapa() {
                     {
                         label: "Promedio de O3 en 2025 (WMS)",
                         layer: ozonoPromedioWms
+                    },
+                    ,
+                    {
+                        label:"Promedio de O3 interactivo (WFS)",
+                        layer: capaO3Wfs
                     }
                 ]
             }
@@ -455,6 +491,86 @@ async function cargarEstacionesLocales() {
         console.error("Error al cargar la capa local:", error);
     }
 }
+
+/**
+ * Consume mediante WFS los promedios de O3 publicados en GeoServer.
+ */
+async function cargarO3Wfs() {
+
+    const hostGeoServer =
+        `${window.location.protocol}//${window.location.hostname}:8080`;
+
+    const parametrosWfs = new URLSearchParams({
+        service: "WFS",
+        version: "1.0.0",
+        request: "GetFeature",
+        typeName: "rama:v_o3_promedio_2025",
+        outputFormat: "application/json"
+    });
+
+    const urlWfs =
+        `${hostGeoServer}/geoserver/rama/ows?${parametrosWfs.toString()}`;
+
+    try {
+        const respuesta = await fetch(urlWfs);
+
+        if (!respuesta.ok) {
+            throw new Error(
+                `El servicio WFS respondió con HTTP ${respuesta.status}`
+            );
+        }
+
+        const geojson = await respuesta.json();
+
+        const capaVectorial = L.geoJSON(geojson, {
+
+            pointToLayer: (feature, latlng) => {
+                return L.circleMarker(latlng, {
+                    radius: 7,
+                    color: "#ffffff",
+                    weight: 2,
+                    fillColor: "#6a4c93",
+                    fillOpacity: 0.9
+                });
+            },
+
+            onEachFeature: (feature, layer) => {
+                const propiedades = feature.properties ?? {};
+
+                layer.bindPopup(`
+                    <strong>
+                        ${propiedades.nombre_estacion ?? "Estación RAMA"}
+                    </strong><br>
+
+                    Clave:
+                    ${propiedades.clave_estacion ?? "Sin clave"}<br>
+
+                    Promedio de O3:
+                    ${propiedades.promedio_o3 ?? "Sin dato"} ppb<br>
+
+                    Mediciones utilizadas:
+                    ${propiedades.mediciones ?? "Sin dato"}<br>
+
+                    <small>Fuente: servicio WFS de GeoServer</small>
+                `);
+            }
+        });
+
+        capaO3Wfs.clearLayers();
+        capaO3Wfs.addLayer(capaVectorial);
+
+        console.log(
+            `WFS cargado: ${geojson.features?.length ?? 0} elementos.`
+        );
+
+    } catch (error) {
+        console.error(
+            "No fue posible cargar el servicio WFS:",
+            error
+        );
+    }
+}
+
 
 // ============================================
 // FUNCIONES DE GRÁFICAS (Chart.js)
