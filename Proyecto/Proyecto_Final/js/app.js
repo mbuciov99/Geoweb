@@ -100,6 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
         inicializarMapa();
         cargarEstacionesLocales();
+        cargarO3Wfs();cargarO3Wfs();
     } catch (error) {
         console.error("No fue posible inicializar el mapa:", error);
     }
@@ -347,6 +348,7 @@ function inicializarMapa() {
     openStreetMap.addTo(mapa);
     capaResultados = L.layerGroup().addTo(mapa);
     capaEstaciones = L.layerGroup();
+    capaO3Wfs = L.layerGroup();
 
     L.control.scale({ position: "bottomleft", metric: true, imperial: false }).addTo(mapa);
 
@@ -381,18 +383,27 @@ function inicializarMapa() {
                 ]
             },
             {
-                label: "Servicios WMS",
-                children: [
-                    {
-                        label: "Promedio de PM2.5 en 2025 (WMS)",
-                        layer: pm25PromedioWms
-                    },
-                    {
-                        label: "Promedio de O3 en 2025 (WMS)",
-                        layer: ozonoPromedioWms
-                    }
-                ]
-            }
+    label: "Servicios WMS",
+    children: [
+        {
+            label: "Promedio de PM2.5 en 2025 (WMS)",
+            layer: pm25PromedioWms
+        },
+        {
+            label: "Promedio de O3 en 2025 (WMS)",
+            layer: ozonoPromedioWms
+        }
+    ]
+},
+{
+    label: "Servicios WFS",
+    children: [
+        {
+            label: "Promedio de O₃ en 2025 (WFS)",
+            layer: capaO3Wfs
+        }
+    ]
+}
         ]
     };
 
@@ -578,4 +589,80 @@ function mostrarGrafica(datos, gas) {
             plugins: { legend: { display: true, position: "top" } }
         }
     });
+}
+async function cargarO3Wfs() {
+    try {
+        const parametros = new URLSearchParams({
+            service: "WFS",
+            version: "2.0.0",
+            request: "GetFeature",
+            typeNames: "rama:v_o3_promedio_2025",
+            outputFormat: "application/json",
+            srsName: "EPSG:4326"
+        });
+
+        const respuesta = await fetch(
+            "/geoserver/rama/ows?" +
+            parametros.toString()
+        );
+
+        if (!respuesta.ok) {
+            throw new Error(
+                `El WFS respondió con HTTP ${respuesta.status}`
+            );
+        }
+
+        const geojson = await respuesta.json();
+
+        const capaVectorial = L.geoJSON(geojson, {
+            pointToLayer: (feature, latlng) => {
+                return L.circleMarker(latlng, {
+                    radius: 7,
+                    color: "#7c3aed",
+                    weight: 2,
+                    fillColor: "#c4b5fd",
+                    fillOpacity: 0.85
+                });
+            },
+
+            onEachFeature: (feature, layer) => {
+                const propiedades = feature.properties || {};
+
+                const nombre =
+                    propiedades.nombre_estacion ||
+                    propiedades.Nombre ||
+                    "Estación RAMA";
+
+                const clave =
+                    propiedades.clave_estacion ||
+                    propiedades.Clave ||
+                    "Sin clave";
+
+                const promedio =
+                    propiedades.promedio_o3 ??
+                    "Sin información";
+
+                layer.bindPopup(`
+                    <strong>${nombre}</strong><br>
+                    Clave: ${clave}<br>
+                    Promedio de O₃: ${promedio} ppb
+                `);
+            }
+        });
+
+        capaO3Wfs.clearLayers();
+        capaO3Wfs.addLayer(capaVectorial);
+
+        console.log(
+            `WFS cargado: ${
+                geojson.features?.length ?? 0
+            } estaciones`
+        );
+
+    } catch (error) {
+        console.error(
+            "Error al cargar el servicio WFS:",
+            error
+        );
+    }
 }
