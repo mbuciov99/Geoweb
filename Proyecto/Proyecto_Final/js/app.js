@@ -1,195 +1,424 @@
 /**
- * Proyecto final - Geoweb
+ * Proyecto final de GeoWeb
+ * Consulta de mediciones de la RAMA
  */
 
-//*A. Estructura condicional múltiple
+let mapa;
+let capaResultados;
+let capaEstaciones;
+let graficaConcentraciones = null;
+let parametrosUltimaConsulta = null;
 
-function evaluarCalidadAireNO2(medicion) {
-    let diagnostico = "";
-
-    if (medicion >= 150) {
-        diagnostico = "Calidad del aire: Crítica";
-    } else if (medicion >= 100) {
-        diagnostico = "Calidad del aire: Regular";
-    } else {
-        diagnostico = "Calidad del aire: Buena";
-    }
-    
-    return diagnostico; // C (retornar valor)
-}
-
-// B. Al menos dos estructuras iterativas con operadores lógicos
-/* ESTRUCTURA ITERATIVA 1: Bucle 'for' con operador lógico '&&' (AND).*/
-function filtrarMedicionesAnomalas(mediciones) {
-    let medicionesValidas = [];
-
-    for (let i = 0; i < mediciones.length; i++) {
-        // Operador lógico &&: La lectura es válida solo si es mayor a 0 Y menor o igual a 500 ppb
-        if (mediciones[i] > 0 && mediciones[i] <= 500) {
-            medicionesValidas.push(mediciones[i]);  
-        }
-    }
-    return medicionesValidas;
-}
-
- /* ESTRUCTURA ITERATIVA 2: Bucle 'while' con operador lógico OR.
- * Función con ARGUMENTOS VARIABLES 
- */
-function analizarCalidadAire(...valoresSatelitales) {
-    // Si no se envían argumentos, retornamos un mensaje por defecto
-    if (valoresSatelitales.length === 0) {
-        return "No hay datos satelitales para analizar.";
-    }
-
-    let i = 0;
-    let alertaDetectada = false;
-
-    // Iteramos mientras haya elementos Y no hayamos encontrado una alerta
-    while (i < valoresSatelitales.length && alertaDetectada === false) {
-        
-        // Operador lógico ||: Se dispara alerta si el valor es negativo (error) O supera los 120 ppb (peligro)
-        if (valoresSatelitales[i] < 0 || valoresSatelitales[i] > 120) {
-            alertaDetectada = true;
-        }
-        i++;
-    }
-
-    if (alertaDetectada) {
-        return "¡Alerta! Se detectaron valores críticos o erróneos en el muestreo satelital.";
-    } else {
-        return "Valores dentro del rango nominal permitido.";
-    }
-}
-
-/* Pruebas de ejecución (Mostrando los resultados en la página HTML)
-*Con una variable de texto vacía se va guardando todo. 
-*<br> para que el HTML haga saltos de línea
-*/
-
-let textoResultados = "";
-
-textoResultados += "<strong>--- Punto A y C: Condicional Múltiple ---</strong><br>";
-textoResultados += "Lectura 160 ppb: " + evaluarCalidadAireNO2(160) + "<br>";
-textoResultados += "Lectura 85 ppb: " + evaluarCalidadAireNO2(85) + "<br><br>";
-
-let muestrasEstacion = [35.2, -5.0, 42.1, 800.5, 28.4]; 
-textoResultados += "<strong>--- Punto B: Filtrado de Anomalías (for + &&) ---</strong><br>";
-const filtradas = filtrarMedicionesAnomalas(muestrasEstacion);
-textoResultados += "Muestras validadas: " + filtradas + "<br><br>";
-
-textoResultados += "<strong>--- Punto B y C: Análisis Satelital (while + or) ---</strong><br>";
-textoResultados += "Análisis zona Centro: " + analizarCalidadAire(35.0, 130.5, 40.0) + "<br><br>";
-
-textoResultados += "<strong>--- Punto D: Reporte de lecturas válidas (array)---</strong><br>";
-const sorteadas = filtradas.sort();
-textoResultados += "Cantidad de muestras válidas: " + sorteadas.length + "<br>";
-textoResultados += "Valor mínimo: " + Math.min(...sorteadas) + "<br>";
-textoResultados += "Valor máximo: " + Math.max(...sorteadas) + "<br>";
-textoResultados += "Muestras ordenadas: " + sorteadas.join(", ") + "<br><br>";
-
-textoResultados += "<strong>--- Punto E: Resultado: Calidad del aire ---</strong><br>";
-const encadenadas = [];
-
-sorteadas.forEach(num => {
-    let calidad = "";
-    if (num <= 50) {
-        calidad = "Buena";
-    } else if (num <= 100) {
-        calidad = "Moderada";
-    } else {
-        calidad = "Mala";
-    }
-    encadenadas.push(`${num} ppb - ${calidad}`);
-});
-
-textoResultados += "Reporte: " + encadenadas.join(" | ") + "<br>";
-
-// Se busca etiqueta por su ID y se integra el texto
-document.getElementById("pantalla-resultados").innerHTML = textoResultados;
-
-// Validación del formulario y apertura de ventana
-
-// Escuchar el evento DOMContentLoaded para asegurar que el HTML esté listo
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("El DOM ha sido completamente cargado. El validador está listo.");
 
-    // Buscar el formulario geoespacial por su clase
-    const formulario= document.querySelector(".formulario-geo");
+    console.log("DOMContentLoaded ejecutado");
 
-    if (formulario) {
-        // Escuchar el evento cuando el usuario da clic en "Enviar solicitud"
-        formulario.addEventListener("submit", (evento) => {
-            // Evitar que la pagina se cargue de golpe y borre datos
-            evento.preventDefault();
+    // Elementos principales del HTML
+    const formulario =
+        document.getElementById("form-consultas");
 
-            // Captura de los datos de validación
-            const nombre= document.getElementById("nombre").value.trim();
-            const latitud= document.getElementById("lat").value.trim();
-            const longitud= document.getElementById("lon").value.trim();
-            const clave= document.getElementById("clave-api").value.trim();
-            const correo= document.getElementById("correo").value.trim();
-            const terminos= document.getElementById("terminos").checked;
+    const pantallaResultados =
+        document.getElementById("pantalla-resultados");
 
-            // Validación de campos obligatorios
-            if (nombre == "" || latitud == "" || longitud == "") {
-                alert("Error: Los campos de Nombre, Latitud y Longitud son obligatorios.");
-                return; // Detener la ejecución
-            }
+    const accionesDescarga =
+        document.getElementById("acciones-descarga");
 
-            if (clave.length < 6) {
-                alert("Error: La contraseña debe tener al menos 6 caracteres");
-                return;
-            }
+    console.log("Formulario:", formulario);
+    console.log("Pantalla:", pantallaResultados);
+    console.log("Descargas:", accionesDescarga);
 
-            if (!terminos) {
-                alert("Error: Debes aceptar los términos y condiciones para descargar datos de TEMPO");
-                return;
-            }
+    try {
+        inicializarMapa();
+        cargarEstacionesLocales();
 
-            // Si todo es correcto, se abre una nueva ventana
-            const nuevaVentana= window.open("", "_blank", "width= 600, height= 400");
-
-            //Contenido dinámico de HTML para esta nueva ventada
-            nuevaVentana.document.write(`
-                <!DOCTYPE html>
-                <html lang="es">
-                    <head>
-                        <meta charset= "UTF-8">
-                        <title>Validación de Solicitud Exitosa</title>
-                        <style>
-                            body {
-                                background-color: #1B2632;
-                                color: #F0F3F5;
-                                font-family: sans-serif;
-                                padding: 30px;
-                            }
-                            h1 { color: #D9C5A7; border-bottom: #2C3B4D; padding: 20px; border-radius: 8px; border: 1px solid #3A4A5E; }
-                            .tarjeta { background-color: #2C3B4D; padding: 20px; border-radius: 8px; border: 1px solid #3A4A5E; }
-                            .exito { color: #43a047; font-weight: bold; }
-                        </style>
-                    </head>
-                    <body>
-                        <h1>
-                            <span> Misión Validada </span>
-                        </h1>
-                        <p class="exito">Todos los campos del formulario pasaron la validación de seguridad.</p>
-                        <div class="tarjeta">
-                            <h3>Resumen de Registro Geoespacial:</h3>
-                            <p><strong>Investigador/Estación:</strong>${nombre}</p>
-                            <p><strong>Coordenadas de consulta:</strong>Lat:${latitud},${longitud}</p>
-                            <p><strong>Estatus de Clave:</strong>Validada (Protegida)</p>
-                        </div>
-                        </br>
-                        <button onclick= "window.close()">Cerrar ventana</button>
-                    </body>
-                </html>`
-
-            );
-            // Se cierra el flujo de escritura de la ventana nueva
-        });
+    } catch (error) {
+        console.error("No fue posible inicializar el mapa:", error);
     }
+
+
+    // Escuchar el envío del formulario
+    formulario.addEventListener("submit", async (evento) => {
+
+        // Evitar que la página se recargue
+        evento.preventDefault();
+
+        // Recuperar valores del formulario
+        const estacion = document.getElementById("estacion").value.trim();
+        const latitud = document.getElementById("latitud").value.trim();
+        const longitud = document.getElementById("longitud").value.trim();
+        const gas = document.getElementById("gas").value;
+        const terminos = document.getElementById("terminos").checked;
+
+        // Validar contaminante
+        if (gas === "") {
+            alert("Selecciona un contaminante.");
+            return;
+        }
+
+        // Validar que las coordenadas se proporcionen juntas
+        if (
+            (latitud !== "" && longitud === "") ||
+            (latitud === "" && longitud !== "")
+        ) {
+            alert("Debes proporcionar la latitud y la longitud.");
+            return;
+        }
+
+        // Validar términos y condiciones
+        if (!terminos) {
+            alert("Debes aceptar los términos y condiciones.");
+            return;
+        }
+
+        // Preparar parámetros para PHP
+        const parametros = new URLSearchParams();
+
+        parametros.append("estacion", estacion);
+        parametros.append("latitud", latitud);
+        parametros.append("longitud", longitud);
+        parametros.append("gas", gas);
+        parametrosUltimaConsulta =
+            new URLSearchParams(parametros.toString());
+
+        // Informar que comenzó la consulta
+        pantallaResultados.innerHTML =
+            "<em>Consultando la base de datos...</em>";
+
+        // Ocultar botones mientras se consulta
+        accionesDescarga.style.display = "none";
+
+        try {
+
+            // Petición al PHP ubicado en la carpeta php
+            const respuesta = await fetch(
+                "php/consulta_get_pdo.php?" + parametros.toString()
+            );
+
+            // Leer primero como texto para identificar errores de PHP
+            const textoRespuesta = await respuesta.text();
+
+            console.log(
+                "Respuesta recibida del PHP:",
+                textoRespuesta
+            );
+
+            let resultado;
+
+            // Convertir la respuesta a JSON
+            try {
+                resultado = JSON.parse(textoRespuesta);
+            } catch (error) {
+                throw new Error(
+                    "El servidor no devolvió JSON. Respuesta: " +
+                    textoRespuesta.substring(0, 300)
+                );
+            }
+
+            // Revisar errores del servidor o de PHP
+            if (!respuesta.ok || resultado.error) {
+                throw new Error(
+                    resultado.error ||
+                    `Error HTTP ${respuesta.status}: ${textoRespuesta}`
+                );
+            }
+
+            // Recuperar registros
+            const datos = resultado.datos ?? [];
+
+            // Actualizar resumen y tabla
+            mostrarResumen(datos, gas);
+            mostrarTabla(datos, gas);
+            mostrarEstacionesEnMapa(datos, gas);
+            mostrarGrafica(datos, gas);
+
+            // Mostrar botones si existen resultados
+            if (datos.length > 0) {
+                accionesDescarga.style.display = "block";
+            }
+
+        } catch (error) {
+
+            pantallaResultados.innerHTML = `
+                <span style="color: #A35139;">
+                    <strong>Error:</strong> ${error.message}
+                </span>
+            `;
+
+            mostrarTabla([], gas);
+
+            console.error("Error en la consulta:", error);
+        }
+    });
 });
 
+
+/**
+ * Muestra un resumen de la consulta.
+ */
+function mostrarResumen(datos, gas) {
+
+    const pantallaResultados =
+        document.getElementById("pantalla-resultados");
+
+    if (!datos || datos.length === 0) {
+        pantallaResultados.innerHTML = `
+            No se encontraron mediciones para los filtros seleccionados.
+        `;
+        return;
+    }
+
+    pantallaResultados.innerHTML = `
+        <strong>Consulta realizada correctamente.</strong><br>
+        Contaminante seleccionado: ${gas.toUpperCase()}<br>
+        Resultados encontrados: ${datos.length}<br>
+        Registros mostrados en la tabla:
+        ${Math.min(datos.length, 100)}
+    `;
+}
+
+
+/**
+ * Llena la tabla con los resultados.
+ */
+function mostrarTabla(datos, gas) {
+
+    const cuerpoTabla =
+        document.getElementById("tabla-resultados");
+
+    const encabezadoGas =
+        document.getElementById("encabezado-gas");
+
+    // Cambiar el encabezado según el contaminante
+    encabezadoGas.textContent =
+        gas ? gas.toUpperCase() : "Concentración";
+
+    // Eliminar resultados anteriores
+    cuerpoTabla.innerHTML = "";
+
+    // Mostrar mensaje cuando no existen datos
+    if (!datos || datos.length === 0) {
+        cuerpoTabla.innerHTML = `
+            <tr>
+                <td colspan="5">
+                    No se encontraron resultados.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    // Evitar colocar miles de filas en el navegador
+    const registrosVisibles = datos.slice(0, 100);
+
+    registrosVisibles.forEach((registro) => {
+
+        const fila = document.createElement("tr");
+
+        const valorGas =
+            registro[gas] === null ||
+            registro[gas] === undefined
+                ? "Sin dato"
+                : registro[gas];
+
+        fila.innerHTML = `
+            <td>${registro.Nombre ?? "Sin nombre"}</td>
+            <td>${registro.clave_estacion ?? "Sin clave"}</td>
+            <td>${registro.fecha ?? "Sin fecha"}</td>
+            <td>${registro.hora ?? "Sin hora"}</td>
+            <td>${valorGas}</td>
+        `;
+
+        cuerpoTabla.appendChild(fila);
+
+        
+    });
+
+    
+}
+
+
+function inicializarMapa() {
+
+    // Crear el mapa
+    mapa = L.map("map", {
+        center: [19.4326, -99.1332],
+        zoom: 10
+    });
+
+    // Primer mapa base
+    const openStreetMap = L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            maxZoom: 19,
+            attribution:
+                '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }
+    );
+
+    // Segundo mapa base
+    const cartoClaro = L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+        {
+            maxZoom: 20,
+            attribution:
+                '&copy; OpenStreetMap &copy; CARTO'
+        }
+    );
+
+    // Mostrar inicialmente OpenStreetMap
+    openStreetMap.addTo(mapa);
+
+    // Capa donde aparecerá la estación consultada
+    capaResultados = L.layerGroup().addTo(mapa);
+    capaEstaciones = L.layerGroup();
+
+    // Escala
+    L.control.scale({
+        position: "bottomleft",
+        metric: true,
+        imperial: false
+    }).addTo(mapa);
+
+    // Árbol de mapas base
+    const arbolBase = {
+        label: "<strong>Mapas base</strong>",
+        children: [
+            {
+                label: "OpenStreetMap",
+                layer: openStreetMap
+            },
+            {
+                label: "CartoDB claro",
+                layer: cartoClaro
+            }
+        ]
+    };
+
+    // Árbol de capas superpuestas
+    const arbolCapas = {
+    label: "<strong>Capas del geoportal</strong>",
+    selectAllCheckbox: false,
+
+    children: [
+        {
+            label: "Consulta RAMA",
+
+            children: [
+                {
+                    label: "Estación consultada",
+                    layer: capaResultados
+                }
+            ]
+        },
+
+        {
+            label: "Datos locales",
+
+            children: [
+                {
+                    label: "Todas las estaciones RAMA",
+                    layer: capaEstaciones
+                }
+            ]
+        }
+    ]
+};
+
+    // Usar el plugin si cargó correctamente
+    if (
+        L.control.layers.tree &&
+        typeof L.control.layers.tree === "function"
+    ) {
+
+        L.control.layers.tree(
+            arbolBase,
+            arbolCapas,
+            {
+                collapsed: true,
+                namedToggle: true,
+                collapseAll: "Cerrar grupos",
+                expandAll: "Abrir grupos"
+            }
+        ).addTo(mapa);
+
+        console.log(
+            "Leaflet.Control.Layers.Tree cargado correctamente."
+        );
+
+    } else {
+
+        // Control normal si el plugin no carga
+        L.control.layers(
+            {
+                "OpenStreetMap": openStreetMap,
+                "CartoDB claro": cartoClaro
+            },
+            {
+                "Estación consultada": capaResultados
+            }
+        ).addTo(mapa);
+
+        console.warn(
+            "El árbol de capas no cargó; se utilizó el control normal."
+        );
+    }
+}
+   
+
+function mostrarEstacionesEnMapa(datos, gas) {
+
+    capaResultados.clearLayers();
+
+    if (!datos || datos.length === 0) {
+        return;
+    }
+
+    const estacionesAgregadas = new Set();
+    const marcadores = [];
+
+    datos.forEach((registro) => {
+
+        const latitud = Number.parseFloat(registro.latitud);
+        const longitud = Number.parseFloat(registro.longitud);
+        const clave = registro.clave_estacion;
+
+        if (!Number.isFinite(latitud) || !Number.isFinite(longitud)) {
+            return;
+        }
+
+        if (estacionesAgregadas.has(clave)) {
+            return;
+        }
+
+        estacionesAgregadas.add(clave);
+
+        const valorGas =
+            registro[gas] === null ||
+            registro[gas] === undefined
+                ? "Sin dato"
+                : registro[gas];
+
+        const marcador = L.marker([latitud, longitud]);
+
+        marcador.bindPopup(`
+            <strong>${registro.Nombre ?? "Estación RAMA"}</strong><br>
+            Clave: ${clave ?? "Sin clave"}<br>
+            ${gas.toUpperCase()}: ${valorGas}<br>
+            Fecha: ${registro.fecha ?? "Sin fecha"}<br>
+            Hora: ${registro.hora ?? "Sin hora"}
+        `);
+
+        marcador.addTo(capaResultados);
+        marcadores.push(marcador);
+    });
+
+    if (marcadores.length > 0) {
+
+        const grupo = L.featureGroup(marcadores);
+
+        mapa.fitBounds(grupo.getBounds(), {
+            padding: [30, 30],
+            maxZoom: 14
 // ============================================
 // CONSULTA DE GASES (Formulario de la imagen)
 // ============================================
@@ -269,8 +498,50 @@ document.addEventListener("DOMContentLoaded", () =>{
             });
         });
     }
+}
+/**
+ * Hace aparecer las secciones al desplazarse por la página.
+ */
+document.addEventListener("DOMContentLoaded", () => {
+
+    const bloques = document.querySelectorAll(
+        ".grid-visor > aside, " +
+        ".grid-visor > main, " +
+        ".grid-visor > footer"
+    );
+
+    bloques.forEach((bloque) => {
+        bloque.classList.add("revelar");
+    });
+
+    const observador = new IntersectionObserver(
+        (entradas) => {
+
+            entradas.forEach((entrada) => {
+
+                if (entrada.isIntersecting) {
+                    entrada.target.classList.add("visible");
+                    observador.unobserve(entrada.target);
+                }
+            });
+        },
+        {
+            threshold: 0.12,
+            rootMargin: "0px 0px -35px 0px"
+        }
+    );
+
+    bloques.forEach((bloque) => {
+        observador.observe(bloque);
+    });
 });
 
+/**
+ * Genera una gráfica temporal de las concentraciones.
+ */
+function mostrarGrafica(datos, gas) {
+
+    const canvas = document.getElementById("graphCanvas");
 // 1. Validar los campos del nuevo formulario
 function validarCamposGas() {
     
@@ -289,142 +560,189 @@ function validarCamposGas() {
     const formatoImput = document.querySelector('input[name="formato"]:checked');
     const formato =formatoImput ? formatoImput.value : "geojson"; // Valor por defecto
 
-    if (gas === "") {
-        alert("Error: Debes seleccionar un gas de interés.");
-        return false;
-    }
-    
-    if (estacion_rama === ""){
-        alert("Error: Debes seleccionar una estacion de monitoreo.")
-        return false
+    if (!canvas) {
+        console.warn("No se encontró graphCanvas.");
+        return;
     }
 
-    return {fecha, hora, estacion_rama, gas, formato };
-}
+    // Eliminar la gráfica anterior
+    if (graficaConcentraciones) {
+        graficaConcentraciones.destroy();
+        graficaConcentraciones = null;
+    }
 
-// 2. Evento para el botón de consultar la base de datos
+    // Preparar solamente mediciones numéricas
+    const serie = datos
+        .map((registro) => ({
+            fecha: `${registro.fecha ?? ""} ${registro.hora ?? ""}`,
+            valor: Number.parseFloat(registro[gas])
+        }))
+        .filter((registro) => Number.isFinite(registro.valor))
+        .sort((a, b) => a.fecha.localeCompare(b.fecha));
 
-const btnConsultarGas = document.getElementById("btn-consultar-gas");
+    if (serie.length === 0) {
+        console.warn("No existen valores numéricos para graficar.");
+        return;
+    }
 
-if (btnConsultarGas) {
-    btnConsultarGas.addEventListener("click", async (evento) => {
-        evento.preventDefault(); 
+    // Mostrar como máximo las últimas 150 mediciones
+    const serieVisible = serie.slice(-150);
 
-        const datos = validarCamposGas();
-        if (!datos) return; 
+    const unidades = {
+        co: "ppm",
+        no: "ppb",
+        no2: "ppb",
+        nox: "ppb",
+        o3: "ppb",
+        pm10: "µg/m³",
+        pm25: "µg/m³",
+        pmco: "µg/m³",
+        so2: "ppb"
+    };
 
-        const pantallaResultados = document.getElementById('pantalla-resultados');
-        pantallaResultados.innerHTML = 'Procesando datos espaciales y mediciones...';
+    graficaConcentraciones = new Chart(canvas, {
+        type: "line",
 
+        data: {
+            labels: serieVisible.map(
+                registro => registro.fecha
+            ),
+
+            datasets: [
+                {
+                    label:
+                        `${gas.toUpperCase()} (${unidades[gas] ?? ""})`,
+
+                    data: serieVisible.map(
+                        registro => registro.valor
+                    ),
+
+                    borderColor: "#176b68",
+                    backgroundColor: "rgba(23, 107, 104, 0.15)",
         // Solicitamos siempre formato JSON para asegurar que la consola y la interfaz reciban los datos
         const URL = `php/consulta_get_pdo.php?estacion=${encodeURIComponent(datos.estacion_rama)}&gas=${encodeURIComponent(datos.gas)}&fecha=${encodeURIComponent(datos.fecha)}&hora=${encodeURIComponent(datos.hora)}&formato=json`;
 
-        try {
-            const response = await fetch(URL, { method: 'GET', cache: 'no-cache' });
-            if (!response.ok) throw new Error("Error en el servidor de base de datos: " + response.status);
-            
-            const jsonData = await response.json();
-            
-            // 1. Mostrar resultados en automático en la interfaz
-            imprimirResultadosGas(jsonData, datos.gas);
+                    borderWidth: 2,
+                    pointRadius: 2,
+                    pointHoverRadius: 5,
+                    tension: 0.25,
+                    fill: true
+                }
+            ]
+        },
 
-            // 2. Si el usuario marcó un formato de descarga vectorial, descargarlo en paralelo
-            if (datos.formato === 'kml') {
-                descargarKMLNavegador(jsonData, datos.gas);
-            } else if (datos.formato === 'geojson') {
-                descargarGeoJSONNavegador(jsonData, datos.gas);
-            }
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
 
-        } catch (error) {
-            pantallaResultados.innerHTML = `<span style="color: #A35139;">Error de conexión: ${error.message}</span>`;
-        }
-    });
-}
-
-function descargarKMLNavegador(data, gas) {
-    if (data.length === 0) return;
-    let kml = `<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2">\n<Document>\n<name>Vectorial RAMA</name>\n`;
-    
-    data.forEach(row => {
-        let nombre = row.Nombre || 'Estación';
-        let valor = row[gas] || 'N/A';
-        kml += `<Placemark>\n<name>${nombre}</name>\n<description>Medición: ${valor}</description>\n<Point><coordinates>-99.13,19.43,0</coordinates></Point>\n</Placemark>\n`;
-    });
-
-    kml += `</Document>\n</kml>`;
-    
-    const blob = new Blob([kml], { type: 'application/vnd.google-earth.kml+xml' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'reporte_vectorial.kml';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-}
-
-function descargarGeoJSONNavegador(data, gas) {
-    if (data.length === 0) return;
-    
-    let features = data.map(row => {
-        return {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [-99.13, 19.43] 
+            interaction: {
+                mode: "index",
+                intersect: false
             },
-            "properties": {
-                "estacion": row.Nombre || 'Estación',
-                "clave": row.clave_estacion,
-                "fecha": row.fecha,
-                "hora": row.hora,
-                "gas": gas,
-                "valor": row[gas] !== null ? row[gas] : null
+
+            plugins: {
+                legend: {
+                    display: true,
+                    position: "top"
+                },
+
+                tooltip: {
+                    callbacks: {
+                        label: (contexto) => {
+                            return (
+                                `${gas.toUpperCase()}: ` +
+                                `${contexto.parsed.y} ` +
+                                `${unidades[gas] ?? ""}`
+                            );
+                        }
+                    }
+                }
+            },
+
+            scales: {
+                x: {
+                    ticks: {
+                        maxTicksLimit: 10,
+                        maxRotation: 45,
+                        minRotation: 0
+                    },
+
+                    title: {
+                        display: true,
+                        text: "Fecha y hora"
+                    }
+                },
+
+                y: {
+                    beginAtZero: true,
+
+                    title: {
+                        display: true,
+                        text:
+                            `Concentración (${unidades[gas] ?? ""})`
+                    }
+                }
             }
-        };
-    });
-
-    let geojsonCollection = {
-        "type": "FeatureCollection",
-        "features": features
-    };
-
-    const blob = new Blob([JSON.stringify(geojsonCollection, null, 2)], { type: 'application/json' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'reporte_estaciones.geojson';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-}
-
-// Función para pintar los resultados en la consola de salida y manejar la descarga
-function imprimirResultadosGas(jsonData, gasSeleccionado) {
-    const pantallaResultados = document.getElementById('pantalla-resultados');
-    pantallaResultados.innerHTML = ''; // Limpiamos el mensaje de espera
-    
-    if (jsonData && jsonData.length > 0) {
-        // Limitamos a los primeros 50 registros para mantener fluida la interfaz
-        const resultadosVisibles = jsonData.slice(0, 50); 
-        
-        resultadosVisibles.forEach(item => {
-            let valorGas = item[gasSeleccionado] !== null && item[gasSeleccionado] !== undefined ? item[gasSeleccionado] : 'Sin datos';
-            
-            let contenido_html = `
-            <strong>Estación:</strong> ${item.Nombre || 'N/A'} (${item.clave_estacion})<br/>
-            <strong>Fecha y Hora:</strong> ${item.fecha} a las ${item.hora}<br/>
-            <strong>Lectura de ${gasSeleccionado.toUpperCase()}:</strong> <span style="color:#43a047;">${valorGas}</span><br/>
-            <hr style="border: 0.5px solid #3A4A5E; margin: 10px 0;"/>
-            `;
-            pantallaResultados.innerHTML += contenido_html;
-        });
-        
-        if (jsonData.length > 50) {
-             pantallaResultados.innerHTML += `<p><em>Se muestran 50 de ${jsonData.length} registros encontrados.</em></p>`;
         }
-    } else {
-        pantallaResultados.innerHTML = "La consulta no arrojó resultados para los parámetros ingresados.<br/>";
+    });
+}
+/**
+ * Carga la capa local GeoJSON de estaciones RAMA.
+ */
+async function cargarEstacionesLocales() {
+
+    try {
+        const respuesta = await fetch(
+            "datos/estaciones_rama.geojson"
+        );
+
+        if (!respuesta.ok) {
+            throw new Error(
+                "No se pudo cargar el GeoJSON: " +
+                respuesta.status
+            );
+        }
+
+        const geojson = await respuesta.json();
+
+        const estacionesGeojson = L.geoJSON(geojson, {
+
+            pointToLayer: (feature, latlng) => {
+
+                return L.circleMarker(latlng, {
+                    radius: 6,
+                    color: "#ffffff",
+                    weight: 2,
+                    fillColor: "#176b68",
+                    fillOpacity: 0.9
+                });
+            },
+
+            onEachFeature: (feature, layer) => {
+
+                const propiedades =
+                    feature.properties ?? {};
+
+                layer.bindPopup(`
+                    <strong>
+                        ${propiedades.nombre ?? "Estación RAMA"}
+                    </strong><br>
+                    Clave:
+                    ${propiedades.clave ?? "Sin clave"}
+                `);
+            }
+        });
+
+        capaEstaciones.addLayer(estacionesGeojson);
+
+        console.log(
+            "Capa local de estaciones cargada correctamente."
+        );
+
+    } catch (error) {
+        console.error(
+            "Error al cargar la capa local:",
+            error
+        );
     }
 }
-
