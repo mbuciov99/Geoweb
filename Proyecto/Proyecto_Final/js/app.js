@@ -326,8 +326,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function validarCamposGas() {
     
     const estacion = document.getElementById("estacion").value.trim();
-    const latitud = document.getElementById("latitud").value.trim();
-    const longitud = document.getElementById("longitud").value.trim();
+    const estacion_rama= document.getElementById("estacion_rama").value;
     const gas = document.getElementById("gas").value;
     
     // Saber qué radio button está seleccionado
@@ -339,12 +338,12 @@ function validarCamposGas() {
         return false;
     }
     
-    if (estacion === "" && (latitud === "" || longitud === "")) {
-        alert("Atención: Por favor ingresa el nombre de una estación o sus coordenadas.");
-        return false;
+    if (estacion_rama === ""){
+        alert("Error: Debes seleccionar una estacion de monitoreo.")
+        return false
     }
 
-    return { estacion, latitud, longitud, gas, formato };
+    return { estacion_rama, gas, formato };
 }
 
 // 2. Evento para el botón de consultar la base de datos
@@ -362,7 +361,7 @@ if (btnConsultarGas) {
         pantallaResultados.innerHTML = 'Procesando datos espaciales y mediciones...';
 
         // Solicitamos siempre formato JSON para asegurar que la consola y la interfaz reciban los datos
-        const URL = `php/consulta_get_pdo.php?estacion=${encodeURIComponent(datos.estacion)}&latitud=${encodeURIComponent(datos.latitud)}&longitud=${encodeURIComponent(datos.longitud)}&gas=${encodeURIComponent(datos.gas)}&formato=json`;
+        const URL = `php/consulta_get_pdo.php?estacion=${encodeURIComponent(datos.estacion_rama)}&gas=${encodeURIComponent(datos.gas)}&formato=json`;
 
         try {
             const response = await fetch(URL, { method: 'GET', cache: 'no-cache' });
