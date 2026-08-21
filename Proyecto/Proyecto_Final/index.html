@@ -5,35 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geoportal de Concentraciones de la RAMA- CentroGeo</title>
 
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css?v=4">
     <!---------------------- Librerias------------------------->
     <!-- Leaflet (Mapa)-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+
+   <!-- Plugin Leaflet.Control.Layers.Tree -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/leaflet.control.layers.tree@1.2.0/L.Control.Layers.Tree.css"
+    >
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/leaflet.control.layers.tree@1.2.0/L.Control.Layers.Tree.js"
+    ></script>
     <!-- jQuery (peticiones AJAX)-->
      <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
      <!-- Chart.js (Esquemas y gràficos)-->
       <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body> 
      <div class="grid-visor">
         <header class="encabezado">
+
             <h1 class="cabecera-1">
                 Geoportal Analítico Multipropósito
             </h1>
+
+            <img
+                class="logo-cabecera"
+                src="https://www.centrogeo.org.mx/img/logo_centrogeo_wide.svg"
+                alt="Logotipo de CentroGeo"
+            >
+
         </header>
         
         <!-- Menù de Navegaciòn -->
-        <nav class="menu">
-    		<ul>
-                <li><a href="#descripcion">Acerca del Proyecto</a></li>
-        		<li><a href="#mapa">Mapa Interactivo</a></li>
-        		<li><a href="#formulario">Formularios</a></li>
-        		<li><a href="#tabla">Tabla</a></li>
-			<li><a href="#herramientas">Listas</a></li>
-        		<li><a href="#resultados">Enlaces</a></li>
-    		</ul>
-	    </nav>
+       <nav class="menu" aria-label="Navegación principal">
+        <ul>
+            <li><a href="#descripcion">Proyecto</a></li>
+            <li><a href="#mapa">Mapa</a></li>
+            <li><a href="#herramientas">Consulta</a></li>
+            <li><a href="#datos-rama">Resultados</a></li>
+            <li><a href="#resultados">Estadísticas</a></li>
+            <li><a href="#descargas">Descargas</a></li>
+            <li><a href="#enlaces">Fuentes</a></li>
+        </ul>
+    </nav>
 
         <!-- 1. Descripciòn del trabajo-->
          <aside class="textos" id="descripcion">
@@ -78,6 +100,15 @@
                     <input type="text" id="latitud" name="latitud" placeholder="Ingresa la latitud"> <br>
                     <input type="text" id="longitud" name="longitud" placeholder="Ingresa la longitud"> <br>
 
+                    <label>Formato de descarga</label>
+                    <div class="grupo-radio">
+                        <input type="radio" id="formato-shp" name="formato" value="shp" checked>
+                        <label for="formato-shp">Shapefile (.zip)</label>
+
+                        <input type="radio" id="formato-kml" name="formato" value="kml">
+                        <label for="formato-kml">KML (.kml)</label>
+                    </div>
+
                     <label for="gas">Gas traza de interés</label>
                     <select id="gas" name="gas">
                         <option value="" disabled selected>--- Selecciona un gas ---</option>
@@ -92,21 +123,8 @@
                         <option value="so2">Dióxido de Azufre (SO2)</option>
                     </select>
 
-                    <label>Formato de Descarga</label>
-                    <div class="grupo-radio">
-                        <input type="radio" id="formato-csv" name="formato" value="csv" chacked>
-                        <label for="formato-csv">Tabla(.csv)</label>
-
-                        <input type="radio" id="formato-tiff" name="formato" value="tiff">
-                        <label for="formato-tiff">Imagen Raster (.tiff)</label>
-                    </div>
-
-                    <label for="justificacion">Justificación del uso de datos:</label>
-                    <textarea id="justificacion" name="justificacion" rows="4" placeholder="Describe brevemente tu investigación..."></textarea>
-
                     <div class="grupo-chackbox">
-                        <input type="checkbox" id="terminos" name="terminos">
-                        <label for="terminos">Acepto los términos y condiciones de uso de datos</label>
+                        <input type="checkbox" id="terminos" name="terminos"> <label for="terminos">Acepto los términos y condiciones de uso de datos</label>
                     </div>
 
                     <button type="submit" id="btn-consultar-gas" class="btn-enviar">Consultar Base de Datos</button>
@@ -129,27 +147,27 @@
             </ol>
 
             <h3 class="cabecera-3">Muestra de Estaciones</h3>
+            <div class="tabla-geo-wrapper">
             <table class="tabla-geo" id="tabla">
-                    <thead>
-                        <tr>
-                            <th>Estación</th>
-                            <th>Coordenadas</th>
-                            <th>NO2 (ppb)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Merced</td>
-                            <td> 19.42, -99.11</td>
-                            <td>35.2</td>
-                        </tr>
-                        <tr>
-                            <td>Pedregal</td>
-                            <td>19.32, -99.19</td>
-                            <td>28.4</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <thead>
+                    <tr>
+                        <th>Estación</th>
+                        <th>Clave</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th id="encabezado-gas">Concentración</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tabla-resultados">
+                    <tr>
+                        <td colspan="5">
+                            Esperando una consulta...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
          </aside>
 
         <!-- Caja de Resultados y Gràficas -->
@@ -157,7 +175,7 @@
             <h2 class="cabecera-2">Resultados y Estadísticas</h2>
             
             <div class="tarjeta-general">
-                <h3 class="titulo-resultados">Consola de Salida</h3>
+                <h3 class="titulo-resultados">Resumen de la consulta</h3>
                 <hr class="divisor-resultados">
                 <div id="pantalla-resultados">
                     <span style="color: #A8B5C2; font-style: italic;">Esperando consultas del usuario...</span>
@@ -166,16 +184,25 @@
 
             <div class="tarjeta-general tarjeta-clara" style="margin-top: 20px;">
                 <h3 class="cabecera-4">Gráfica de Concentraciones</h3>
-                <canvas id="graphCanvas" style="width: 100%; height: 250px;"></canvas>
+                <div class="contenedor-grafica">
+                    <canvas id="graphCanvas"></canvas>
+                </div>
             </div>
+            <div id="acciones-descarga" style="display: none;">
+                <h3>Descargar resultados</h3>
+
+                <button type="button" id="descargar-shp" class="btn-enviar">
+                    Descargar Shapefile
+                </button>
+
+                <button type="button" id="descargar-kml" class="btn-enviar">
+                    Descargar KML
+                </button>
+            </div>
+            
         </aside>
 
-        <aside class="imagen">
-            <div class="texto-imagen">
-                <p>Figura 1. Logotipo Centro Geo</p>
-            </div>
-            <img class="logo-institucional" src="https://www.centrogeo.org.mx/img/logo_centrogeo_wide.svg" alt="Logotipo CentroGeo">
-        </aside> 
+    
         
         <footer class="pie-pagina">
             <h2 class="cabecera-2">Integrantes del equipo</h2>
@@ -188,6 +215,6 @@
         </footer>
 
     </div> 
-    <script src="js/app.js"></script>
+    <script src="js/app.js?v=4"></script>
 </body>
 </html>
