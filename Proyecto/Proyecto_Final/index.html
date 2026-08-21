@@ -60,9 +60,26 @@
         <!-- 1. Descripciòn del trabajo-->
          <aside class="textos" id="descripcion">
             <h2 class="cabecera-2">Descripcion del Proyecto</h2>
+            <div class="resumen-proyecto">
+
+                <p class="texto-general">
+                    Este geoportal permite consultar, visualizar y explorar las mediciones
+                    de contaminantes atmosféricos registradas por la Red Automática de
+                    Monitoreo Atmosférico de la Ciudad de México.
+                </p>
+
+                <p class="texto-general">
+                    Mediante un formulario, el usuario puede seleccionar una estación y un
+                    contaminante de interés. La solicitud se conecta con una base de datos
+                    PostgreSQL/PostGIS a través de PHP y presenta los resultados en una
+                    tabla, una gráfica temporal y un mapa interactivo desarrollado con
+                    Leaflet.
+                </p>
+
+            </div>
             <div class="tarjeta-general tarjeta-clara">
                 <p class="texto-general texto-intro">
-                    Este geoportal integra diversas tecnologias de codigo abierto para el despliegue y anàlisis de datos espaciales. Sus principales caracteristicas incluyen:
+                    Esta versión del Geoportal Analítico Multipropósito integra diversas tecnologias de codigo abierto para el despliegue y anàlisis de datos espaciales. Sus principales caracteristicas incluyen:
                 </p>
                 <ul>
                     <li>Consumo de servicios WMS y WFS via <strong>GeoServer</strong>.</li>
@@ -72,7 +89,6 @@
                 </ul>
             </div>
 
-            <h3 class="cabecera-3">Capas Disponibles</h3>
             <div class="tarjeta-general tarjeta-oscura">
                 <p class="texto-general texto-metadato">
                     Interactua con el mapa para ver datos de contaminacion atmosferica: gase como CO, NO, NO2, SO y material particulado (PM) dentro de la demarcaciòn de la CDMX.
@@ -134,19 +150,8 @@
 
         <!-- Listas y Contenidos-->
          <aside class="textos" id="datos-rama">
-            <h3 class="cabecera-3">Contaminantes medidos</h3>
-            <ol>
-                <li>Ozono (O3)</li>
-                <li>Dioxido de Nitrogeno (NO2)</li>
-                <li>Oxidos de Nitrogeno (NOx)</li>
-                <li>Monoxido de Nitrogeno (NO)</li>
-                <li>Dioxido de Azufre (SO2)</li>
-                <li>Monoxido de Carbono (CO)</li>
-                <li>Particulas menores a 10 micrometros (PM10)</li>
-                <li>Particulas menores a 2.5 micropetros (PM2.5)</li>
-            </ol>
-
-            <h3 class="cabecera-3">Muestra de Estaciones</h3>
+            
+            <h3 class="cabecera-3">Resultados de la consulta</h3>
             <div class="tabla-geo-wrapper">
             <table class="tabla-geo" id="tabla">
                 <thead>
@@ -172,7 +177,6 @@
 
         <!-- Caja de Resultados y Gràficas -->
         <aside class="seccion-resultados-js" id="resultados">
-            <h2 class="cabecera-2">Resultados y Estadísticas</h2>
             
             <div class="tarjeta-general">
                 <h3 class="titulo-resultados">Resumen de la consulta</h3>
@@ -215,6 +219,6 @@
         </footer>
 
     </div> 
-    <script src="js/app.js?v=4"></script>
+    <script src="js/app.js?v=5"></script>
 </body>
 </html>

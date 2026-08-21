@@ -1,6 +1,6 @@
 <?php
 try {
-    $dsn = "pgsql:host=localhost;port=5432;dbname=;rama";
+    $dsn = "pgsql:host=localhost;port=5432;dbname=rama";
     $user = "postgres";
     $password = "ubuntu";
 

@@ -5,6 +5,7 @@
 
 let mapa;
 let capaResultados;
+let capaEstaciones;
 let graficaConcentraciones = null;
 let parametrosUltimaConsulta = null;
 
@@ -28,6 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
         inicializarMapa();
+        cargarEstacionesLocales();
+
     } catch (error) {
         console.error("No fue posible inicializar el mapa:", error);
     }
@@ -267,6 +270,7 @@ function inicializarMapa() {
 
     // Capa donde aparecerá la estación consultada
     capaResultados = L.layerGroup().addTo(mapa);
+    capaEstaciones = L.layerGroup();
 
     // Escala
     L.control.scale({
@@ -292,20 +296,33 @@ function inicializarMapa() {
 
     // Árbol de capas superpuestas
     const arbolCapas = {
-        label: "<strong>Capas del geoportal</strong>",
-        selectAllCheckbox: false,
-        children: [
-            {
-                label: "Consulta RAMA",
-                children: [
-                    {
-                        label: "Estación consultada",
-                        layer: capaResultados
-                    }
-                ]
-            }
-        ]
-    };
+    label: "<strong>Capas del geoportal</strong>",
+    selectAllCheckbox: false,
+
+    children: [
+        {
+            label: "Consulta RAMA",
+
+            children: [
+                {
+                    label: "Estación consultada",
+                    layer: capaResultados
+                }
+            ]
+        },
+
+        {
+            label: "Datos locales",
+
+            children: [
+                {
+                    label: "Todas las estaciones RAMA",
+                    layer: capaEstaciones
+                }
+            ]
+        }
+    ]
+};
 
     // Usar el plugin si cargó correctamente
     if (
@@ -572,4 +589,64 @@ function mostrarGrafica(datos, gas) {
             }
         }
     });
+}
+/**
+ * Carga la capa local GeoJSON de estaciones RAMA.
+ */
+async function cargarEstacionesLocales() {
+
+    try {
+        const respuesta = await fetch(
+            "datos/estaciones_rama.geojson"
+        );
+
+        if (!respuesta.ok) {
+            throw new Error(
+                "No se pudo cargar el GeoJSON: " +
+                respuesta.status
+            );
+        }
+
+        const geojson = await respuesta.json();
+
+        const estacionesGeojson = L.geoJSON(geojson, {
+
+            pointToLayer: (feature, latlng) => {
+
+                return L.circleMarker(latlng, {
+                    radius: 6,
+                    color: "#ffffff",
+                    weight: 2,
+                    fillColor: "#176b68",
+                    fillOpacity: 0.9
+                });
+            },
+
+            onEachFeature: (feature, layer) => {
+
+                const propiedades =
+                    feature.properties ?? {};
+
+                layer.bindPopup(`
+                    <strong>
+                        ${propiedades.nombre ?? "Estación RAMA"}
+                    </strong><br>
+                    Clave:
+                    ${propiedades.clave ?? "Sin clave"}
+                `);
+            }
+        });
+
+        capaEstaciones.addLayer(estacionesGeojson);
+
+        console.log(
+            "Capa local de estaciones cargada correctamente."
+        );
+
+    } catch (error) {
+        console.error(
+            "Error al cargar la capa local:",
+            error
+        );
+    }
 }
