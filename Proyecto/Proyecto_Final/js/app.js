@@ -225,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-}); // <--- ¡AQUÍ ESTÁ EL CIERRE QUE FALTABA!
+}); 
 
 // ============================================
 // FUNCIONES DE DESCARGA Y FORMATO LOCAL
@@ -233,8 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function generarObjetoGeoJSON(data, gas) {
     let features = data.map(row => {
         const lat = Number.parseFloat(row.latitud) || 19.43;
-        const lon = Number.parseFloat(row.longitud) || -99.13;
-        return {
+        const lon = Number.parseFloat(row.longitud) || -99.13;        return {
             "type": "Feature",
             "geometry": { 
                 "type": "Point", 
@@ -486,42 +485,49 @@ function mostrarEstacionesEnMapa(datos, gas) {
 // ============================================
 // CARGAR CAPA LOCAL DE ESTACIONES
 // ============================================
+
 async function cargarEstacionesLocales() {
     try {
-        const respuesta = await fetch("rama_stations.geojson");
-        if (!respuesta.ok) throw new Error("No se pudo cargar el GeoJSON: " + respuesta.status);
+        const respuesta = await fetch(
+            "datos/estaciones_rama.geojson"
+        );
+
+        if (!respuesta.ok) {
+            throw new Error(`Error HTTP ${respuesta.status}`);
+        }
+
         const geojson = await respuesta.json();
 
         const estacionesGeojson = L.geoJSON(geojson, {
-            pointToLayer: (feature, latlng) => {
-                const props = feature.properties || {};
-                const lat = Number.parseFloat(props.Latitud || props.latitud);
-                const lon = Number.parseFloat(props.Longitud || props.longitud);
+            pointToLayer: (feature, latlng) =>
+                L.circleMarker(latlng, {
+                    radius: 6,
+                    color: "#ffffff",
+                    weight: 2,
+                    fillColor: "#176b68",
+                    fillOpacity: 0.9
+                }),
 
-                if (Number.isFinite(lat) && Number.isFinite(lon)) {
-                    return L.circleMarker([lat, lon], { 
-                        radius: 6, 
-                        color: "#ffffff", 
-                        weight: 2, 
-                        fillColor: "#176b68", 
-                        fillOpacity: 0.9 
-                    });
-                }
-                return null;
-            },
             onEachFeature: (feature, layer) => {
-                const propiedades = feature.properties ?? {};
-                const nombre = propiedades.Nombre || propiedades.nombre || "Estación RAMA";
-                const clave = propiedades.Clave || propiedades.clave || "Sin clave";
-                layer.bindPopup(`<strong>${nombre}</strong><br>Clave: ${clave}`);
+                const propiedades = feature.properties || {};
+
+                layer.bindPopup(`
+                    <strong>${propiedades.nombre || "Estación RAMA"}</strong><br>
+                    Clave: ${propiedades.clave || "Sin clave"}
+                `);
             }
         });
 
+        capaEstaciones.clearLayers();
         capaEstaciones.addLayer(estacionesGeojson);
-        capaEstaciones.addTo(mapa); 
-        console.log("Capa local cargada y pintada correctamente.");
+        capaEstaciones.addTo(mapa);
+
+        console.log(
+            `GeoJSON cargado: ${geojson.features.length} estaciones`
+        );
+
     } catch (error) {
-        console.error("Error al cargar la capa local:", error);
+        console.error("Error del GeoJSON:", error);
     }
 }
 
