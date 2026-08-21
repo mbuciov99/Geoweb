@@ -1,230 +1,415 @@
 <!DOCTYPE html>
+
 <html lang="es">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geoportal de Concentraciones de la RAMA- CentroGeo</title>
 
-    <link rel="stylesheet" href="css/styles.css">
-    <!---------------------- Librerias------------------------->
-    <!-- Leaflet (Mapa)-->
+    <title>Geoportal de Concentraciones de la RAMA - CentroGeo</title>
+
+
+
+    <link rel="stylesheet" href="css/styles.css?v=5">
+
+   
+
+    <!-- Librerías Leaflet y Plugins -->
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"/>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
-    <!-- jQuery (peticiones AJAX)-->
-     <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
-     <!-- Chart.js (Esquemas y gràficos)-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.js"></script>
+
+
+
+    <!-- Plugin Leaflet.Control.Layers.Tree -->
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.control.layers.tree@1.2.0/L.Control.Layers.Tree.css"/>
+
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.control.layers.tree@1.2.0/L.Control.Layers.Tree.js"></script>
+
+
+
+    <!-- jQuery & Chart.js -->
+
+    <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.js"></script>
+
+
+
+    <!-- Google Fonts -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
-<body> 
-     <div class="grid-visor">
+
+<body>
+
+    <div class="grid-visor">
+
         <header class="encabezado">
-            <h1 class="cabecera-1">
-                Geoportal Analítico Multipropósito
-            </h1>
+
+            <img class="logo-cabecera" src="https://www.centrogeo.org.mx/img/logo_centrogeo_wide.svg" alt="Logotipo de CentroGeo">
+
+            <h1 class="cabecera-1">Geoportal Analítico Multipropósito</h1>
+
         </header>
-        
-        <!-- Menù de Navegaciòn -->
-        <nav class="menu">
-    		<ul>
-                <li><a href="#descripcion">Acerca del Proyecto</a></li>
-        		<li><a href="#mapa">Mapa Interactivo</a></li>
-        		<li><a href="#formulario">Formularios</a></li>
-        		<li><a href="#tabla">Tabla</a></li>
-			<li><a href="#herramientas">Listas</a></li>
-        		<li><a href="#resultados">Enlaces</a></li>
-    		</ul>
-	    </nav>
 
-        <!-- 1. Descripciòn del trabajo-->
-         <aside class="textos" id="descripcion">
-            <h2 class="cabecera-2">Descripcion del Proyecto</h2>
+       
+
+        <!-- Menú de Navegación -->
+
+        <nav class="menu" aria-label="Navegación principal">
+
+            <ul>
+
+                <li><a href="#descripcion">Proyecto</a></li>
+
+                <li><a href="#mapa">Mapa</a></li>
+
+                <li><a href="#herramientas">Consulta</a></li>
+
+                <li><a href="#datos-rama">Resultados</a></li>
+
+                <li><a href="#resultados">Estadísticas</a></li>
+
+                <li><a href="#enlaces">Fuentes</a></li>
+
+            </ul>
+
+        </nav>
+
+
+
+        <!-- 1. Descripción del trabajo -->
+
+        <aside class="textos" id="descripcion">
+
+            <h2 class="cabecera-2">Descripción del Proyecto</h2>
+
+            <div class="resumen-proyecto">
+
+                <p class="texto-general">
+
+                    Este geoportal permite consultar, visualizar y explorar las mediciones de contaminantes atmosféricos registradas por la Red Automática de Monitoreo Atmosférico de la Ciudad de México.
+
+                </p>
+
+            </div>
+
             <div class="tarjeta-general tarjeta-clara">
+
                 <p class="texto-general texto-intro">
-                    Este geoportal integra diversas tecnologias de codigo abierto para el despliegue y anàlisis de datos espaciales. Sus principales caracteristicas incluyen:
+
+                    Este geoportal integra diversas tecnologías de código abierto para el despliegue y análisis de datos espaciales. Sus principales características incluyen:
+
                 </p>
+
                 <ul>
-                    <li>Consumo de servicios WMS y WFS via <strong>GeoServer</strong>.</li>
-                    <li>Busqueda avanzada conectada a <strong>PostgreSQL</strong> via PHP.</li>
-                    <li>Geoprocesamiento dinamico (WPS) usando <strong>Python</strong> y PostGIS.</li>
-                    <li>Visualizaciòn de datos estadisticos interactivos.</li>
+
+                    <li>Consumo de servicios WMS y WFS vía <strong>GeoServer</strong>.</li>
+
+                    <li>Búsqueda avanzada conectada a <strong>PostgreSQL</strong> vía PHP.</li>
+
+                    <li>Geoprocesamiento dinámico usando <strong>Python</strong> y PostGIS.</li>
+
+                    <li>Visualización de datos estadísticos interactivos.</li>
+
                 </ul>
+
             </div>
 
-            <h3 class="cabecera-3">Capas Disponibles</h3>
-            <div class="tarjeta-general tarjeta-oscura">
-                <p class="texto-general texto-metadato">
-                    Interactua con el mapa para ver datos de contaminacion atmosferica: gase como CO, NO, NO2, SO y material particulado (PM) dentro de la demarcaciòn de la CDMX.
-                </p>
-            </div>
-         </aside>
+        </aside>
 
-         <!-- MAPA Central (Leaflet)-->
-          <main class="mapa" id="mapa">
-            <h2 class="cabecera-2">Visor Cartografico</h2>
-            <div id="map" style="flex-grow: 1; min-height: 400px;border-radius: 8px; z-index: 1;"></div>
-          </main>
-        
-          <!-- Herramientas y Formularios-->
+
+
+        <!-- MAPA Central (Leaflet) -->
+
+        <main class="mapa" id="mapa">
+
+            <h2 class="cabecera-2">Visor Cartográfico</h2>
+
+            <div id="map" style="flex-grow: 1; min-height: 400px; border-radius: 8px; z-index: 1;"></div>
+
+        </main>
+
+       
+
+        <!-- Herramientas y Formularios -->
+
         <aside class="formulario" id="herramientas">
 
             <form class="formulario-geo" action="#" method="get" id="form-consultas">
+
                 <fieldset>
-                    <legend>Busqueda de estaciones RAMA</legend>
+
+                    <legend>Búsqueda de estaciones RAMA</legend>
+
+
 
                     <label for="estacion">Nombre de la estación o investigador</label>
+
                     <input type="text" id="estacion" name="estacion" placeholder="Ej. Estación Merced">
 
-                    <label for="estacion_rama">Estacion de Monitoreo (RAMA):</label>
+
+
+                    <label for="estacion_rama">Estación de Monitoreo (RAMA):</label>
+
                     <select id="estacion_rama" name="estacion_rama">
-                        <option value="" disabled selected>---- Selecciona Estacion ----</option>
+
+                        <option value="" selected>---- Todas las estaciones ----</option>
+
                         <option value="ACO">ACO</option>
+
                         <option value="AJM">AJM</option>
+
                         <option value="AJU">AJU</option>
+
                         <option value="ATI">ATI</option>
+
                         <option value="BJU">BJU</option>
+
                         <option value="CAM">CAM</option>
+
                         <option value="CCA">CCA</option>
+
                         <option value="CHO">CHO</option>
+
                         <option value="COY">COY</option>
+
                         <option value="CUA">CUA</option>
+
                         <option value="CUT">CUT</option>
+
                         <option value="FAC">FAC</option>
+
                         <option value="FAR">FAR</option>
+
                         <option value="GAM">GAM</option>
+
                         <option value="HGM">HGM</option>
+
                         <option value="INN">INN</option>
+
                         <option value="IZT">IZT</option>
+
                         <option value="LLA">LLA</option>
+
                         <option value="LPR">LPR</option>
+
                         <option value="MER">MER</option>
+
                         <option value="MGH">MGH</option>
+
                         <option value="MON">MON</option>
+
                         <option value="MPA">MPA</option>
+
                         <option value="NEZ">NEZ</option>
+
                         <option value="PED">PED</option>
+
                         <option value="SAC">SAC</option>
+
                         <option value="SAG">SAG</option>
+
                         <option value="SFE">SFE</option>
+
                         <option value="SJA">SJA</option>
+
                         <option value="TAH">TAH</option>
+
                         <option value="TLA">TLA</option>
+
                         <option value="TLI">TLI</option>
+
                         <option value="UAX">UAX</option>
+
                         <option value="UIZ">UIZ</option>
+
                         <option value="VIF">VIF</option>
+
                         <option value="XAL">XAL</option>
+
                     </select>
+
+
 
                     <label for="gas">Gas traza de interés</label>
+
                     <select id="gas" name="gas">
+
                         <option value="" disabled selected>--- Selecciona un gas ---</option>
+
                         <option value="co">Monóxido de Carbono (CO)</option>
+
                         <option value="no">Monóxido de Nitrógeno (NO)</option>
+
                         <option value="no2">Dióxido de Nitrógeno (NO2)</option>
-                        <option value="nox">Oxidos de nitrógeno (NOx)</option>
+
+                        <option value="nox">Óxidos de nitrógeno (NOx)</option>
+
                         <option value="o3">Ozono (O3)</option>
-                        <option value="pm10">Particulas menores a 10 micrómetros (PM10)</option>
-                        <option value="pm25">Particulas menores a 2.5 micrómetros (PM2.5)</option>
-                        <option value="pmco">Partículas fraccion gruesa (PMCO)</option>
+
+                        <option value="pm10">Partículas menores a 10 micrómetros (PM10)</option>
+
+                        <option value="pm25">Partículas menores a 2.5 micrómetros (PM2.5)</option>
+
+                        <option value="pmco">Partículas fracción gruesa (PMCO)</option>
+
                         <option value="so2">Dióxido de Azufre (SO2)</option>
+
                     </select>
 
+
+
                     <label>Formato de Descarga Vectorial</label>
+
                     <div class="grupo-radio">
+
                         <input type="radio" id="formato-geojson" name="formato" value="geojson" checked>
+
                         <label for="formato-geojson">Vectorial (.geojson)</label>
 
+
+
                         <input type="radio" id="formato-kml" name="formato" value="kml">
+
                         <label for="formato-kml">Vectorial (.kml)</label>
+
                     </div>
 
-                    <label for="justificacion">Justificación del uso de datos:</label>
-                    <textarea id="justificacion" name="justificacion" rows="4" placeholder="Describe brevemente tu investigación..."></textarea>
 
-                    <div class="grupo-chackbox">
-                        <input type="checkbox" id="terminos" name="terminos">
+
+                    <div class="grupo-chackbox" style="margin-top: 15px;">
+
+                        <input type="checkbox" id="terminos" name="terminos" checked>
+
                         <label for="terminos">Acepto los términos y condiciones de uso de datos</label>
+
                     </div>
+
+
 
                     <button type="submit" id="btn-consultar-gas" class="btn-enviar">Consultar Base de Datos</button>
+
                 </fieldset>
+
             </form>
+
         </aside>
 
-        <!-- Listas y Contenidos-->
-         <aside class="textos" id="datos-rama">
-            <h3 class="cabecera-3">Contaminantes medidos</h3>
-            <ol>
-                <li>Ozono (O3)</li>
-                <li>Dioxido de Nitrogeno (NO2)</li>
-                <li>Oxidos de Nitrogeno (NOx)</li>
-                <li>Monoxido de Nitrogeno (NO)</li>
-                <li>Dioxido de Azufre (SO2)</li>
-                <li>Monoxido de Carbono (CO)</li>
-                <li>Particulas menores a 10 micrometros (PM10)</li>
-                <li>Particulas menores a 2.5 micropetros (PM2.5)</li>
-            </ol>
+
+
+        <!-- Listas y Tabla -->
+
+        <aside class="textos" id="datos-rama">
 
             <h3 class="cabecera-3">Muestra de Estaciones</h3>
-            <table class="tabla-geo" id="tabla">
-                    <thead>
-                        <tr>
-                            <th>Estación</th>
-                            <th>Coordenadas</th>
-                            <th>NO2 (ppb)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Merced</td>
-                            <td> 19.42, -99.11</td>
-                            <td>35.2</td>
-                        </tr>
-                        <tr>
-                            <td>Pedregal</td>
-                            <td>19.32, -99.19</td>
-                            <td>28.4</td>
-                        </tr>
-                    </tbody>
-                </table>
-         </aside>
 
-        <!-- Caja de Resultados y Gràficas -->
-        <aside class="seccion-resultados-js" id="resultados">
-            <h2 class="cabecera-2">Resultados y Estadísticas</h2>
-            
-            <div class="tarjeta-general">
-                <h3 class="titulo-resultados">Consola de Salida</h3>
-                <hr class="divisor-resultados">
-                <div id="pantalla-resultados">
-                    <span style="color: #A8B5C2; font-style: italic;">Esperando consultas del usuario...</span>
-                </div>
-            </div>
+            <table class="tabla-geo">
 
-            <div class="tarjeta-general tarjeta-clara" style="margin-top: 20px;">
-                <h3 class="cabecera-4">Gráfica de Concentraciones</h3>
-                <canvas id="graphCanvas" style="width: 100%; height: 250px;"></canvas>
-            </div>
+                <thead>
+
+                    <tr>
+
+                        <th>Estación</th>
+
+                        <th>Clave</th>
+
+                        <th>Fecha</th>
+
+                        <th>Hora</th>
+
+                        <th id="encabezado-gas">Concentración</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="tabla-resultados">
+
+                    <tr>
+
+                        <td colspan="5">Realiza una consulta para ver los datos.</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
         </aside>
 
-        <aside class="imagen">
-            <div class="texto-imagen">
-                <p>Figura 1. Logotipo Centro Geo</p>
+
+
+        <!-- Caja de Resultados y Gráficas -->
+
+        <aside class="seccion-resultados-js" id="resultados">
+
+            <h2 class="cabecera-2">Resultados y Estadísticas</h2>
+
+           
+
+            <div class="tarjeta-general">
+
+                <h3 class="titulo-resultados">Consola de Salida</h3>
+
+                <hr class="divisor-resultados">
+
+                <div id="pantalla-resultados" style="max-height: 250px; overflow-y: auto;">
+
+                    <span style="color: #A8B5C2; font-style: italic;">Esperando consultas del usuario...</span>
+
+                </div>
+
             </div>
-            <img class="logo-institucional" src="https://www.centrogeo.org.mx/img/logo_centrogeo_wide.svg" alt="Logotipo CentroGeo">
-        </aside> 
-        
+
+
+
+            <!-- Botones de descarga opcionales -->
+
+            <div id="acciones-descarga" style="display: none; margin-top: 15px;">
+                <h3>Descargar resultados</h3>
+                <button type="button" id="descargar-kml" class="btn-enviar">Descargar Resultados</button>
+            </div>
+
+        </aside>
+
+       
+
         <footer class="pie-pagina">
+
             <h2 class="cabecera-2">Integrantes del equipo</h2>
-            Mariajesús Bucio Villaseñor<br>
+
+            Maríajesús Bucio Villaseñor<br>
+
             Brenda Cecilia Ortíz Gómez<br>
+
             Coraima Reyes Urrego
 
+
+
             <h2 class="cabecera-2" id="enlaces">Enlaces destacados</h2>
-            <a class="enlace-destacado" href="https://www.aire.cdmx.gob.mx/default.php?opc=%27ZaBhnmI=&dc=%27ZA==" target="_blank">Consulta la pagina de la RAMA</a><br>
+
+            <a class="enlace-destacado" href="https://www.aire.cdmx.gob.mx/default.php?opc=%27ZaBhnmI=&dc=%27ZA==" target="_blank">Consulta la página de la RAMA</a><br>
+
         </footer>
 
-    </div> 
+    </div>
+
+
+
     <script src="js/app.js"></script>
+
 </body>
-</html>
+
+</html> 
+
