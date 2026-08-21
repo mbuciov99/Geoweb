@@ -13,7 +13,7 @@ try {
     $latitud = $_GET['latitud'] ?? '';
     $longitud = $_GET['longitud'] ?? '';
     $gas = $_GET['gas'] ?? '';
-    $formato = $_GET['formato'] ?? 'csv';
+    $formato = $_GET['formato'] ?? 'json';
 
     $gases_permitidos = ['co', 'no', 'no2', 'nox', 'o3', 'pm10', 'pm25', 'pmco', 'so2'];
 
@@ -21,7 +21,6 @@ try {
         die(json_encode(['error' => 'El gas seleccionado no es válido.']));
     }
 
-    // Usamos comillas dobles para respetar las mayúsculas con las que se importó la tabla
     $query = "SELECT m.fecha, m.hora, m.clave_estacion, rs.\"Nombre\", m.{$gas} 
               FROM mediciones_rama m
               JOIN rama_stations rs ON m.clave_estacion = rs.\"Clave\"
@@ -36,7 +35,7 @@ try {
 
     if (!empty($latitud) && !empty($longitud)) {
         $query .= " AND ST_DWithin(
-                        rs.geom::geography, 
+                        rs.\"geom\"::geography, 
                         ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)::geography, 
                         5000
                     )";
@@ -48,13 +47,32 @@ try {
     $stmt->execute($params);
     $data = $stmt->fetchAll();
     
-    if ($formato === 'csv') {
-        header('Content-Type: application/json');
-        echo json_encode(['mensaje' => 'CSV listo', 'datos' => $data]);
-    } else {
-        header('Content-Type: application/json');
-        echo json_encode($data);
+    // Si piden KML desde el servidor
+    if ($formato === 'kml') {
+        header('Content-Type: application/vnd.google-earth.kml+xml; charset=utf-8');
+        header('Content-Disposition: attachment; filename=reporte_estaciones.kml');
+        
+        echo '<?xml version="1.0" encoding="UTF-8"?>';
+        echo '<kml xmlns="http://www.opengis.net/kml/2.2">';
+        echo '<Document>';
+        echo '<name>Resultados RAMA</name>';
+        
+        foreach ($data as $row) {
+            echo '<Placemark>';
+            echo '<name>' . htmlspecialchars($row['Nombre'] ?? 'Estación') . '</name>';
+            echo '<description><![CDATA[Fecha: ' . ($row['fecha'] ?? '') . ' - Gas: ' . $row[$gas] . ']]></description>';
+            echo '<Point><coordinates>-99.13,19.43,0</coordinates></Point>';
+            echo '</Placemark>';
+        }
+        
+        echo '</Document>';
+        echo '</kml>';
+        exit;
     }
+
+    // Por defecto devolvemos JSON para la interfaz web
+    header('Content-Type: application/json');
+    echo json_encode($data);
 
 } catch (Exception $e) {
     header('HTTP/1.1 500 Internal Server Error');

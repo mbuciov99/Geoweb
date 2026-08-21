@@ -326,32 +326,34 @@ document.addEventListener("DOMContentLoaded", () => {
 function validarCamposGas() {
     
     const estacion = document.getElementById("estacion").value.trim();
-    const lat = document.getElementById("latitud").value.trim();
-    const lon = document.getElementById("longitud").value.trim();
+    const latitud = document.getElementById("latitud").value.trim();
+    const longitud = document.getElementById("longitud").value.trim();
     const gas = document.getElementById("gas").value;
     
     // Saber qué radio button está seleccionado
-    const formato = document.querySelector('input[name="formato"]:checked').value;
+    const formatoImput = document.querySelector('input[name="formato"]:checked');
+    const formato =formatoImput ? formatoImput.value : "geojson"; // Valor por defecto
 
     if (gas === "") {
-        alert("Error: Debes seleccionar un gas traza de interés.");
+        alert("Error: Debes seleccionar un gas de interés.");
         return false;
     }
     
-    if (estacion === "" && (lat === "" || lon === "")) {
-        alert("Atención: Por favor ingresa el nombre de una estación o sus coordenadas para no saturar la base de datos.");
+    if (estacion === "" && (latitud === "" || longitud === "")) {
+        alert("Atención: Por favor ingresa el nombre de una estación o sus coordenadas.");
         return false;
     }
 
-    return { estacion, lat, lon, gas, formato };
+    return { estacion, latitud, longitud, gas, formato };
 }
 
 // 2. Evento para el botón de consultar la base de datos
-const btnConsultarGas = document.getElementById("btn-consultar-gas"); 
+
+const btnConsultarGas = document.getElementById("btn-consultar-gas");
 
 if (btnConsultarGas) {
     btnConsultarGas.addEventListener("click", async (evento) => {
-        evento.preventDefault(); // Evita que la página se recargue
+        evento.preventDefault(); 
 
         const datos = validarCamposGas();
         if (!datos) return; 
@@ -359,24 +361,23 @@ if (btnConsultarGas) {
         const pantallaResultados = document.getElementById('pantalla-resultados');
         pantallaResultados.innerHTML = 'Procesando datos espaciales y mediciones...';
 
-        // Construir la URL con parámetros GET
-        const URL = `php/consulta_get_pdo.php?estacion=${encodeURIComponent(datos.estacion)}&latitud=${encodeURIComponent(datos.lat)}&longitud=${encodeURIComponent(datos.lon)}&gas=${encodeURIComponent(datos.gas)}&formato=${encodeURIComponent(datos.formato)}`;
+        // Solicitamos siempre formato JSON para asegurar que la consola y la interfaz reciban los datos
+        const URL = `php/consulta_get_pdo.php?estacion=${encodeURIComponent(datos.estacion)}&latitud=${encodeURIComponent(datos.latitud)}&longitud=${encodeURIComponent(datos.longitud)}&gas=${encodeURIComponent(datos.gas)}&formato=json`;
 
         try {
             const response = await fetch(URL, { method: 'GET', cache: 'no-cache' });
-            
             if (!response.ok) throw new Error("Error en el servidor de base de datos: " + response.status);
             
             const jsonData = await response.json();
             
-            if (datos.formato === 'csv') {
-                 // Si pediste CSV, por ahora el PHP mandó JSON de prueba. 
-                 // Aquí podrías descargar el archivo.
-                 console.log("Datos para CSV listos", jsonData);
-                 pantallaResultados.innerHTML = "Generando archivo de descarga...";
-            } else {
-                 // Imprimir los resultados en pantalla
-                 imprimirResultadosGas(jsonData, datos.gas);
+            // 1. Mostrar resultados en automático en la interfaz
+            imprimirResultadosGas(jsonData, datos.gas);
+
+            // 2. Si el usuario marcó un formato de descarga vectorial, descargarlo en paralelo
+            if (datos.formato === 'kml') {
+                descargarKMLNavegador(jsonData, datos.gas);
+            } else if (datos.formato === 'geojson') {
+                descargarGeoJSONNavegador(jsonData, datos.gas);
             }
 
         } catch (error) {
@@ -385,23 +386,80 @@ if (btnConsultarGas) {
     });
 }
 
-// 3. Función para pintar los resultados en pantalla
+function descargarKMLNavegador(data, gas) {
+    if (data.length === 0) return;
+    let kml = `<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2">\n<Document>\n<name>Vectorial RAMA</name>\n`;
+    
+    data.forEach(row => {
+        let nombre = row.Nombre || 'Estación';
+        let valor = row[gas] || 'N/A';
+        kml += `<Placemark>\n<name>${nombre}</name>\n<description>Medición: ${valor}</description>\n<Point><coordinates>-99.13,19.43,0</coordinates></Point>\n</Placemark>\n`;
+    });
+
+    kml += `</Document>\n</kml>`;
+    
+    const blob = new Blob([kml], { type: 'application/vnd.google-earth.kml+xml' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'reporte_vectorial.kml';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+}
+
+function descargarGeoJSONNavegador(data, gas) {
+    if (data.length === 0) return;
+    
+    let features = data.map(row => {
+        return {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [-99.13, 19.43] 
+            },
+            "properties": {
+                "estacion": row.Nombre || 'Estación',
+                "clave": row.clave_estacion,
+                "fecha": row.fecha,
+                "hora": row.hora,
+                "gas": gas,
+                "valor": row[gas] !== null ? row[gas] : null
+            }
+        };
+    });
+
+    let geojsonCollection = {
+        "type": "FeatureCollection",
+        "features": features
+    };
+
+    const blob = new Blob([JSON.stringify(geojsonCollection, null, 2)], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'reporte_estaciones.geojson';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+}
+
+// Función para pintar los resultados en la consola de salida y manejar la descarga
 function imprimirResultadosGas(jsonData, gasSeleccionado) {
     const pantallaResultados = document.getElementById('pantalla-resultados');
-    pantallaResultados.innerHTML = '';
+    pantallaResultados.innerHTML = ''; // Limpiamos el mensaje de espera
     
-    if (jsonData.length > 0) {
-        // Limitamos a los primeros 50 para no desbordar el HTML si hay muchas fechas
+    if (jsonData && jsonData.length > 0) {
+        // Limitamos a los primeros 50 registros para mantener fluida la interfaz
         const resultadosVisibles = jsonData.slice(0, 50); 
         
         resultadosVisibles.forEach(item => {
-            // Usamos item[gasSeleccionado] para acceder dinámicamente al valor del gas
-            let valorGas = item[gasSeleccionado] !== null ? item[gasSeleccionado] + ' ppb' : 'Sin datos';
+            let valorGas = item[gasSeleccionado] !== null && item[gasSeleccionado] !== undefined ? item[gasSeleccionado] : 'Sin datos';
             
             let contenido_html = `
-            <strong>Estación:</strong> ${item.nombre} (${item.clave_estacion})</br>
-            <strong>Fecha y Hora:</strong> ${item.fecha} a las ${item.hora}</br>
-            <strong>Lectura de ${gasSeleccionado.toUpperCase()}:</strong> <span style="color:#43a047;">${valorGas}</span></br>
+            <strong>Estación:</strong> ${item.Nombre || 'N/A'} (${item.clave_estacion})<br/>
+            <strong>Fecha y Hora:</strong> ${item.fecha} a las ${item.hora}<br/>
+            <strong>Lectura de ${gasSeleccionado.toUpperCase()}:</strong> <span style="color:#43a047;">${valorGas}</span><br/>
             <hr style="border: 0.5px solid #3A4A5E; margin: 10px 0;"/>
             `;
             pantallaResultados.innerHTML += contenido_html;
@@ -411,6 +469,7 @@ function imprimirResultadosGas(jsonData, gasSeleccionado) {
              pantallaResultados.innerHTML += `<p><em>Se muestran 50 de ${jsonData.length} registros encontrados.</em></p>`;
         }
     } else {
-        pantallaResultados.innerHTML = "No se encontraron mediciones para esa estación/coordenadas. </br>";
+        pantallaResultados.innerHTML = "La consulta no arrojó resultados para los parámetros ingresados.<br/>";
     }
 }
+
