@@ -10,11 +10,11 @@ try {
     ]);
     
     $estacion = $_GET['estacion'] ?? '';
-    $latitud = $_GET['latitud'] ?? '';
-    $longitud = $_GET['longitud'] ?? '';
     $gas = $_GET['gas'] ?? '';
+    $fecha = $_GET['fecha'] ?? '';
+    $hora = $_GET['hora'] ?? '';
     $formato = $_GET['formato'] ?? 'json';
-
+    
     $gases_permitidos = ['co', 'no', 'no2', 'nox', 'o3', 'pm10', 'pm25', 'pmco', 'so2'];
 
     if (!in_array($gas, $gases_permitidos)) {
@@ -33,14 +33,14 @@ try {
         $params['estacion'] = '%' . $estacion . '%';
     }
 
-    if (!empty($latitud) && !empty($longitud)) {
-        $query .= " AND ST_DWithin(
-                        rs.\"geom\"::geography, 
-                        ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)::geography, 
-                        5000
-                    )";
-        $params['lat'] = $latitud;
-        $params['lon'] = $longitud;
+    if (!empty($fecha)){
+        $query .= " AND m.fecha = :fecha";
+        $params['fecha']= $fecha;
+    }
+
+    if(!empty($hora)){
+        $query .= " AND m.hora = :hora";
+        $params['hora']= $hora;
     }
 
     $stmt = $pdo->prepare($query);

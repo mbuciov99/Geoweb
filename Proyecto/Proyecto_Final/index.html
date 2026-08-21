@@ -71,8 +71,11 @@
                 <fieldset>
                     <legend>Busqueda de estaciones RAMA</legend>
 
-                    <label for="estacion">Nombre de la estación o investigador</label>
-                    <input type="text" id="estacion" name="estacion" placeholder="Ej. Estación Merced">
+                    <label for="fecha_consulta">Fecha de Medicion:</label>
+                    <input type="date" id="fecha_consulta" name="fecha_consulta" min="2025-01-01" max="2025-12-31">
+
+                    <label for="hora_consulta">Hora de Medicion:</label>
+                    <input type="number" id="hora_consulta" name="hora_consulta" min="1" max="24" placeholder="Escribe hora (Ej. 14)">
 
                     <label for="estacion_rama">Estacion de Monitoreo (RAMA):</label>
                     <select id="estacion_rama" name="estacion_rama">
