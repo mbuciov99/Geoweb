@@ -94,44 +94,82 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 2. Cargar Mapa
+    // 2. Cargar Mapa, WFS y Herramienta de Dibujo (WPS local)
     try {
         inicializarMapa();
         cargarEstacionesLocales();
         cargarO3Wfs();
-        var drawnItems= new L.featureGroup();
+        
+        var drawnItems = new L.FeatureGroup();
         mapa.addLayer(drawnItems);
 
         var drawControl = new L.Control.Draw({
-        edit: { featureGroup: drawnItems },
-        draw: {
-            polygon: true,
-            rectangle: true,
-            circle: false,
-            marker: false,
-            polyline: false
-        }
-    });
-    mapa.addControl(drawControl);
+            edit: { featureGroup: drawnItems },
+            draw: {
+                polygon: true,
+                rectangle: true,
+                circle: false,
+                marker: false,
+                polyline: false
+            }
+        });
+        mapa.addControl(drawControl);
 
-    // 3. ¡Aquí es donde ocurre la magia!
-    mapa.on(L.Draw.Event.CREATED, function (e) {
-        var layer = e.layer;
-        drawnItems.clearLayers(); // Limpia dibujos anteriores
-        drawnItems.addLayer(layer);
+        // Lógica de selección espacial (WPS local con Turf.js)
+        mapa.on(L.Draw.Event.CREATED, function (e) {
+            var layer = e.layer;
+            drawnItems.clearLayers(); 
+            drawnItems.addLayer(layer);
 
-        // Obtenemos el polígono en formato GeoJSON
-        var geojson = layer.toGeoJSON();
-        console.log("Polígono dibujado:", geojson);
+            var poligonoDibujado = layer.toGeoJSON();
+            let estacionesSeleccionadas = [];
 
-        // Aquí es donde llamarías a tu servicio WPS (por ahora, un alert de victoria)
-        alert("¡Polígono capturado! Ahora podrías enviar estas coordenadas a tu proceso WPS en GeoServer.");
-    });
+            // Recorremos de manera segura cualquier capa o subgrupo dentro de capaEstaciones
+            capaEstaciones.eachLayer(function(subcapa){
+                // Si es un grupo que contiene más capas (como L.geoJSON)
+                if (typeof subcapa.eachLayer === 'function') {
+                    subcapa.eachLayer(function(marker) {
+                        procesarMarcador(marker);
+                    });
+                } else {
+                    // Si es un marcador directo
+                    procesarMarcador(subcapa);
+                }
+            });
+
+            function procesarMarcador(marker) {
+                if (typeof marker.getLatLng === 'function') {
+                    var latLng = marker.getLatLng();
+                    var puntoGeoJSON = {
+                        type: "Feature",
+                        geometry: {
+                            type: "Point",
+                            coordinates: [latLng.lng, latLng.lat]
+                        }
+                    };
+
+                    if (turf.booleanPointInPolygon(puntoGeoJSON, poligonoDibujado)) {
+                        estacionesSeleccionadas.push(marker);
+                        if (typeof marker.setStyle === 'function') {
+                            marker.setStyle({ fillColor: "#e74c3c", radius: 8 }); // Rojito si entra
+                        }
+                    } else {
+                        if (typeof marker.setStyle === 'function') {
+                            marker.setStyle({ fillColor: "#176b68", radius: 6 }); // Color original si queda fuera
+                        }
+                    }
+                }
+            }
+
+            console.log(`Estaciones encontradas: ${estacionesSeleccionadas.length}`);
+            alert(`¡Proceso WPS completado! Se seleccionaron ${estacionesSeleccionadas.length} estaciones dentro del área.`);
+        });
+
     } catch (error) {
         console.error("No fue posible inicializar el mapa:", error);
     }
 
-    // 3. Efectos visuales de scroll (Código de tus compañeras)
+    // 3. Efectos visuales de scroll
     const bloques = document.querySelectorAll(".grid-visor > aside, .grid-visor > main, .grid-visor > footer");
     bloques.forEach((bloque) => bloque.classList.add("revelar"));
     
@@ -152,7 +190,6 @@ document.addEventListener("DOMContentLoaded", () => {
     formulario.addEventListener("submit", async (evento) => {
         evento.preventDefault();
 
-        // Recuperar y formatear tus valores
         const fechaCruda = document.getElementById("fecha_consulta").value;
         let fecha = "";
         if (fechaCruda !== ""){
@@ -165,7 +202,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const gas = document.getElementById("gas").value;
         const terminos = document.getElementById("terminos").checked;
 
-        // Validaciones
         if (estacion_rama === "") {
             alert("Selecciona una estación de monitoreo.");
             return;
@@ -179,13 +215,12 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Preparar parámetros para PHP
         const parametros = new URLSearchParams();
         parametros.append("estacion", estacion_rama);
         parametros.append("gas", gas);
         if (fecha !== "") parametros.append("fecha", fecha);
         if (hora !== "") parametros.append("hora", hora);
-        parametros.append("formato", "json"); // Siempre pedimos JSON para la interfaz
+        parametros.append("formato", "json");
 
         parametrosUltimaConsulta = new URLSearchParams(parametros.toString());
 
@@ -282,7 +317,7 @@ function inicializarMapa() {
         maxZoom: 20, attribution: '&copy; CARTO'
     });
 
-        const pm25PromedioWms = L.tileLayer.wms(
+    const pm25PromedioWms = L.tileLayer.wms(
         "http://localhost:8080/geoserver/rama/wms",
         {
             layers: "rama:v_pm25_promedio_2025",
@@ -307,7 +342,7 @@ function inicializarMapa() {
     openStreetMap.addTo(mapa);
     capaResultados = L.layerGroup().addTo(mapa);
     capaEstaciones = L.layerGroup();
-    capaO3Wfs= L.layerGroup();
+    capaO3Wfs = L.layerGroup();
 
     L.control.scale({ position: "bottomleft", metric: true, imperial: false }).addTo(mapa);
 
@@ -319,45 +354,24 @@ function inicializarMapa() {
         ]
     };
 
-        const arbolCapas = {
+    const arbolCapas = {
         label: "<strong>Capas del geoportal</strong>",
         selectAllCheckbox: false,
-
         children: [
             {
                 label: "Consulta RAMA",
-                children: [
-                    {
-                        label: "Estación consultada",
-                        layer: capaResultados
-                    }
-                ]
+                children: [{ label: "Estación consultada", layer: capaResultados }]
             },
             {
                 label: "Datos locales",
-                children: [
-                    {
-                        label: "Todas las estaciones RAMA (GeoJSON)",
-                        layer: capaEstaciones
-                    }
-                ]
+                children: [{ label: "Todas las estaciones RAMA (GeoJSON)", layer: capaEstaciones }]
             },
             {
                 label: "Servicios WMS",
                 children: [
-                    {
-                        label: "Promedio de PM2.5 en 2025 (WMS)",
-                        layer: pm25PromedioWms
-                    },
-                    {
-                        label: "Promedio de O3 en 2025 (WMS)",
-                        layer: ozonoPromedioWms
-                    },
-                    ,
-                    {
-                        label:"Promedio de O3 interactivo (WFS)",
-                        layer: capaO3Wfs
-                    }
+                    { label: "Promedio de PM2.5 en 2025 (WMS)", layer: pm25PromedioWms },
+                    { label: "Promedio de O3 en 2025 (WMS)", layer: ozonoPromedioWms },
+                    { label: "Promedio de O3 interactivo (WFS)", layer: capaO3Wfs }
                 ]
             }
         ]
@@ -369,24 +383,15 @@ function inicializarMapa() {
         L.control.layers({ "OpenStreetMap": openStreetMap, "CartoDB claro": cartoClaro }, { "Estación consultada": capaResultados }).addTo(mapa);
     }
 
-        // ============================================
+    // ============================================
     // LEYENDA DINÁMICA DE LOS SERVICIOS WMS
     // ============================================
-
-    const controlLeyenda = L.control({
-        position: "bottomright"
-    });
+    const controlLeyenda = L.control({ position: "bottomright" });
 
     controlLeyenda.onAdd = function () {
-        this._div = L.DomUtil.create(
-            "div",
-            "leyenda-mapa"
-        );
-
-        // Evita que al interactuar con la leyenda se mueva el mapa
+        this._div = L.DomUtil.create("div", "leyenda-mapa");
         L.DomEvent.disableClickPropagation(this._div);
         L.DomEvent.disableScrollPropagation(this._div);
-
         return this._div;
     };
 
@@ -399,11 +404,7 @@ function inicializarMapa() {
             contenido += `
                 <section class="leyenda-seccion">
                     <h4>Promedio de PM2.5, 2025</h4>
-
-                    <img
-                        src="http://localhost:8080/geoserver/rama/wms?SERVICE=WMS&REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&LAYER=rama:v_pm25_promedio_2025"
-                        alt="Simbología del promedio de PM2.5"
-                    >
+                    <img src="http://localhost:8080/geoserver/rama/wms?SERVICE=WMS&REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&LAYER=rama:v_pm25_promedio_2025" alt="Simbología del promedio de PM2.5">
                 </section>
             `;
         }
@@ -412,29 +413,16 @@ function inicializarMapa() {
             contenido += `
                 <section class="leyenda-seccion">
                     <h4>Promedio de O₃, 2025</h4>
-
-                    <img
-                        src="http://localhost:8080/geoserver/rama/wms?SERVICE=WMS&REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&LAYER=rama:v_o3_promedio_2025"
-                        alt="Simbología del promedio de ozono"
-                    >
-
-                   
+                    <img src="http://localhost:8080/geoserver/rama/wms?SERVICE=WMS&REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&LAYER=rama:v_o3_promedio_2025" alt="Simbología del promedio de ozono">
                 </section>
             `;
         }
 
         controlLeyenda._div.innerHTML = contenido;
-
-        controlLeyenda._div.style.display =
-            contenido === "" ? "none" : "block";
+        controlLeyenda._div.style.display = contenido === "" ? "none" : "block";
     }
 
-    // Actualizar cuando se active o desactive un WMS
-    mapa.on(
-        "overlayadd overlayremove",
-        actualizarLeyenda
-    );
-
+    mapa.on("overlayadd overlayremove", actualizarLeyenda);
     actualizarLeyenda();
 }
 
@@ -470,7 +458,7 @@ function mostrarEstacionesEnMapa(datos, gas) {
     if (marcadores.length > 0) {
         const grupo = L.featureGroup(marcadores);
         mapa.fitBounds(grupo.getBounds(), { padding: [30, 30], maxZoom: 14 }); 
-}
+    }
 }
 
 async function cargarEstacionesLocales() {
@@ -496,9 +484,7 @@ async function cargarEstacionesLocales() {
  * Consume mediante WFS los promedios de O3 publicados en GeoServer.
  */
 async function cargarO3Wfs() {
-
-    const hostGeoServer =
-        `${window.location.protocol}//${window.location.hostname}:8080`;
+    const hostGeoServer = `${window.location.protocol}//${window.location.hostname}:8080`;
 
     const parametrosWfs = new URLSearchParams({
         service: "WFS",
@@ -508,22 +494,15 @@ async function cargarO3Wfs() {
         outputFormat: "application/json"
     });
 
-    const urlWfs =
-        `${hostGeoServer}/geoserver/rama/ows?${parametrosWfs.toString()}`;
+    const urlWfs = `${hostGeoServer}/geoserver/rama/ows?${parametrosWfs.toString()}`;
 
     try {
         const respuesta = await fetch(urlWfs);
-
-        if (!respuesta.ok) {
-            throw new Error(
-                `El servicio WFS respondió con HTTP ${respuesta.status}`
-            );
-        }
+        if (!respuesta.ok) throw new Error(`El servicio WFS respondió con HTTP ${respuesta.status}`);
 
         const geojson = await respuesta.json();
 
         const capaVectorial = L.geoJSON(geojson, {
-
             pointToLayer: (feature, latlng) => {
                 return L.circleMarker(latlng, {
                     radius: 7,
@@ -533,24 +512,13 @@ async function cargarO3Wfs() {
                     fillOpacity: 0.9
                 });
             },
-
             onEachFeature: (feature, layer) => {
                 const propiedades = feature.properties ?? {};
-
                 layer.bindPopup(`
-                    <strong>
-                        ${propiedades.nombre_estacion ?? "Estación RAMA"}
-                    </strong><br>
-
-                    Clave:
-                    ${propiedades.clave_estacion ?? "Sin clave"}<br>
-
-                    Promedio de O3:
-                    ${propiedades.promedio_o3 ?? "Sin dato"} ppb<br>
-
-                    Mediciones utilizadas:
-                    ${propiedades.mediciones ?? "Sin dato"}<br>
-
+                    <strong>${propiedades.nombre_estacion ?? "Estación RAMA"}</strong><br>
+                    Clave: ${propiedades.clave_estacion ?? "Sin clave"}<br>
+                    Promedio de O3: ${propiedades.promedio_o3 ?? "Sin dato"} ppb<br>
+                    Mediciones utilizadas: ${propiedades.mediciones ?? "Sin dato"}<br>
                     <small>Fuente: servicio WFS de GeoServer</small>
                 `);
             }
@@ -559,18 +527,10 @@ async function cargarO3Wfs() {
         capaO3Wfs.clearLayers();
         capaO3Wfs.addLayer(capaVectorial);
 
-        console.log(
-            `WFS cargado: ${geojson.features?.length ?? 0} elementos.`
-        );
-
     } catch (error) {
-        console.error(
-            "No fue posible cargar el servicio WFS:",
-            error
-        );
+        console.error("No fue posible cargar el servicio WFS:", error);
     }
 }
-
 
 // ============================================
 // FUNCIONES DE GRÁFICAS (Chart.js)
