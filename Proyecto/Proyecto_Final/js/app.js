@@ -252,6 +252,28 @@ function inicializarMapa() {
         maxZoom: 20, attribution: '&copy; CARTO'
     });
 
+        const estacionesWms = L.tileLayer.wms(
+        "http://localhost:8080/geoserver/rama/wms",
+        {
+            layers: "rama:rama_stations",
+            format: "image/png",
+            transparent: true,
+            version: "1.1.1",
+            attribution: "RAMA / GeoServer"
+        }
+    );
+
+    const ozonoPromedioWms = L.tileLayer.wms(
+        "http://localhost:8080/geoserver/rama/wms",
+        {
+            layers: "rama:v_o3_promedio_2025",
+            format: "image/png",
+            transparent: true,
+            version: "1.1.1",
+            attribution: "RAMA / GeoServer"
+        }
+    );
+
     openStreetMap.addTo(mapa);
     capaResultados = L.layerGroup().addTo(mapa);
     capaEstaciones = L.layerGroup();
@@ -266,11 +288,42 @@ function inicializarMapa() {
         ]
     };
 
-    const arbolCapas = {
-        label: "<strong>Capas del geoportal</strong>", selectAllCheckbox: false,
+        const arbolCapas = {
+        label: "<strong>Capas del geoportal</strong>",
+        selectAllCheckbox: false,
+
         children: [
-            { label: "Consulta RAMA", children: [{ label: "Estación consultada", layer: capaResultados }] },
-            { label: "Datos locales", children: [{ label: "Todas las estaciones RAMA", layer: capaEstaciones }] }
+            {
+                label: "Consulta RAMA",
+                children: [
+                    {
+                        label: "Estación consultada",
+                        layer: capaResultados
+                    }
+                ]
+            },
+            {
+                label: "Datos locales",
+                children: [
+                    {
+                        label: "Todas las estaciones RAMA (GeoJSON)",
+                        layer: capaEstaciones
+                    }
+                ]
+            },
+            {
+                label: "Servicios WMS",
+                children: [
+                    {
+                        label: "Estaciones RAMA (WMS)",
+                        layer: estacionesWms
+                    },
+                    {
+                        label: "Promedio de O3 en 2025 (WMS)",
+                        layer: ozonoPromedioWms
+                    }
+                ]
+            }
         ]
     };
 
@@ -279,6 +332,74 @@ function inicializarMapa() {
     } else {
         L.control.layers({ "OpenStreetMap": openStreetMap, "CartoDB claro": cartoClaro }, { "Estación consultada": capaResultados }).addTo(mapa);
     }
+
+        // ============================================
+    // LEYENDA DINÁMICA DE LOS SERVICIOS WMS
+    // ============================================
+
+    const controlLeyenda = L.control({
+        position: "bottomright"
+    });
+
+    controlLeyenda.onAdd = function () {
+        this._div = L.DomUtil.create(
+            "div",
+            "leyenda-mapa"
+        );
+
+        // Evita que al interactuar con la leyenda se mueva el mapa
+        L.DomEvent.disableClickPropagation(this._div);
+        L.DomEvent.disableScrollPropagation(this._div);
+
+        return this._div;
+    };
+
+    controlLeyenda.addTo(mapa);
+
+    function actualizarLeyenda() {
+        let contenido = "";
+
+        if (mapa.hasLayer(estacionesWms)) {
+            contenido += `
+                <section class="leyenda-seccion">
+                    <h4>Estaciones RAMA</h4>
+
+                    <img
+                        src="http://localhost:8080/geoserver/rama/wms?SERVICE=WMS&REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&LAYER=rama:rama_stations"
+                        alt="Simbología de estaciones RAMA"
+                    >
+                </section>
+            `;
+        }
+
+        if (mapa.hasLayer(ozonoPromedioWms)) {
+            contenido += `
+                <section class="leyenda-seccion">
+                    <h4>Promedio de O₃, 2025</h4>
+
+                    <img
+                        src="http://localhost:8080/geoserver/rama/wms?SERVICE=WMS&REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&LAYER=rama:v_o3_promedio_2025"
+                        alt="Simbología del promedio de ozono"
+                    >
+
+                   
+                </section>
+            `;
+        }
+
+        controlLeyenda._div.innerHTML = contenido;
+
+        controlLeyenda._div.style.display =
+            contenido === "" ? "none" : "block";
+    }
+
+    // Actualizar cuando se active o desactive un WMS
+    mapa.on(
+        "overlayadd overlayremove",
+        actualizarLeyenda
+    );
+
+    actualizarLeyenda();
 }
 
 function mostrarEstacionesEnMapa(datos, gas) {
@@ -289,8 +410,6 @@ function mostrarEstacionesEnMapa(datos, gas) {
     const marcadores = [];
 
     datos.forEach((registro) => {
-        // Asumiendo que tu PHP devuelve latitud y longitud, si no, los marcadores no se pintarán
-        // hasta cruzarlo con la tabla rama_stations
         const latitud = Number.parseFloat(registro.latitud || 19.4326); 
         const longitud = Number.parseFloat(registro.longitud || -99.1332);
         const clave = registro.clave_estacion;
@@ -315,7 +434,7 @@ function mostrarEstacionesEnMapa(datos, gas) {
     if (marcadores.length > 0) {
         const grupo = L.featureGroup(marcadores);
         mapa.fitBounds(grupo.getBounds(), { padding: [30, 30], maxZoom: 14 }); 
-    } // ¡AQUÍ ESTABA EL ERROR DONDE SE CORTABA EL CÓDIGO!
+}
 }
 
 async function cargarEstacionesLocales() {
@@ -370,7 +489,7 @@ function mostrarGrafica(datos, gas) {
                 label: `${gas.toUpperCase()} (${unidades[gas] ?? ""})`,
                 data: serieVisible.map(registro => registro.valor),
                 borderColor: "#176b68",
-                backgroundColor: "rgba(23, 107, 104, 0.15)", // ¡AQUÍ ESTABA ATRAPADA TU URL!
+                backgroundColor: "rgba(23, 107, 104, 0.15)", 
                 borderWidth: 2,
                 pointRadius: 2,
                 pointHoverRadius: 5,

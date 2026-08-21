@@ -653,3 +653,103 @@ p {
         transition: none;
     }
 }
+
+/* Leyenda cartográfica generada desde los estilos WMS */
+.leyenda-mapa {
+    display: none;
+    min-width: 180px;
+    max-width: 260px;
+    max-height: 320px;
+    overflow-y: auto;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.96);
+    color: #18343a;
+    border: 1px solid rgba(24, 52, 58, 0.16);
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(15, 40, 45, 0.18);
+    font-family: "Manrope", sans-serif;
+}
+
+.leyenda-seccion + .leyenda-seccion {
+    padding-top: 10px;
+    margin-top: 10px;
+    border-top: 1px solid #d9e3e1;
+}
+
+.leyenda-seccion h4 {
+    margin: 0 0 8px;
+    color: #18343a;
+    font-size: 0.9rem;
+}
+
+.leyenda-seccion img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.leyenda-seccion p {
+    margin: 8px 0 0;
+    color: #607378;
+    font-size: 0.72rem;
+    line-height: 1.4;
+}
+/* Corrección de tamaño y posición de la leyenda Leaflet */
+.leaflet-control.leyenda-mapa {
+    width: 210px !important;
+    min-width: 0 !important;
+    max-width: 210px !important;
+    max-height: 260px !important;
+    overflow: auto !important;
+
+    padding: 10px !important;
+    margin: 0 10px 28px 0 !important;
+
+    background-color: #ffffff !important;
+    color: #18343a !important;
+
+    border: 1px solid #d8e1df !important;
+    border-radius: 8px !important;
+    box-shadow: 0 3px 12px rgba(15, 40, 45, 0.22) !important;
+
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+}
+
+.leaflet-control.leyenda-mapa .leyenda-seccion {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.leaflet-control.leyenda-mapa .leyenda-seccion + .leyenda-seccion {
+    margin-top: 10px !important;
+    padding-top: 10px !important;
+    border-top: 1px solid #d8e1df !important;
+}
+
+.leaflet-control.leyenda-mapa h4 {
+    margin: 0 0 6px !important;
+    color: #18343a !important;
+    font-size: 0.82rem !important;
+    line-height: 1.3 !important;
+    white-space: normal !important;
+}
+
+.leaflet-control.leyenda-mapa img {
+    display: block !important;
+    width: auto !important;
+    max-width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+}
+
+@media (max-width: 600px) {
+    .leaflet-control.leyenda-mapa {
+        width: 175px !important;
+        max-width: 175px !important;
+        max-height: 210px !important;
+        padding: 8px !important;
+    }
+}
