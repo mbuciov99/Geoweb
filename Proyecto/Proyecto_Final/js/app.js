@@ -252,10 +252,10 @@ function inicializarMapa() {
         maxZoom: 20, attribution: '&copy; CARTO'
     });
 
-        const estacionesWms = L.tileLayer.wms(
+        const pm25PromedioWms = L.tileLayer.wms(
         "http://localhost:8080/geoserver/rama/wms",
         {
-            layers: "rama:rama_stations",
+            layers: "rama:v_pm25_promedio_2025",
             format: "image/png",
             transparent: true,
             version: "1.1.1",
@@ -315,8 +315,8 @@ function inicializarMapa() {
                 label: "Servicios WMS",
                 children: [
                     {
-                        label: "Estaciones RAMA (WMS)",
-                        layer: estacionesWms
+                        label: "Promedio de PM2.5 en 2025 (WMS)",
+                        layer: pm25PromedioWms
                     },
                     {
                         label: "Promedio de O3 en 2025 (WMS)",
@@ -359,14 +359,14 @@ function inicializarMapa() {
     function actualizarLeyenda() {
         let contenido = "";
 
-        if (mapa.hasLayer(estacionesWms)) {
+        if (mapa.hasLayer(pm25PromedioWms)) {
             contenido += `
                 <section class="leyenda-seccion">
-                    <h4>Estaciones RAMA</h4>
+                    <h4>Promedio de PM2.5, 2025</h4>
 
                     <img
-                        src="http://localhost:8080/geoserver/rama/wms?SERVICE=WMS&REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&LAYER=rama:rama_stations"
-                        alt="Simbología de estaciones RAMA"
+                        src="http://localhost:8080/geoserver/rama/wms?SERVICE=WMS&REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&LAYER=rama:v_pm25_promedio_2025"
+                        alt="Simbología del promedio de PM2.5"
                     >
                 </section>
             `;
