@@ -30,6 +30,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
 <body> 
      <div class="grid-visor">
@@ -161,8 +162,8 @@
 
                     <label>Formato de descarga</label>
                     <div class="grupo-radio">
-                        <input type="radio" id="formato-shp" name="formato" value="shp" checked>
-                        <label for="formato-shp">Shapefile (.zip)</label>
+                        <input type="radio" id="formato-geojson" name="formato" value="geojson" checked>
+                        <label for="formato-geojson">GeoJSON (.geojson)</label>
 
                         <input type="radio" id="formato-kml" name="formato" value="kml">
                         <label for="formato-kml">KML (.kml)</label>
@@ -238,12 +239,8 @@
             <div id="acciones-descarga" style="display: none;">
                 <h3>Descargar resultados</h3>
 
-                <button type="button" id="descargar-shp" class="btn-enviar">
-                    Descargar Shapefile
-                </button>
-
-                <button type="button" id="descargar-kml" class="btn-enviar">
-                    Descargar KML
+                 <button type="button" id="btn-descargar" class="btn-enviar">
+                    Descargar resultados en formato seleccionado
                 </button>
             </div>
             

@@ -8,6 +8,7 @@ let capaResultados;
 let capaEstaciones;
 let graficaConcentraciones = null;
 let parametrosUltimaConsulta = null;
+let ultimosDatosConsultados = []; // Variable global para guardar los datos de la última consulta
 let capaO3Wfs;
 
 // ============================================
@@ -40,7 +41,7 @@ const gasesPorEstacion = {
     "NEZ": ["co", "no2", "o3", "pm10", "no", "nox", "pm25", "so2"],
     "PED": ["co", "no2", "o3", "pm10", "no", "nox", "pm25", "pmco", "so2"],
     "SAC": ["co", "no2", "o3", "no", "nox", "pm25", "so2"],
-    "SAG": ["co", "no2", "o3", "pm10", "no", "nox", "pm25", "pmco", "so2"],
+    "SAG": ["co", "no2", "o3", "pm10", "no", "nox", "pm25", "so2"],
     "SFE": [], 
     "SJA": [], 
     "TAH": ["co", "no2", "o3", "pm10", "no", "nox", "so2"],
@@ -74,7 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const formulario = document.getElementById("form-consultas");
     const pantallaResultados = document.getElementById("pantalla-resultados");
     const accionesDescarga = document.getElementById("acciones-descarga");
-    const selectEstacion = document.getElementById("estacion_rama");
+    const btnDescargar = document.getElementById("btn-descargar"); 
+    const selectEstacion = document.getElementById("estacion_rama"); 
     const selectGas = document.getElementById("gas");
 
     // 1. Activar menú dinámico de gases
@@ -94,77 +96,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 2. Cargar Mapa, WFS y Herramienta de Dibujo (WPS local)
+    // 2. Cargar Mapa
     try {
         inicializarMapa();
         cargarEstacionesLocales();
-        cargarO3Wfs();
-        
-        var drawnItems = new L.FeatureGroup();
-        mapa.addLayer(drawnItems);
-
-        var drawControl = new L.Control.Draw({
-            edit: { featureGroup: drawnItems },
-            draw: {
-                polygon: true,
-                rectangle: true,
-                circle: false,
-                marker: false,
-                polyline: false
-            }
-        });
-        mapa.addControl(drawControl);
-
-        // Lógica de selección espacial (WPS local con Turf.js)
-        mapa.on(L.Draw.Event.CREATED, function (e) {
-            var layer = e.layer;
-            drawnItems.clearLayers(); 
-            drawnItems.addLayer(layer);
-
-            var poligonoDibujado = layer.toGeoJSON();
-            let estacionesSeleccionadas = [];
-
-            // Recorremos de manera segura cualquier capa o subgrupo dentro de capaEstaciones
-            capaEstaciones.eachLayer(function(subcapa){
-                // Si es un grupo que contiene más capas (como L.geoJSON)
-                if (typeof subcapa.eachLayer === 'function') {
-                    subcapa.eachLayer(function(marker) {
-                        procesarMarcador(marker);
-                    });
-                } else {
-                    // Si es un marcador directo
-                    procesarMarcador(subcapa);
-                }
-            });
-
-            function procesarMarcador(marker) {
-                if (typeof marker.getLatLng === 'function') {
-                    var latLng = marker.getLatLng();
-                    var puntoGeoJSON = {
-                        type: "Feature",
-                        geometry: {
-                            type: "Point",
-                            coordinates: [latLng.lng, latLng.lat]
-                        }
-                    };
-
-                    if (turf.booleanPointInPolygon(puntoGeoJSON, poligonoDibujado)) {
-                        estacionesSeleccionadas.push(marker);
-                        if (typeof marker.setStyle === 'function') {
-                            marker.setStyle({ fillColor: "#e74c3c", radius: 8 }); // Rojito si entra
-                        }
-                    } else {
-                        if (typeof marker.setStyle === 'function') {
-                            marker.setStyle({ fillColor: "#176b68", radius: 6 }); // Color original si queda fuera
-                        }
-                    }
-                }
-            }
-
-            console.log(`Estaciones encontradas: ${estacionesSeleccionadas.length}`);
-            alert(`¡Proceso WPS completado! Se seleccionaron ${estacionesSeleccionadas.length} estaciones dentro del área.`);
-        });
-
     } catch (error) {
         console.error("No fue posible inicializar el mapa:", error);
     }
@@ -187,79 +122,149 @@ document.addEventListener("DOMContentLoaded", () => {
     // ============================================
     // LÓGICA DEL FORMULARIO Y CONEXIÓN A PHP
     // ============================================
-    formulario.addEventListener("submit", async (evento) => {
-        evento.preventDefault();
+    if (formulario) {
+        formulario.addEventListener("submit", async (evento) => {
+            evento.preventDefault();
 
-        const fechaCruda = document.getElementById("fecha_consulta").value;
-        let fecha = "";
-        if (fechaCruda !== ""){
-            const partes = fechaCruda.split("-");
-            fecha = `${partes[2]}/${partes[1]}/${partes[0]}`; // DD/MM/YYYY
-        }
-        
-        const hora = document.getElementById("hora_consulta").value;
-        const estacion_rama = document.getElementById("estacion_rama").value;
-        const gas = document.getElementById("gas").value;
-        const terminos = document.getElementById("terminos").checked;
-
-        if (estacion_rama === "") {
-            alert("Selecciona una estación de monitoreo.");
-            return;
-        }
-        if (gas === "") {
-            alert("Selecciona un contaminante.");
-            return;
-        }
-        if (!terminos) {
-            alert("Debes aceptar los términos y condiciones.");
-            return;
-        }
-
-        const parametros = new URLSearchParams();
-        parametros.append("estacion", estacion_rama);
-        parametros.append("gas", gas);
-        if (fecha !== "") parametros.append("fecha", fecha);
-        if (hora !== "") parametros.append("hora", hora);
-        parametros.append("formato", "json");
-
-        parametrosUltimaConsulta = new URLSearchParams(parametros.toString());
-
-        pantallaResultados.innerHTML = "<em>Consultando la base de datos...</em>";
-        accionesDescarga.style.display = "none";
-
-        try {
-            const respuesta = await fetch("php/consulta_get_pdo.php?" + parametros.toString());
-            const textoRespuesta = await respuesta.text();
+            const fechaCruda = document.getElementById("fecha_consulta") ? document.getElementById("fecha_consulta").value : "";
+            let fecha = "";
+            if (fechaCruda !== ""){
+                const partes = fechaCruda.split("-");
+                fecha = `${partes[2]}/${partes[1]}/${partes[0]}`; // DD/MM/YYYY
+            }
             
-            let resultado;
+            const hora = document.getElementById("hora_consulta") ? document.getElementById("hora_consulta").value : "";
+            const estacion_rama = document.getElementById("estacion_rama").value;
+            const gas = document.getElementById("gas").value;
+            const terminos = document.getElementById("terminos").checked;
+
+            // Validaciones
+            if (estacion_rama === "") {
+                alert("Selecciona una estación de monitoreo.");
+                return;
+            }
+            if (gas === "") {
+                alert("Selecciona un contaminante.");
+                return;
+            }
+            if (!terminos) {
+                alert("Debes aceptar los términos y condiciones.");
+                return;
+            }
+
+            // Preparar parámetros para PHP
+            const parametros = new URLSearchParams();
+            parametros.append("estacion", estacion_rama);
+            parametros.append("gas", gas);
+            if (fecha !== "") parametros.append("fecha", fecha);
+            if (hora !== "") parametros.append("hora", hora);
+            parametros.append("formato", "json");
+
+            parametrosUltimaConsulta = new URLSearchParams(parametros.toString());
+
+            pantallaResultados.innerHTML = "<em>Consultando la base de datos...</em>";
+            if (accionesDescarga) accionesDescarga.style.display = "none";
+
             try {
-                resultado = JSON.parse(textoRespuesta);
+                const respuesta = await fetch("php/consulta_get_pdo.php?" + parametros.toString());
+                const textoRespuesta = await respuesta.text();
+                
+                let resultado;
+                try {
+                    resultado = JSON.parse(textoRespuesta);
+                } catch (error) {
+                    throw new Error("El servidor no devolvió JSON.");
+                }
+
+                if (!respuesta.ok || resultado.error) {
+                    throw new Error(resultado.error || `Error HTTP ${respuesta.status}`);
+                }
+
+                ultimosDatosConsultados = Array.isArray(resultado) ? resultado : (resultado.datos ?? []);
+
+                mostrarResumen(ultimosDatosConsultados, gas);
+                mostrarTabla(ultimosDatosConsultados, gas);
+                mostrarEstacionesEnMapa(ultimosDatosConsultados, gas);
+                mostrarGrafica(ultimosDatosConsultados, gas);
+
+                if (ultimosDatosConsultados.length > 0 && accionesDescarga) {
+                    accionesDescarga.style.display = "block";
+                }
+
             } catch (error) {
-                throw new Error("El servidor no devolvió JSON.");
+                pantallaResultados.innerHTML = `<span style="color: #A35139;"><strong>Error:</strong> ${error.message}</span>`;
+                mostrarTabla([], gas);
+                console.error("Error en la consulta:", error);
+            }
+        });
+    }
+
+    // ============================================
+    // LÓGICA DEL ÚNICO BOTÓN DE DESCARGA MANUAL
+    // ============================================
+    if (btnDescargar) {
+        btnDescargar.addEventListener("click", () => {
+            if (!ultimosDatosConsultados || ultimosDatosConsultados.length === 0) {
+                alert("Primero debes realizar una consulta exitosa para descargar los resultados.");
+                return;
             }
 
-            if (!respuesta.ok || resultado.error) {
-                throw new Error(resultado.error || `Error HTTP ${respuesta.status}`);
+            const formatoSeleccionado = document.querySelector('input[name="formato"]:checked');
+            const formato = formatoSeleccionado ? formatoSeleccionado.value : "kml";
+            const gas = document.getElementById("gas").value;
+
+            if (formato === 'kml') {
+                if (parametrosUltimaConsulta) {
+                    const params = new URLSearchParams(parametrosUltimaConsulta.toString());
+                    params.set("formato", "kml");
+                    window.location.href = "php/consulta_get_pdo.php?" + params.toString();
+                }
+            } else {
+                // Descarga local por defecto (GeoJSON)
+                descargarGeoJSONNavegador(ultimosDatosConsultados, gas);
             }
+        });
+    }
+}); // <--- ¡AQUÍ ESTÁ EL CIERRE QUE FALTABA!
 
-            const datos = Array.isArray(resultado) ? resultado : (resultado.datos ?? []);
-
-            mostrarResumen(datos, gas);
-            mostrarTabla(datos, gas);
-            mostrarEstacionesEnMapa(datos, gas);
-            mostrarGrafica(datos, gas);
-
-            if (datos.length > 0) {
-                accionesDescarga.style.display = "block";
+// ============================================
+// FUNCIONES DE DESCARGA Y FORMATO LOCAL
+// ============================================
+function generarObjetoGeoJSON(data, gas) {
+    let features = data.map(row => {
+        const lat = Number.parseFloat(row.latitud) || 19.43;
+        const lon = Number.parseFloat(row.longitud) || -99.13;
+        return {
+            "type": "Feature",
+            "geometry": { 
+                "type": "Point", 
+                "coordinates": [lon, lat] 
+            },
+            "properties": {
+                "estacion": row.Nombre || 'Estación',
+                "clave": row.clave_estacion,
+                "fecha": row.fecha,
+                "hora": row.hora,
+                "gas": gas,
+                "valor": row[gas] ?? null
             }
-
-        } catch (error) {
-            pantallaResultados.innerHTML = `<span style="color: #A35139;"><strong>Error:</strong> ${error.message}</span>`;
-            mostrarTabla([], gas);
-            console.error("Error en la consulta:", error);
-        }
+        };
     });
-});
+    return { "type": "FeatureCollection", "features": features };
+}
+
+// Descargar GeoJSON nativo
+function descargarGeoJSONNavegador(data, gas) {
+    const geojsonObj = generarObjetoGeoJSON(data, gas);
+    const blob = new Blob([JSON.stringify(geojsonObj, null, 2)], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'reporte_estaciones.geojson';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+}
 
 // ============================================
 // FUNCIONES DE INTERFAZ (Tablas, Resumen)
@@ -281,7 +286,8 @@ function mostrarResumen(datos, gas) {
 function mostrarTabla(datos, gas) {
     const cuerpoTabla = document.getElementById("tabla-resultados");
     const encabezadoGas = document.getElementById("encabezado-gas");
-    encabezadoGas.textContent = gas ? gas.toUpperCase() : "Concentración";
+    if (encabezadoGas) encabezadoGas.textContent = gas ? gas.toUpperCase() : "Concentración";
+    if (!cuerpoTabla) return;
     cuerpoTabla.innerHTML = "";
 
     if (!datos || datos.length === 0) {
@@ -342,7 +348,6 @@ function inicializarMapa() {
     openStreetMap.addTo(mapa);
     capaResultados = L.layerGroup().addTo(mapa);
     capaEstaciones = L.layerGroup();
-    capaO3Wfs = L.layerGroup();
 
     L.control.scale({ position: "bottomleft", metric: true, imperial: false }).addTo(mapa);
 
@@ -360,18 +365,33 @@ function inicializarMapa() {
         children: [
             {
                 label: "Consulta RAMA",
-                children: [{ label: "Estación consultada", layer: capaResultados }]
+                children: [
+                    {
+                        label: "Estación consultada",
+                        layer: capaResultados
+                    }
+                ]
             },
             {
                 label: "Datos locales",
-                children: [{ label: "Todas las estaciones RAMA (GeoJSON)", layer: capaEstaciones }]
+                children: [
+                    {
+                        label: "Todas las estaciones RAMA (GeoJSON)",
+                        layer: capaEstaciones
+                    }
+                ]
             },
             {
                 label: "Servicios WMS",
                 children: [
-                    { label: "Promedio de PM2.5 en 2025 (WMS)", layer: pm25PromedioWms },
-                    { label: "Promedio de O3 en 2025 (WMS)", layer: ozonoPromedioWms },
-                    { label: "Promedio de O3 interactivo (WFS)", layer: capaO3Wfs }
+                    {
+                        label: "Promedio de PM2.5 en 2025 (WMS)",
+                        layer: pm25PromedioWms
+                    },
+                    {
+                        label: "Promedio de O3 en 2025 (WMS)",
+                        layer: ozonoPromedioWms
+                    }
                 ]
             }
         ]
@@ -386,7 +406,9 @@ function inicializarMapa() {
     // ============================================
     // LEYENDA DINÁMICA DE LOS SERVICIOS WMS
     // ============================================
-    const controlLeyenda = L.control({ position: "bottomright" });
+    const controlLeyenda = L.control({
+        position: "bottomright"
+    });
 
     controlLeyenda.onAdd = function () {
         this._div = L.DomUtil.create("div", "leyenda-mapa");
@@ -404,7 +426,7 @@ function inicializarMapa() {
             contenido += `
                 <section class="leyenda-seccion">
                     <h4>Promedio de PM2.5, 2025</h4>
-                    <img src="http://localhost:8080/geoserver/rama/wms?SERVICE=WMS&REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&LAYER=rama:v_pm25_promedio_2025" alt="Simbología del promedio de PM2.5">
+                    <img src="http://localhost:8080/geoserver/rama/wms?SERVICE=WMS&REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&LAYER=rama:v_pm25_promedio_2025" alt="Simbología PM2.5">
                 </section>
             `;
         }
@@ -413,7 +435,7 @@ function inicializarMapa() {
             contenido += `
                 <section class="leyenda-seccion">
                     <h4>Promedio de O₃, 2025</h4>
-                    <img src="http://localhost:8080/geoserver/rama/wms?SERVICE=WMS&REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&LAYER=rama:v_o3_promedio_2025" alt="Simbología del promedio de ozono">
+                    <img src="http://localhost:8080/geoserver/rama/wms?SERVICE=WMS&REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&LAYER=rama:v_o3_promedio_2025" alt="Simbología Ozono">
                 </section>
             `;
         }
@@ -461,74 +483,45 @@ function mostrarEstacionesEnMapa(datos, gas) {
     }
 }
 
+// ============================================
+// CARGAR CAPA LOCAL DE ESTACIONES
+// ============================================
 async function cargarEstacionesLocales() {
     try {
-        const respuesta = await fetch("datos/estaciones_rama.geojson");
+        const respuesta = await fetch("rama_stations.geojson");
         if (!respuesta.ok) throw new Error("No se pudo cargar el GeoJSON: " + respuesta.status);
         const geojson = await respuesta.json();
 
         const estacionesGeojson = L.geoJSON(geojson, {
-            pointToLayer: (feature, latlng) => L.circleMarker(latlng, { radius: 6, color: "#ffffff", weight: 2, fillColor: "#176b68", fillOpacity: 0.9 }),
-            onEachFeature: (feature, layer) => {
-                const propiedades = feature.properties ?? {};
-                layer.bindPopup(`<strong>${propiedades.nombre ?? "Estación RAMA"}</strong><br>Clave: ${propiedades.clave ?? "Sin clave"}`);
-            }
-        });
-        capaEstaciones.addLayer(estacionesGeojson);
-    } catch (error) {
-        console.error("Error al cargar la capa local:", error);
-    }
-}
-
-/**
- * Consume mediante WFS los promedios de O3 publicados en GeoServer.
- */
-async function cargarO3Wfs() {
-    const hostGeoServer = `${window.location.protocol}//${window.location.hostname}:8080`;
-
-    const parametrosWfs = new URLSearchParams({
-        service: "WFS",
-        version: "1.0.0",
-        request: "GetFeature",
-        typeName: "rama:v_o3_promedio_2025",
-        outputFormat: "application/json"
-    });
-
-    const urlWfs = `${hostGeoServer}/geoserver/rama/ows?${parametrosWfs.toString()}`;
-
-    try {
-        const respuesta = await fetch(urlWfs);
-        if (!respuesta.ok) throw new Error(`El servicio WFS respondió con HTTP ${respuesta.status}`);
-
-        const geojson = await respuesta.json();
-
-        const capaVectorial = L.geoJSON(geojson, {
             pointToLayer: (feature, latlng) => {
-                return L.circleMarker(latlng, {
-                    radius: 7,
-                    color: "#ffffff",
-                    weight: 2,
-                    fillColor: "#6a4c93",
-                    fillOpacity: 0.9
-                });
+                const props = feature.properties || {};
+                const lat = Number.parseFloat(props.Latitud || props.latitud);
+                const lon = Number.parseFloat(props.Longitud || props.longitud);
+
+                if (Number.isFinite(lat) && Number.isFinite(lon)) {
+                    return L.circleMarker([lat, lon], { 
+                        radius: 6, 
+                        color: "#ffffff", 
+                        weight: 2, 
+                        fillColor: "#176b68", 
+                        fillOpacity: 0.9 
+                    });
+                }
+                return null;
             },
             onEachFeature: (feature, layer) => {
                 const propiedades = feature.properties ?? {};
-                layer.bindPopup(`
-                    <strong>${propiedades.nombre_estacion ?? "Estación RAMA"}</strong><br>
-                    Clave: ${propiedades.clave_estacion ?? "Sin clave"}<br>
-                    Promedio de O3: ${propiedades.promedio_o3 ?? "Sin dato"} ppb<br>
-                    Mediciones utilizadas: ${propiedades.mediciones ?? "Sin dato"}<br>
-                    <small>Fuente: servicio WFS de GeoServer</small>
-                `);
+                const nombre = propiedades.Nombre || propiedades.nombre || "Estación RAMA";
+                const clave = propiedades.Clave || propiedades.clave || "Sin clave";
+                layer.bindPopup(`<strong>${nombre}</strong><br>Clave: ${clave}`);
             }
         });
 
-        capaO3Wfs.clearLayers();
-        capaO3Wfs.addLayer(capaVectorial);
-
+        capaEstaciones.addLayer(estacionesGeojson);
+        capaEstaciones.addTo(mapa); 
+        console.log("Capa local cargada y pintada correctamente.");
     } catch (error) {
-        console.error("No fue posible cargar el servicio WFS:", error);
+        console.error("Error al cargar la capa local:", error);
     }
 }
 
