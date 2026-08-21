@@ -419,6 +419,83 @@ function mostrarEstacionesEnMapa(datos, gas) {
         mapa.fitBounds(grupo.getBounds(), {
             padding: [30, 30],
             maxZoom: 14
+// ============================================
+// CONSULTA DE GASES (Formulario de la imagen)
+// ============================================
+
+// Diccionario: Configuracion de gases por estacion (RAMA 2025)
+const gasesPorEstacion = {
+    "ACO": ["co", "no2", "o3", "pm10", "no", "nox", "so2"],
+    "AJM": ["co", "no2", "o3", "pm10", "pm25", "pmco", "so2"],
+    "AJU": ["o3", "no", "nox", "pm25"],
+    "ATI": ["co", "no2", "o3", "pm10", "no", "nox", "so2"],
+    "BJU": ["co", "no2", "o3", "pm10", "pm25", "pmco", "so2"],
+    "CAM": ["co", "no2", "o3", "pm10", "no", "nox", "pm25", "pmco", "so2"],
+    "CCA": ["co", "no2", "o3", "no", "nox", "pm25", "so2"],
+    "CHO": ["co", "no2", "o3", "pm10", "no", "nox", "so2"],
+    "COY": [], // Sin datos en 2025
+    "CUA": ["co", "no2", "o3", "pm10", "no", "nox", "so2"],
+    "CUT": ["co", "no2", "o3", "pm10", "no", "nox", "so2"],
+    "FAC": ["co", "no2", "o3", "pm10", "no", "nox", "so2"],
+    "FAR": ["co", "no2", "o3", "pm25", "so2"],
+    "GAM": ["no2", "o3", "pm10", "pm25", "pmco"],
+    "HGM": ["co", "no2", "o3", "pm10", "no", "nox", "pm25", "pmco", "so2"],
+    "INN": ["co", "o3", "pm10", "pm25", "pmco", "so2"],
+    "IZT": ["co", "no2", "o3", "pm10", "no", "nox", "so2"],
+    "LLA": ["o3"],
+    "LPR": ["co", "o3", "so2"],
+    "MER": ["co", "no2", "o3", "pm10", "no", "nox", "pm25", "pmco", "so2"],
+    "MGH": ["co", "no2", "o3", "no", "nox", "so2"],
+    "MON": ["co", "no2", "o3", "no", "nox", "pm25", "so2"],
+    "MPA": ["co", "no2", "o3", "pm10", "pm25", "pmco", "so2"],
+    "NEZ": ["co", "no2", "o3", "pm10", "no", "nox", "pm25", "so2"],
+    "PED": ["co", "no2", "o3", "pm10", "no", "nox", "pm25", "pmco", "so2"],
+    "SAC": ["co", "no2", "o3", "no", "nox", "pm25", "so2"],
+    "SAG": ["co", "no2", "o3", "pm10", "no", "nox", "pm25", "pmco", "so2"],
+    "SFE": [], // Sin datos en 2025
+    "SJA": [], // Sin datos en 2025
+    "TAH": ["co", "no2", "o3", "pm10", "no", "nox", "so2"],
+    "TLA": ["co", "no2", "o3", "pm10", "no", "nox", "pm25", "pmco", "so2"],
+    "TLI": ["co", "no2", "o3", "pm10", "no", "nox", "so2"],
+    "UAX": ["co", "no2", "o3", "no", "nox", "pm25", "so2"],
+    "UIZ": ["co", "no2", "o3", "pm10", "no", "nox", "pm25", "pmco", "so2"],
+    "VIF": ["co", "no2", "o3", "pm10", "no", "nox", "so2"],
+    "XAL": ["co", "no2", "o3", "no", "nox", "so2"]
+};
+
+const nombresGases = {
+    "co": "Monóxido de Carbono (CO)",
+    "no": "Monóxido de Nitrógeno (NO)",
+    "no2": "Dióxido de Nitrógeno (NO2)",
+    "nox": "Óxidos de nitrógeno (NOx)",
+    "o3": "Ozono (O3)",
+    "pm10": "Partículas menores a 10 micrómetros (PM10)",
+    "pm25": "Partículas menores a 2.5 micrómetros (PM2.5)",
+    "pmco": "Partículas fracción gruesa (PMCO)",
+    "so2": "Dióxido de Azufre (SO2)"
+};
+
+// Restricciòn para solicitar datos de gases segùn estacion
+document.addEventListener("DOMContentLoaded", () =>{
+    const selectEstacion= document.getElementById("estacion_rama");
+    const selectGas= document.getElementById("gas");
+
+    if (selectEstacion && selectGas){
+        // Cuando el usuario cambie de estacion
+        selectEstacion.addEventListener("change", (evento) => {
+            const estacionSeleccionada= evento.target.value;
+            const gasesPermitidos= gasesPorEstacion[estacionSeleccionada] || [];
+
+            // Borra todas las estaciones viejas del menù de gases
+            selectGas.innerHTML= '<option value="" disabled selected>---- Selecciona un gas ----</option>';
+
+            // Inyectar solo las opciones permitidas
+            gasesPermitidos.forEach(gas => {
+                const nuevaOpcion= document.createElement("option");
+                nuevaOpcion.value = gas;
+                nuevaOpcion.textContent= nombresGases[gas];
+                selectGas.appendChild(nuevaOpcion);
+            });
         });
     }
 }
@@ -465,6 +542,23 @@ document.addEventListener("DOMContentLoaded", () => {
 function mostrarGrafica(datos, gas) {
 
     const canvas = document.getElementById("graphCanvas");
+// 1. Validar los campos del nuevo formulario
+function validarCamposGas() {
+    
+    const fechaCruda = document.getElementById("fecha_consulta").value;
+    let fecha= "";
+    
+    if (fechaCruda !== ""){
+        const partes= fechaCruda.split("-");
+        fecha= `${partes[2]}/${partes[1]}/${partes[0]}`;
+    }
+    const hora = document.getElementById("hora_consulta").value;
+    const estacion_rama= document.getElementById("estacion_rama").value;
+    const gas = document.getElementById("gas").value;
+    
+    // Saber qué radio button está seleccionado
+    const formatoImput = document.querySelector('input[name="formato"]:checked');
+    const formato =formatoImput ? formatoImput.value : "geojson"; // Valor por defecto
 
     if (!canvas) {
         console.warn("No se encontró graphCanvas.");
@@ -525,6 +619,8 @@ function mostrarGrafica(datos, gas) {
 
                     borderColor: "#176b68",
                     backgroundColor: "rgba(23, 107, 104, 0.15)",
+        // Solicitamos siempre formato JSON para asegurar que la consola y la interfaz reciban los datos
+        const URL = `php/consulta_get_pdo.php?estacion=${encodeURIComponent(datos.estacion_rama)}&gas=${encodeURIComponent(datos.gas)}&fecha=${encodeURIComponent(datos.fecha)}&hora=${encodeURIComponent(datos.hora)}&formato=json`;
 
                     borderWidth: 2,
                     pointRadius: 2,
