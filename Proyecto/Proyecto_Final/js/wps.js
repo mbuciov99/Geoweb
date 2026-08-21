@@ -1,4 +1,59 @@
+document.addEventListener("DOMContentLoaded", () => {
 
+    if (
+        typeof L === "undefined" ||
+        typeof mapa === "undefined" ||
+        !mapa ||
+        typeof L.Control.Draw !== "function"
+    ) {
+        console.error(
+            "No fue posible inicializar la herramienta WPS de dibujo."
+        );
+        return;
+    }
+
+    const poligonosDibujados =
+        new L.FeatureGroup();
+
+    mapa.addLayer(poligonosDibujados);
+
+    const controlDibujo =
+        new L.Control.Draw({
+            edit: {
+                featureGroup: poligonosDibujados
+            },
+
+            draw: {
+                polygon: true,
+                rectangle: true,
+                circle: false,
+                marker: false,
+                circlemarker: false,
+                polyline: false
+            }
+        });
+
+    mapa.addControl(controlDibujo);
+
+    mapa.on(
+        L.Draw.Event.CREATED,
+        evento => {
+
+            const layer = evento.layer;
+
+            poligonosDibujados.clearLayers();
+            poligonosDibujados.addLayer(layer);
+
+            ejecutarFiltroEspacialRama(
+                layer.toGeoJSON()
+            );
+        }
+    );
+
+    console.log(
+        "Herramienta de filtro espacial WPS inicializada."
+    );
+});
 let capaFiltroWps = null;
 
 async function ejecutarFiltroEspacialRama(poligonoGeojson) {
